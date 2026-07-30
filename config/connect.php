@@ -16,7 +16,7 @@ if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
 }
 
 // Database Configuration
-$local = true; // Set to false for live server
+$local = false; // Set to false for live server
 
 if ($local) {
     $host = 'localhost';
@@ -29,7 +29,7 @@ if ($local) {
     $username = 'u776339737_aristonut';
     $password = 'UuR@~m3C2!Kj';
     $dbName = 'u776339737_aristonut';
-    $site = 'https://blue-okapi-934452.hostingersite.com/aristonut/';
+    $site = 'https://www.aristonut.com/';
 }
 
 global $site;
