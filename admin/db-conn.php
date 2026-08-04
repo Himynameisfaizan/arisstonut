@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 
 
 // Database Configuration
-$local = false; // Set to false for live server
+$local = true; // Set to false for live server
 
 if ($local) {
     $host = 'localhost';

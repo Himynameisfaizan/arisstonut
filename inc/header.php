@@ -1,7 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+
 include('config/connect.php'); // Global variable dependencies and cookie session path check
 
 // Standard persistent session evaluation rules setup on page refresh

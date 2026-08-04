@@ -16,7 +16,7 @@ if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
 }
 
 // Database Configuration
-$local = false; // Set to false for live server
+$local = true; // Set to false for live server
 
 if ($local) {
     $host = 'localhost';
