@@ -5,11 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AristoNut - Premium Makhana | Taste the Excellence</title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="assets/images/logo.webp">
     <style>
@@ -665,11 +662,9 @@
                 <p class="text-muted mb-4">Have questions about our premium Makhana or want to collaborate? We'd love to hear from you!</p>
 
                 <?php
-                // Database se live contacts metrics properties fetch karna
                 $contact_query = "SELECT phone, email, address FROM contacts LIMIT 1";
                 $contact_res = $conn->query($contact_query);
 
-                // Default Configuration Fallbacks (Agar database empty ho)
                 $c_address = "Subhankarpur, Darbhanga, Bihar-846004";
                 $c_email   = "aristowebin@gmail.com";
                 $c_phone   = "+91 99997 28084";
@@ -709,22 +704,18 @@
             <div class="col-md-7">
                 <div class="card p-4 shadow-sm border-0">
                     <?php
-                    // PHPMailer classes import
                     use PHPMailer\PHPMailer\PHPMailer;
                     use PHPMailer\PHPMailer\Exception;
 
-                    // Base configuration parameters setup block
                     $msg_status = "";
                     $msg_class = "";
 
                     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_contact'])) {
-                        // Input parameters sanitization
                         $name    = htmlspecialchars(trim($_POST['full_name']));
                         $email   = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
                         $subject = htmlspecialchars(trim($_POST['subject']));
                         $message = htmlspecialchars(trim($_POST['message']));
 
-                        // Server end validation checks
                         if (empty($name) || empty($email) || empty($subject) || empty($message)) {
                             $msg_status = "⚠️ Please fill in all fields before transmitting data.";
                             $msg_class = "alert-danger";
@@ -733,7 +724,6 @@
                             $msg_class = "alert-danger";
                         } else {
 
-                            // 1. DATABASE INJECTION PIPELINE - STRICTLY MATCHED WITH INQUIRIES TABLE
                             $db_stmt = $conn->prepare("INSERT INTO `inquiries` (`name`, `email`, `subject`, `message`) VALUES (?, ?, ?, ?)");
                             $db_stmt->bind_param("ssss", $name, $email, $subject, $message);
 
@@ -742,28 +732,24 @@
 
                             if ($db_execute_success) {
 
-                                // 2. CORE TARGET EMAIL MODULE SEGMENT USING PHPMAILER
                                 if (file_exists('vendor/autoload.php')) {
                                     require_once 'vendor/autoload.php';
 
                                     $mail = new PHPMailer(true);
 
                                     try {
-                                        // ---- GMAIL SMTP SETTINGS ----
                                         $mail->isSMTP();
                                         $mail->Host       = 'smtp.gmail.com';
                                         $mail->SMTPAuth   = true;
                                         $mail->Username   = 'aristowebin@gmail.com';
-                                        $mail->Password   = 'abcd efgh ijkl mnop'; // <-- 16-character App Password yahan dalo
+                                        $mail->Password   = 'kzte hzkh tysh cezg'; // <-- 16-character App Password yahan dalo
                                         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                                         $mail->Port       = 587;
 
-                                        // ---- SENDER & RECEIVER ----
                                         $mail->setFrom('aristowebin@gmail.com', 'AristoNut Webportal');
                                         $mail->addAddress('aristowebin@gmail.com', 'AristoNut Admin');
                                         $mail->addReplyTo($email, $name);
 
-                                        // ---- EMAIL DESIGN / CONTENT ----
                                         $mail->isHTML(true);
                                         $mail->Subject = "AristoNut Contact Form: " . $subject;
 
@@ -784,11 +770,9 @@
 
                                         $mail->send();
 
-                                        // Success message set
-                                        $msg_status = "🎉 Your inquiry has been submitted and recorded inside our database! Our support team will get back to you shortly.";
+                                        $msg_status = "🎉 Your inquiry has been submitted! Our support team will get back to you shortly.";
                                         $msg_class = "alert-success";
 
-                                        // Clean variables
                                         $name = $email = $subject = $message = "";
                                     } catch (Exception $e) {
                                         $msg_status = "⚠️ Data saved to database, but email delivery failed. Error: " . $mail->ErrorInfo;
@@ -799,7 +783,6 @@
                                     $msg_class = "alert-danger";
                                 }
                             } else {
-                                // DB Transaction Break Log Trace Event Response
                                 $msg_status = "❌ Internal Database System Fault. Core execution query failed to bind input parameter streams.";
                                 $msg_class = "alert-danger";
                             }
