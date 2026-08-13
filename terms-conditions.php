@@ -3,10 +3,11 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 // Configuration matrix aur routing layer load line 1
-include('config/connect.php'); 
+include('config/connect.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,27 +15,10 @@ include('config/connect.php');
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background: #fffaf5; color: #3E2723; overflow-x: hidden; }
-        .text-brown { color: #ff0100; }
-        
-        /* Legal Layout Custom Styling Canvas */
-        .legal-wrapper-card { background: #ffffff; border-radius: 24px; border: 2px solid #F5E6D3; overflow: hidden; padding: 40px; }
-        .legal-header { background: linear-gradient(135deg, #FFF8F0 0%, #FFE4C4 100%); padding: 40px 0; border-bottom: 2px solid #F5E6D3; text-align: center; margin-bottom: 40px; border-radius: 20px; }
-        
-        .legal-content h4 { color: #ff0100; font-weight: 700; font-size: 1.25rem; margin-top: 25px; margin-bottom: 12px; position: relative; }
-        .legal-content p { color: #5D4037; font-size: 0.95rem; line-height: 1.8; margin-bottom: 15px; text-align: justify; }
-        .legal-content ul { color: #5D4037; font-size: 0.95rem; line-height: 1.8; margin-bottom: 20px; padding-left: 20px; }
-        .legal-content li { margin-bottom: 8px; }
-        
-        @media (max-width: 768px) {
-            .legal-wrapper-card { padding: 25px; }
-            .legal-header { padding: 30px 15px; }
-        }
-    </style>
+
+   
 </head>
+
 <body>
 
     <?php include('inc/header.php'); ?>
@@ -48,7 +32,7 @@ include('config/connect.php');
         </nav>
 
         <div class="card legal-wrapper-card shadow-sm mb-5">
-            
+
             <div class="legal-header">
                 <h1 class="fw-bold text-brown mb-2"><i class="bi bi-file-earmark-gantt-fill me-2"></i> Terms & Conditions</h1>
                 <p class="text-muted mb-0 small">Last Updated: <?php echo date('F d, Y'); ?> • AristoNut Snacks Enterprise</p>
@@ -100,7 +84,8 @@ include('config/connect.php');
     </main>
 
     <?php include('inc/footer.php'); ?>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

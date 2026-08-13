@@ -5,9 +5,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Database module integration layer mapping configuration
-include('config/connect.php'); 
+include('config/connect.php');
 
-// header data output standard formatting trigger code logic encapsulation
 header('Content-Type: application/json');
 
 // ==========================================
@@ -67,13 +66,13 @@ if (isset($_POST['action']) && $_POST['action'] == 'update_quantity') {
                 $_SESSION['cart'][$pid]['quantity']--;
             }
         }
-        
+
         // Single unit lookup evaluation parsing pipeline configuration
         $query = $conn->query("SELECT selling_price FROM products WHERE id = '$pid'");
         $p = $query->fetch_assoc();
-        
+
         $new_subtotal = $p['selling_price'] * $_SESSION['cart'][$pid]['quantity'];
-        
+
         // Final Global compute parsing logic block summary calculation metrics
         $grand_total = 0;
         $total_items = 0;
@@ -105,10 +104,10 @@ if (isset($_POST['action']) && $_POST['action'] == 'update_quantity') {
 // ==========================================
 if (isset($_POST['action']) && $_POST['action'] == 'remove_item') {
     $pid = intval($_POST['product_id']);
-    
+
     if (isset($_SESSION['cart'][$pid])) {
         unset($_SESSION['cart'][$pid]); // Explicit clearing row value attributes data array elements logic
-        
+
         // Re-indexing calculation summary update triggers mapping context evaluation layers
         $grand_total = 0;
         $total_items = 0;
@@ -140,4 +139,3 @@ echo json_encode([
     'message' => 'Direct internal runtime parsing script configuration bypass execution strategy blocked.'
 ]);
 exit();
-?>
