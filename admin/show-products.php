@@ -160,64 +160,81 @@ include "db-conn.php";
                                                     $totalRows = mysqli_fetch_assoc($countResult)['total'];
                                                     $totalPages = ceil($totalRows / $perPage);
 
-                                                    if (mysqli_num_rows($result) > 0) {
-                                                        while ($row = mysqli_fetch_assoc($result)) {
-                                                            $status_text = $row['status'] == "1" ? "Active" : "Inactive";
-                                                            $status_color = $row['status'] == "1" ? "text-success" : "text-danger";
+if (mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $p_db_id = intval($row['id']);
+        $status_text = $row['status'] == "1" ? "Active" : "Inactive";
+        $status_color = $row['status'] == "1" ? "text-success" : "text-danger";
 
-                                                            $image = $row['pro_img'];
-                                                            $images = explode(",", $image);
-                                                            $first_image = $images[0];
-                                                            ?>
-                                                            <tr>
-                                                                <td><?= $sno++ ?></td>
-                                                                <td class="fw-bold">
-                                                                    <?= htmlspecialchars(string: $row['pro_id']) ?>
-                                                                </td>
-                                                                <td><?= htmlspecialchars($row['pro_name']) ?></td>
-                                                                <td><?= htmlspecialchars($row['pro_cate']) ?></td>
-                                                                <td>
-                                                                    <img src="assets/img/uploads/<?= htmlspecialchars($first_image) ?>"
-                                                                        alt="<?= htmlspecialchars($row['pro_name']) ?>"
-                                                                        style="width: 100px;" class="img-thumbnail">
-                                                                </td>
-                                                                <td>
-                                                                    <a href="multiple_img.php?id=<?= $row['pro_id'] ?>" class="btn btn-success btn-sm">Manage
-                                                                        Images</a>
-                                                                </td>
-                                                                <td>
-    <del>
-        ₹<?= number_format((float)$row['mrp'], 2) ?>
-    </del>
-</td>
+        $image = $row['pro_img'];
+        $images = explode(",", $image);
+        $first_image = !empty($images[0]) ? $images[0] : 'no-image.png';
 
-<td class="text-primary">
-    ₹<?= number_format((float)$row['selling_price'], 2) ?>
-</td>
-                                                                    
-                                                                    
-                                                                <td class="<?= $status_color ?>"><?= $status_text ?></td>
+        // 1. Fetch Category Name dynamically instead of raw cate_id
+        $cate_name_display = "N/A";
+        $c_id = $row['pro_cate'];
+        $cat_lookup = mysqli_query($conn, "SELECT categories FROM categories WHERE cate_id = '$c_id' LIMIT 1");
+        if ($cat_lookup && mysqli_num_rows($cat_lookup) > 0) {
+            $cate_name_display = mysqli_fetch_assoc($cat_lookup)['categories'];
+        }
 
-                                                                <td>
-                                                                    <div class="d-flex justify-content-center">
-                                                                        <a href="edit_products.php?edit_product_details=<?= $row['pro_id'] ?>"
-                                                                            class="btn btn-outline-info btn-sm me-2">
-                                                                            <i class="fas fa-edit"></i>
-                                                                        </a>
-                                                                        <a href="product_delete.php?delete=<?= $row['pro_id'] ?>"
-                                                                            class="btn btn-outline-danger btn-sm"
-                                                                            onclick="return confirm('Are you sure you want to delete this product?')">
-                                                                            <i class="fas fa-trash-alt"></i>
-                                                                        </a>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <?php
-                                                        }
-                                                    } else {
-                                                        echo '<tr><td colspan="9" class="text-center text-muted py-4">No products found</td></tr>';
-                                                    }
-                                                    ?>
+        // 2. Fetch Variation Pricing Details
+        $var_check = mysqli_query($conn, "SELECT MIN(single_price) as min_p, MAX(single_price) as max_p, COUNT(id) as total_var FROM product_variations WHERE product_id = '$p_db_id'");
+        $var_data = mysqli_fetch_assoc($var_check);
+
+        $price_display = "₹" . number_format((float)$row['selling_price'], 2);
+        if ($var_data && $var_data['total_var'] > 0) {
+            if ($var_data['min_p'] == $var_data['max_p']) {
+                $price_display = "₹" . number_format((float)$var_data['min_p'], 2);
+            } else {
+                $price_display = "₹" . number_format((float)$var_data['min_p'], 2) . " - ₹" . number_format((float)$var_data['max_p'], 2);
+            }
+            $price_display .= " <br><span class='badge bg-light text-dark border'>" . $var_data['total_var'] . " Packs</span>";
+        }
+        ?>
+        <tr>
+            <td><?= $sno++ ?></td>
+            <td class="fw-bold"><?= htmlspecialchars($row['pro_id']) ?></td>
+            <td class="fw-bold text-start"><?= htmlspecialchars($row['pro_name']) ?></td>
+            <td><span class="badge bg-secondary"><?= htmlspecialchars($cate_name_display) ?></span></td>
+            <td>
+                <img src="assets/img/uploads/<?= htmlspecialchars($first_image) ?>"
+                    alt="<?= htmlspecialchars($row['pro_name']) ?>"
+                    style="width: 60px; height: 60px; object-fit: contain;" class="img-thumbnail"
+                    onerror="this.src='assets/img/no-image.png'">
+            </td>
+            <td>
+                <a href="multiple_img.php?id=<?= $row['pro_id'] ?>" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-images me-1"></i> Images
+                </a>
+            </td>
+            <td>
+                <del class="text-muted">₹<?= number_format((float)$row['mrp'], 2) ?></del>
+            </td>
+            <td class="price-highlight">
+                <?= $price_display ?>
+            </td>
+            <td class="<?= $status_color ?> fw-bold"><?= $status_text ?></td>
+            <td>
+                <div class="d-flex justify-content-center">
+                    <a href="edit_products.php?edit_product_details=<?= $row['pro_id'] ?>"
+                        class="btn btn-outline-info btn-sm me-2" title="Edit Product">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="product_delete.php?delete=<?= $row['pro_id'] ?>"
+                        class="btn btn-outline-danger btn-sm"
+                        onclick="return confirm('Are you sure you want to delete this product?')" title="Delete Product">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        <?php
+    }
+} else {
+    echo '<tr><td colspan="10" class="text-center text-muted py-4">No products found</td></tr>';
+}
+?>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -265,12 +282,12 @@ include "db-conn.php";
     <script>
         // Initialize tooltips
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
 
         // Focus search input when search icon is clicked
-        document.querySelector('.search-box i').addEventListener('click', function () {
+        document.querySelector('.search-box i').addEventListener('click', function() {
             this.parentElement.querySelector('input').focus();
         });
     </script>

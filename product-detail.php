@@ -4,33 +4,38 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include('config/connect.php'); // Database & Global $site Config Layer
 
-// 1. URL Parameter Validation & Sanitization (Slug Tracking)
+// URL Parameter Validation
 if (isset($_GET['slug']) && !empty($_GET['slug'])) {
     $slug = $conn->real_escape_string($_GET['slug']);
 
-    // Database se product details fetch karna matching slug query standard se
     $query = $conn->query("SELECT * FROM products WHERE slug_url = '$slug' AND status = 1 LIMIT 1");
 
     if ($query && $query->num_rows > 0) {
         $product = $query->fetch_assoc();
 
-        // Data nodes dynamic separation mapping matrix variables
         $p_id = $product['id'];
         $p_name = htmlspecialchars($product['pro_name']);
         $p_mrp = $product['mrp'];
         $p_price = $product['selling_price'];
-        $p_weight = htmlspecialchars($product['qty']); // Qty field used for weight context
-
-        // Global $site base routing matrix parameters for absolute image assets path mapping
+        
         $p_img = $site . 'admin/assets/img/uploads/' . htmlspecialchars($product['pro_img']);
+        $p_short_desc = $product['short_desc']; 
+        $p_long_desc = $product['description']; 
 
-        $p_short_desc = $product['short_desc']; // Contains paragraph HTML text block
-        $p_long_desc = $product['description']; // Contains long descriptive data node block
-
-        // SEO Meta Optimization dynamically map indicators
         $seo_title = htmlspecialchars($product['meta_title']);
         $seo_desc = htmlspecialchars($product['meta_desc']);
         $seo_keywords = htmlspecialchars($product['meta_key']);
+        
+        // --- Fetch Variations ---
+        $variations = [];
+        $var_query = $conn->query("SELECT * FROM product_variations WHERE product_id = '$p_id' ORDER BY id ASC");
+        if ($var_query && $var_query->num_rows > 0) {
+            while ($row = $var_query->fetch_assoc()) {
+                $variations[] = $row;
+            }
+        }
+        $variations_json = json_encode($variations);
+
     } else {
         header("Location: " . $site . "index.php");
         exit();
@@ -42,18 +47,78 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title><?php echo $seo_title; ?> - AristoNut</title>
     <meta name="description" content="<?php echo $seo_desc; ?>">
     <meta name="keywords" content="<?php echo $seo_keywords; ?>">   
+    
+    <style>
+        .variation-radio { display: none !important; }
+        .variation-label {
+            display: inline-block;
+            cursor: pointer;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            color: #5D4037;
+            background: #ffffff;
+            font-weight: 600;
+            padding: 8px 16px;
+            transition: all 0.3s ease-in-out;
+            margin-bottom: 5px;
+        }
+        .variation-label:hover { border-color: #8B4513; background: #FFF8F0; }
+        .variation-radio:checked + .variation-label {
+            border-color: #8B4513;
+            background-color: #8B4513;
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(139, 69, 19, 0.3);
+        }
+        .qty-btn {
+            border: 2px solid #F5E6D3;
+            background: #FFF8F0;
+            color: #8B4513;
+            font-weight: bold;
+            font-size: 1.2rem;
+            width: 45px;
+        }
+        .qty-btn:hover { background: #8B4513; color: white; border-color: #8B4513; }
+        .qty-input {
+            border-top: 2px solid #F5E6D3 !important;
+            border-bottom: 2px solid #F5E6D3 !important;
+            border-left: none !important;
+            border-right: none !important;
+            background: #ffffff !important;
+            font-size: 1.2rem;
+        }
+        .btn-add-detail {
+            background-color: #8B4513;
+            color: white;
+            padding: 14px 24px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            width: 100%;
+            border: none;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+        .btn-add-detail:hover { background-color: #6D3410; color: white; transform: translateY(-2px); }
+        
+        /* Thumbnail Selection CSS */
+        .var-thumb {
+            width: 70px; height: 70px; object-fit: contain; cursor: pointer;
+            border: 2px solid #eee; border-radius: 8px; transition: 0.3s;
+            background: #fff;
+        }
+        .var-thumb.active-thumb {
+            border-color: #8B4513;
+            box-shadow: 0 4px 8px rgba(139, 69, 19, 0.2);
+        }
+    </style>
 </head>
 
 <body>
-
     <?php include('inc/header.php'); ?>
 
     <main class="container py-5">
@@ -65,58 +130,99 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
             </ol>
         </nav>
 
-        <div class="card detail-wrapper-card p-4 shadow-sm mb-5">
+        <div class="card detail-wrapper-card p-4 shadow-sm mb-5 border-0" style="border-radius: 16px;">
             <div class="row g-5">
 
+                <!-- Image Section with Thumbnails -->
                 <div class="col-md-6">
-                    <div class="detail-image-box" id="magnify-container-node">
-                        <img src="<?php echo $p_img; ?>" alt="<?php echo $p_name; ?>" id="magnify-target-img">
+                    <div class="detail-image-box rounded p-3 text-center" id="magnify-container-node" style="background: #fbfbfb; border: 1px solid #eee;">
+                        <img src="<?php echo $p_img; ?>" alt="<?php echo $p_name; ?>" id="magnify-target-img" style="max-height: 400px; width: 100%; object-fit: contain;">
                     </div>
+                    
+                    <!-- DYNAMIC THUMBNAILS -->
+                    <?php if(!empty($variations)): ?>
+                    <div class="d-flex gap-2 mt-3 overflow-auto pb-2" id="variation-thumbnails">
+                        <?php foreach($variations as $index => $var): ?>
+                            <?php $thumb_img = !empty($var['image_path']) ? $site . 'admin/assets/img/uploads/' . $var['image_path'] : $p_img; ?>
+                            <img src="<?php echo $thumb_img; ?>" 
+                                 class="var-thumb <?php echo $index === 0 ? 'active-thumb' : ''; ?>" 
+                                 data-index="<?php echo $index; ?>"
+                                 alt="<?php echo $var['weight_size']; ?>"
+                                 title="<?php echo $var['weight_size']; ?>">
+                        <?php endforeach; ?>
+                    </div>
+                    <?php endif; ?>
                 </div>
 
-                <div class="col-md-6 d-flex flex-column justify-content-center">
-                    <span class="badge align-self-start bg-success mb-2 px-3 py-2 rounded-pill"><i class="bi bi-shield-check me-1"></i> In Stock</span>
+                <!-- Product Details Section -->
+                <div class="col-md-6 d-flex flex-column">
+                    <span class="badge align-self-start bg-success mb-2 px-3 py-2 rounded-pill" id="stock-badge"><i class="bi bi-shield-check me-1"></i> In Stock</span>
                     <h1 class="fw-bold text-brown mb-2"><?php echo $p_name; ?></h1>
 
-                    <div class="d-flex align-items-center gap-3 mb-4">
-                        <span class="weight-badge"><i class="bi bi-box-seam me-2"></i>Net Weight: <?php echo $p_weight; ?>g</span>
-                    </div>
-
-                    <div class="mb-4">
+                    <!-- Price Display -->
+                    <div class="mb-3 mt-2 border-bottom pb-3">
                         <div class="d-flex align-items-baseline gap-2">
-                            <span class="price-badge-strip">₹<?php echo $p_price; ?></span>
-                            <?php if (!empty($p_mrp) && $p_mrp > $p_price): ?>
-                                <span class="mrp-strike">MRP ₹<?php echo $p_mrp; ?></span>
-                            <?php endif; ?>
+                            <span class="price-badge-strip text-dark fs-2 fw-bold" id="display-price">₹<?php echo $p_price; ?></span>
+                            <span class="text-muted fw-bold fs-5" id="display-total-price"></span>
                         </div>
                         <small class="text-success fw-bold"><i class="bi bi-tags-fill me-1"></i> Inclusive of all regional taxes</small>
                     </div>
 
-                    <div class="product-short-summary text-muted mb-4 fs-6">
-                        <?php echo $p_short_desc; ?>
-                    </div>
-
-                    <div class="row mt-auto">
-                        <div class="col-xl-8">
-                            <button type="button" class="btn btn-add-detail" onclick="addToCart(<?php echo $p_id; ?>)">
-                                <i class="bi bi-bag-plus-fill me-2"></i> Add To Premium Basket
-                            </button>
+                    <!-- Variations Selector -->
+                    <?php if(!empty($variations)): ?>
+                    <div class="variation-selector mb-3">
+                        <h6 class="text-muted fw-bold mb-2">Select Pack Size:</h6>
+                        <div class="d-flex flex-wrap gap-2" id="weight-options">
+                            <?php foreach($variations as $index => $var): ?>
+                                <input type="radio" class="variation-radio" name="pack_size" id="var_<?php echo $var['id']; ?>" value="<?php echo $var['id']; ?>" <?php echo $index === 0 ? 'checked' : ''; ?> data-index="<?php echo $index; ?>">
+                                <label class="variation-label" for="var_<?php echo $var['id']; ?>">
+                                    <?php echo htmlspecialchars($var['weight_size']); ?>
+                                </label>
+                            <?php endforeach; ?>
                         </div>
                     </div>
-                </div>
+                    <?php endif; ?>
 
-            </div>
-        </div>
+                    <!-- Quantity & Add to Cart -->
+                    <div class="bg-white p-3 rounded-3 mb-3 border shadow-sm">
+                        <h6 class="text-muted fw-bold mb-3">Quantity:</h6>
+                        <div class="d-flex align-items-center gap-3 flex-wrap">
+                            <div class="input-group" style="width: 140px;">
+                                <button class="btn qty-btn" type="button" id="btn-qty-minus"><i class="bi bi-dash"></i></button>
+                                <input type="text" class="form-control text-center text-dark fw-bold qty-input" id="product-qty" value="1" readonly>
+                                <button class="btn qty-btn" type="button" id="btn-qty-plus"><i class="bi bi-plus"></i></button>
+                            </div>
+                            <div class="flex-grow-1">
+                                <button type="button" class="btn btn-add-detail" id="custom-add-to-cart-btn">
+                                    <i class="bi bi-lock-fill me-1"></i> ADD TO BASKET
+                                </button>
+                            </div>
+                        </div>
 
-        <div class="card detail-wrapper-card p-4 shadow-sm">
-            <ul class="nav nav-tabs mb-4" id="productTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="desc-tab" data-bs-toggle="tab" data-bs-target="#desc-pane" type="button" role="tab">Detailed Overview</button>
-                </li>
-            </ul>
-            <div class="tab-content text-muted p-2" id="productTabContent">
-                <div class="tab-pane fade show active" id="desc-pane" role="tabpanel" aria-labelledby="desc-tab">
-                    <div class="lh-lg fs-6"><?php echo $p_long_desc; ?></div>
+                        <!-- BULK DISCOUNT TABLE (Dynamic) -->
+                        <div id="bulk-pricing-table-container" class="mt-4 pt-3 border-top" style="display: none;">
+                            <p class="fw-bold text-success mb-2 small"><i class="bi bi-percent"></i> Bulk Discount Applied on High Quantities!</p>
+                            <table class="table table-sm table-bordered text-center align-middle mb-0 bg-light" style="font-size: 0.85rem;">
+                                <thead class="table-secondary text-muted">
+                                    <tr>
+                                        <th>Quantity</th>
+                                        <th>4+ Packs</th>
+                                        <th>5+ Packs</th>
+                                        <th>6+ Packs</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Price/Pack</td>
+                                        <td id="bp-4" class="fw-bold text-brown">-</td>
+                                        <td id="bp-5" class="fw-bold text-brown">-</td>
+                                        <td id="bp-6" class="fw-bold text-brown">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <small class="text-danger fw-bold mt-2 d-block" id="bulk-discount-msg" style="display:none;"></small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -125,38 +231,160 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
     <?php include('inc/footer.php'); ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const containerNode = document.getElementById("magnify-container-node");
+            
             const targetImg = document.getElementById("magnify-target-img");
+            const variations = <?php echo !empty($variations_json) ? $variations_json : '[]'; ?>;
+            const baseImgUrl = '<?php echo $site . "admin/assets/img/uploads/"; ?>';
+            const defaultImg = '<?php echo $p_img; ?>';
 
-            // Execute hover panning only on screens greater than mobile thresholds
-            if (window.innerWidth > 768) {
-                containerNode.addEventListener("mousemove", function(e) {
-                    const rect = containerNode.getBoundingClientRect();
+            let currentVariation = variations.length > 0 ? variations[0] : null;
+            let qty = 1;
 
-                    // Get mouse coordinates relative to the image container box bounds
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
+            // Thumbnail Click Event
+            document.querySelectorAll('.var-thumb').forEach(thumb => {
+                thumb.addEventListener('click', function() {
+                    const index = this.getAttribute('data-index');
+                    // Radio button ko programmatically click karna
+                    const radio = document.querySelectorAll('.variation-radio')[index];
+                    radio.checked = true;
+                    radio.dispatchEvent(new Event('change'));
+                });
+            });
 
-                    // Convert coordinates to exact target matrix percentages
-                    const xPercent = (x / rect.width) * 100;
-                    const yPercent = (y / rect.height) * 100;
+            function updateUI() {
+                if(!currentVariation) return;
 
-                    // Lock the zoom-origin tracking node dynamically matching the cursor context
-                    targetImg.style.transformOrigin = `${xPercent}% ${yPercent}%`;
-                    targetImg.style.transform = "scale(2.2)"; // Adjust magnification power profile multiplier here
+                let unitPrice = parseFloat(currentVariation.single_price);
+                let discountMsg = "";
+
+                // Bulk Price Logic
+                if (qty >= 6 && currentVariation.price_6_plus !== null && parseFloat(currentVariation.price_6_plus) > 0) {
+                    unitPrice = parseFloat(currentVariation.price_6_plus);
+                    discountMsg = "Super Saver: 6+ Bulk Price Applied! 💥";
+                } else if (qty >= 5 && currentVariation.price_5_plus !== null && parseFloat(currentVariation.price_5_plus) > 0) {
+                    unitPrice = parseFloat(currentVariation.price_5_plus);
+                    discountMsg = "Mega Saver: 5+ Bulk Price Applied! 🔥";
+                } else if (qty >= 4 && currentVariation.price_4_plus !== null && parseFloat(currentVariation.price_4_plus) > 0) {
+                    unitPrice = parseFloat(currentVariation.price_4_plus);
+                    discountMsg = "Smart Saver: 4+ Bulk Price Applied! 🎉";
+                }
+
+                let totalPrice = unitPrice * qty;
+
+                // Update Price
+                document.getElementById('display-price').innerHTML = '₹' + unitPrice.toFixed(2) + ' <span class="fs-6 text-muted fw-normal">(' + currentVariation.weight_size + ')</span>';
+                if(qty > 1) document.getElementById('display-total-price').innerText = '(Total: ₹' + totalPrice.toFixed(2) + ')';
+                else document.getElementById('display-total-price').innerText = '';
+
+                // Update Discount Message
+                const msgEl = document.getElementById('bulk-discount-msg');
+                if(discountMsg) { msgEl.innerText = discountMsg; msgEl.style.display = 'block'; } 
+                else { msgEl.style.display = 'none'; }
+
+                // Show Bulk Pricing Table dynamically
+                const bpContainer = document.getElementById('bulk-pricing-table-container');
+                let hasBulk = false;
+                if(currentVariation.price_4_plus > 0) { document.getElementById('bp-4').innerText = '₹' + currentVariation.price_4_plus; hasBulk = true; } else { document.getElementById('bp-4').innerText = '-'; }
+                if(currentVariation.price_5_plus > 0) { document.getElementById('bp-5').innerText = '₹' + currentVariation.price_5_plus; hasBulk = true; } else { document.getElementById('bp-5').innerText = '-'; }
+                if(currentVariation.price_6_plus > 0) { document.getElementById('bp-6').innerText = '₹' + currentVariation.price_6_plus; hasBulk = true; } else { document.getElementById('bp-6').innerText = '-'; }
+                
+                bpContainer.style.display = hasBulk ? 'block' : 'none';
+
+                // Update Image
+                if (currentVariation.image_path && currentVariation.image_path.trim() !== '') {
+                    targetImg.src = baseImgUrl + currentVariation.image_path;
+                } else {
+                    targetImg.src = defaultImg;
+                }
+
+                // Highlight Active Thumbnail
+                document.querySelectorAll('.var-thumb').forEach(thumb => {
+                    if(thumb.getAttribute('data-index') == variations.indexOf(currentVariation)) {
+                        thumb.classList.add('active-thumb');
+                    } else {
+                        thumb.classList.remove('active-thumb');
+                    }
                 });
 
-                // Revert image back to default scaling layout bounds on mouse leave parameters
-                containerNode.addEventListener("mouseleave", function() {
-                    targetImg.style.transform = "scale(1)";
-                    targetImg.style.transformOrigin = "center center";
-                });
+                // Update Stock Status
+                const stockBadge = document.getElementById('stock-badge');
+                if(parseInt(currentVariation.stock) > 0) {
+                    stockBadge.className = "badge align-self-start bg-success mb-2 px-3 py-2 rounded-pill";
+                    stockBadge.innerHTML = '<i class="bi bi-shield-check me-1"></i> In Stock';
+                } else {
+                    stockBadge.className = "badge align-self-start bg-danger mb-2 px-3 py-2 rounded-pill";
+                    stockBadge.innerHTML = '<i class="bi bi-x-circle me-1"></i> Out of Stock';
+                }
             }
+
+            // Radio Button Events
+            document.querySelectorAll('.variation-radio').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const index = this.getAttribute('data-index');
+                    currentVariation = variations[index];
+                    qty = 1; 
+                    document.getElementById('product-qty').value = qty;
+                    updateUI();
+                });
+            });
+
+            // QTY Events
+            document.getElementById('btn-qty-plus').addEventListener('click', () => {
+                if (currentVariation && qty < parseInt(currentVariation.stock)) {
+                    qty++; document.getElementById('product-qty').value = qty; updateUI();
+                }
+            });
+
+            document.getElementById('btn-qty-minus').addEventListener('click', () => {
+                if (qty > 1) { qty--; document.getElementById('product-qty').value = qty; updateUI(); }
+            });
+
+            // =====================================
+            // REAL ADD TO CART AJAX EXECUTION
+            // =====================================
+            // =====================================
+// REAL ADD TO CART AJAX EXECUTION
+// =====================================
+document.getElementById('custom-add-to-cart-btn').addEventListener('click', () => {
+    if (currentVariation && parseInt(currentVariation.stock) > 0) {
+        let productId = <?php echo $p_id; ?>;
+        let variationId = currentVariation.id;
+        let finalQty = qty;
+        
+        $.ajax({
+            url: '<?php echo $site; ?>cart_action.php', // <--- Yahan file ka naam theek kar diya gaya hai
+            type: 'POST',
+            data: {
+                action: 'add_to_cart',
+                product_id: productId,
+                variation_id: variationId,
+                quantity: finalQty
+            },
+            dataType: 'json',
+            success: function(response) {
+                if(response.status === 'success') {
+                    // Header Cart Badge Update
+                    $('.cart-count').text(response.cart_count);
+                    alert("Success: " + finalQty + " Pack of " + currentVariation.weight_size + " added to your basket!");
+                } else {
+                    alert("Error: " + response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                alert("System Error: Could not connect to the cart server. Check console for details.");
+            }
+        });
+    } else {
+        alert('Cannot add out of stock item to basket.');
+    }
+});
+            updateUI();
         });
     </script>
 </body>
-
 </html>

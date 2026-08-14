@@ -260,19 +260,108 @@ $check = mysqli_query($conn, $sql);
                                                                 <textarea class="form-control" name="pro_desc" required ></textarea>
                                                             </div>
 
-                                                            <div class="col-md-6 mb-3">
-                                                                <label class="form-label"
-                                                                    for="inputEmail4">MRP</label>
-                                                                <input type="text" class="form-control" name="mrp"
-                                                                    id="inputEmail4" placeholder="MRP" />
-                                                            </div>
-                                                            <div class="col-md-6 mb-3">
-                                                                <label class="form-label"
-                                                                    for="inputEmail4">Selling Price</label>
-                                                                <input type="text" class="form-control" name="selling_price"
-                                                                    id="inputEmail4" placeholder="Selling Price" />
-                                                            </div>
+                                                          <!-- Yahan se purana MRP, Selling Price, Qty, aur Stock hata do -->
+<!-- Custom CSS for clean UI & Contrast -->
+<style>
+    .variation-card {
+        background: #ffffff;
+        border: 1px solid #e1e5eb;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .variation-header {
+        background: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+        padding: 15px 20px;
+        border-radius: 8px 8px 0 0;
+    }
+    .table-variations thead th {
+        background-color: #343a40 !important; /* Dark background fixing visibility issue */
+        color: #ffffff !important; /* Pure white text */
+        font-weight: 500;
+        text-align: center;
+        border: none;
+    }
+    .table-variations td {
+        vertical-align: middle;
+    }
+</style>
 
+<div class="col-md-12 mb-4 mt-3">
+    <div class="variation-card">
+        <div class="variation-header">
+            <h5 class="m-0 text-dark fw-bold"><i class="ti-layers text-primary"></i> Product Variations (Weight, Price & Images)</h5>
+        </div>
+        <div class="p-3">
+            <div class="table-responsive">
+                <table class="table table-bordered table-variations" id="variation_table">
+                    <thead>
+                        <tr>
+                            <th>Weight/Size <span class="text-danger">*</span></th>
+                            <th>Single Price (₹) <span class="text-danger">*</span></th>
+                            <th>4+ Price (₹)</th>
+                            <th>5+ Price (₹)</th>
+                            <th>6+ Price (₹)</th>
+                            <th>Stock <span class="text-danger">*</span></th>
+                            <th>Image</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="variation_body">
+                        <?php
+                        // Agar pehle se variations exist karte hain, to loop chalayenge
+                        if (isset($variations_result) && mysqli_num_rows($variations_result) > 0) {
+                            while ($var = mysqli_fetch_assoc($variations_result)) {
+                                ?>
+                                <tr>
+                                    <!-- Hidden ID taaki backend samajh sake ki yeh update karna hai -->
+                                    <input type="hidden" name="var_id[]" value="<?= $var['id'] ?>">
+                                    
+                                    <td><input type="text" name="var_weight[]" class="form-control" value="<?= htmlspecialchars($var['weight_size']) ?>" required></td>
+                                    <td><input type="number" step="0.01" name="var_price[]" class="form-control" value="<?= $var['single_price'] ?>" required></td>
+                                    <td><input type="number" step="0.01" name="var_price_4[]" class="form-control" value="<?= $var['price_4_plus'] ?>"></td>
+                                    <td><input type="number" step="0.01" name="var_price_5[]" class="form-control" value="<?= $var['price_5_plus'] ?>"></td>
+                                    <td><input type="number" step="0.01" name="var_price_6[]" class="form-control" value="<?= $var['price_6_plus'] ?>"></td>
+                                    <td><input type="number" name="var_stock[]" class="form-control" value="<?= $var['stock'] ?>" required></td>
+                                    <td class="text-center">
+                                        <input type="file" name="var_img[]" class="form-control mb-1" accept="image/*">
+                                        <?php if(!empty($var['image_path'])): ?>
+                                            <img src="assets/img/uploads/<?= $var['image_path'] ?>" width="40" height="40" style="object-fit:cover; border-radius:5px; border:1px solid #ddd;">
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-danger btn-sm remove-row fw-bold"><i class="ti-minus"></i></button>
+                                    </td>
+                                </tr>
+                                <?php
+                            }
+                        } else {
+                            // Agar purana product hai aur koi variation nahi hai, to ek blank row dikhayenge
+                            ?>
+                            <tr>
+                                <input type="hidden" name="var_id[]" value="0"> <!-- 0 means new insert -->
+                                <td><input type="text" name="var_weight[]" class="form-control" placeholder="e.g. 100g" required></td>
+                                <td><input type="number" step="0.01" name="var_price[]" class="form-control" required></td>
+                                <td><input type="number" step="0.01" name="var_price_4[]" class="form-control"></td>
+                                <td><input type="number" step="0.01" name="var_price_5[]" class="form-control"></td>
+                                <td><input type="number" step="0.01" name="var_price_6[]" class="form-control"></td>
+                                <td><input type="number" name="var_stock[]" class="form-control" required></td>
+                                <td><input type="file" name="var_img[]" class="form-control" accept="image/*"></td>
+                                <td class="text-center"><button type="button" class="btn btn-danger btn-sm remove-row fw-bold"><i class="ti-minus"></i></button></td>
+                            </tr>
+                            <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+                <div class="mt-3 text-end">
+                    <button type="button" class="btn btn-success add-row fw-bold"><i class="ti-plus"></i> Add New Variation</button>
+                </div>
+            </div>
+            <small class="text-muted mt-2 d-block"><i class="ti-info-alt text-primary"></i> Note: Leave 4+, 5+, 6+ price empty if you don't want to give bulk discount for a specific weight.</small>
+        </div>
+    </div>
+</div>
                                                             <!-- <div class="col-md-6 mb-3">
                                                                 <label class="form-label"
                                                                     for="inputEmail4">Discount in % </label>
@@ -373,3 +462,27 @@ $check = mysqli_query($conn, $sql);
                 })
             }
         </script>
+       <script>
+    $(document).ready(function() {
+        // Add new variation row dynamically
+        $(document).on('click', '.add-row', function() {
+            var html = `<tr>
+                <input type="hidden" name="var_id[]" value="0"> <!-- New entry logic -->
+                <td><input type="text" name="var_weight[]" class="form-control" placeholder="e.g. 200g" required></td>
+                <td><input type="number" step="0.01" name="var_price[]" class="form-control" required></td>
+                <td><input type="number" step="0.01" name="var_price_4[]" class="form-control"></td>
+                <td><input type="number" step="0.01" name="var_price_5[]" class="form-control"></td>
+                <td><input type="number" step="0.01" name="var_price_6[]" class="form-control"></td>
+                <td><input type="number" name="var_stock[]" class="form-control" required></td>
+                <td><input type="file" name="var_img[]" class="form-control" accept="image/*"></td>
+                <td class="text-center"><button type="button" class="btn btn-danger btn-sm remove-row fw-bold"><i class="ti-minus"></i></button></td>
+            </tr>`;
+            $('#variation_body').append(html);
+        });
+
+        // Remove variation row from UI
+        $(document).on('click', '.remove-row', function() {
+            $(this).closest('tr').remove();
+        });
+    });
+</script>
