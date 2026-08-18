@@ -489,50 +489,38 @@ body {
     }
 }
 
+/* ========================================= */
 .hero-badge {
     position: absolute;
-    
-    /* 1. Purane values ko override karna zaroori hai taaki stretch na ho */
     top: auto !important; 
-    left: auto !important;
-    
-    /* 2. Nayi position: Image ke bottom-right mein set kiya jahan jagah khali hoti hai */
-    top: 5px !important; 
-    left: 5px !important; 
-    
-    /* 3. Height aur Width ko restrict kiya */
+    bottom: 30px !important; /* Bottom mein shift kiya taaki top logo clear rahe */
+    left: -15px !important; /* Image ke thoda bahar nikala premium look ke liye */
     height: auto !important; 
     width: max-content;
     min-width: 120px;
-    
-    /* 4. Glassmorphism effect aur styling */
     background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(8px);
-    padding: 5px 15px !important;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(139, 69, 19, 0.15);
-    border: 1px solid rgba(139, 69, 19, 0.1);
-    
-    /* 5. Content alignment */
+    backdrop-filter: blur(10px);
+    padding: 10px 15px !important;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(139, 69, 19, 0.15);
+    border: 1px solid rgba(139, 69, 19, 0.08);
     text-align: center;
     display: inline-flex; 
     flex-direction: column;
     justify-content: center;
     align-items: center;
     z-index: 10;
-    
-    /* 6. Smooth hover animation */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: floatBadge 4s ease-in-out infinite; /* Floating animation */
 }
 
-.hero-badge:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(139, 69, 19, 0.25);
+@keyframes floatBadge {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(139, 69, 19, 0.2); }
 }
 
 .hero-badge .stars {
     color: #ff9900; 
-    font-size: 1rem !important;
+    font-size: 1.1rem !important;
     letter-spacing: 2px;
     line-height: 1;
     margin-bottom: 4px;
@@ -541,12 +529,12 @@ body {
 .hero-badge .rating {
     font-weight: 800;
     color: #3e2723;
-    font-size: 1.1rem !important;
+    font-size: 1.3rem !important;
     line-height: 1.2;
 }
 
 .hero-badge small {
-    font-size: 0.7rem !important;
+    font-size: 0.75rem !important;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -992,3 +980,279 @@ body {
         padding: 20px 15px;
     }
 }
+
+/* ========================================= */
+/* MODERN VIDEO-STYLE PRODUCT CARDS          */
+/* ========================================= */
+.modern-product-card {
+    background-color: #F4F5F7; 
+    border-radius: 28px; 
+    padding: 25px 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modern-product-card:hover {
+    background-color: #FFFFFF;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+    border-color: #EAEAEA;
+    transform: translateY(-6px);
+}
+
+.modern-wishlist-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #FFFFFF;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    cursor: pointer;
+    z-index: 10;
+    color: #A0A0A0;
+    transition: 0.3s ease;
+}
+
+.modern-wishlist-btn:hover {
+    color: #ff0100;
+    transform: scale(1.1);
+}
+
+.modern-img-circle {
+    width: 140px;
+    height: 140px;
+    background-color: #FFFFFF;
+    border-radius: 50%;
+    margin: 0 auto 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+.modern-img-circle img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-product-card:hover .modern-img-circle img {
+    transform: rotate(360deg) scale(1.1); 
+}
+
+.modern-product-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.modern-product-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2D3436;
+    margin-bottom: 4px;
+}
+
+.modern-product-weight {
+    font-size: 0.85rem;
+    color: #8D6E63;
+    margin-bottom: 12px;
+}
+
+.modern-product-price {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #8B4513;
+    margin-bottom: 18px;
+}
+
+.modern-btn-add {
+    background-color: transparent;
+    color: #8B4513;
+    border: 1.5px solid #8B4513;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s;
+    margin-top: auto;
+    width: 100%;
+}
+
+.modern-btn-add:hover {
+    background-color: #8B4513;
+    color: #FFFFFF;
+}
+
+/* Blog Section Styling */
+.blog-card {
+    transition: 0.3s;
+}
+.blog-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(139, 69, 19, 0.1) !important;
+}
+
+/* ========================================= */
+/* DYNAMIC BLOG SECTION STYLING              */
+/* ========================================= */
+.blog-card {
+    transition: 0.3s ease;
+    background: #ffffff;
+}
+.blog-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(139, 69, 19, 0.1) !important;
+}
+.blog-img-wrapper {
+    position: relative;
+    overflow: hidden;
+    height: 220px;
+    border-radius: 16px 16px 0 0;
+}
+.blog-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+.blog-card:hover .blog-img-wrapper img {
+    transform: scale(1.05);
+}
+.blog-date-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: #ff0100;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+
+/* =================== */
+/* About us page  */
+/* =================== */
+
+  :root {
+    --primary-color: #d90429;
+    --primary-dark: #b8001f;
+    --dark-green: #2b9348;
+    --soft-bg: #fff8f5;
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    --hover-shadow: 0 15px 35px rgba(217, 4, 41, 0.15);
+  }
+
+  .about-hero {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)), url('assets/images/1.png') center/cover no-repeat;
+    padding: 100px 0;
+    color: #ffffff;
+    text-align: center;
+  }
+
+  .section-tag {
+    display: inline-block;
+    background-color: rgba(217, 4, 41, 0.1);
+    color: var(--primary-color);
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .feature-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 30px 24px;
+    box-shadow: var(--card-shadow);
+    transition: all 0.4s ease;
+    height: 100%;
+    border: 1px solid #f0f0f0;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--hover-shadow);
+    border-color: rgba(217, 4, 41, 0.2);
+  }
+
+  .icon-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    background: rgba(217, 4, 41, 0.1);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    margin-bottom: 20px;
+    transition: 0.3s ease;
+  }
+
+  .feature-card:hover .icon-box {
+    background: var(--primary-color);
+    color: #ffffff;
+  }
+
+  .badge-tag {
+    background: #ffffff;
+    border: 1px solid #eee;
+    padding: 10px 18px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+  }
+
+  .badge-tag:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: scale(1.03);
+  }
+
+  .stat-card {
+    background: var(--soft-bg);
+    border-radius: 12px;
+    padding: 20px;
+    border-left: 4px solid var(--primary-color);
+  }
+
+  .vision-mission-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: var(--card-shadow);
+    border-top: 5px solid var(--primary-color);
+    height: 100%;
+  }
+
+  .cta-section {
+    background: linear-gradient(135deg, #2b2d42 0%, #1a1a24 100%);
+    border-radius: 24px;
+    color: #ffffff;
+    padding: 60px 40px;
+  }

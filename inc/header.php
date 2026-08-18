@@ -39,6 +39,7 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/privacy.css">
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/product.css">
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/wishlist.css">
+    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/blog.css">
 </head>
 
 <body>
@@ -115,6 +116,7 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
                     </li>
 
                     <li class="nav-item"><a class="nav-link" href="<?php echo $site; ?>about.php">ABOUT</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo $site; ?>blog.php">BLOG</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?php echo $site; ?>contact.php">CONTACT</a></li>
                 </ul>
 

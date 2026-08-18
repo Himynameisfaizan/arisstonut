@@ -656,3 +656,176 @@
         font-size: 2.5rem;
     }
 }
+
+/* ========================================= */
+/* MODERN VIDEO-STYLE PRODUCT CARDS (NEW)    */
+/* ========================================= */
+.modern-product-card {
+    background-color: #F4F5F7;
+    /* Soft light grey background from video */
+    border-radius: 28px;
+    /* Highly rounded corners */
+    padding: 25px 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modern-product-card:hover {
+    background-color: #FFFFFF;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+    border-color: #EAEAEA;
+    transform: translateY(-6px);
+}
+
+.modern-wishlist-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #FFFFFF;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+    z-index: 10;
+    color: #A0A0A0;
+    transition: 0.3s ease;
+}
+
+.modern-wishlist-btn:hover {
+    color: #ff0100;
+    transform: scale(1.1);
+}
+
+/* White Circle for Image as seen in the video */
+.modern-img-circle {
+    width: 140px;
+    height: 140px;
+    background-color: #FFFFFF;
+    border-radius: 50%;
+    margin: 0 auto 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    transition: transform 0.4s ease;
+}
+
+.modern-product-card:hover .modern-img-circle {
+    transform: scale(1.08);
+}
+
+/* Image par smooth transition lagana zaroori hai taaki jhatke se rotate na ho */
+.modern-img-circle img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    /* 0.8 seconds ki smooth animation */
+}
+
+/* Jab card par hover ho to circle thoda pop hoga (already tha) */
+.modern-product-card:hover .modern-img-circle {
+    transform: scale(1.08);
+}
+
+/* NAYA CODE: Hover karne par image 360 degree ghumegi aur thodi si zoom hogi */
+.modern-product-card:hover .modern-img-circle img {
+    transform: rotate(360deg) scale(1.1);
+}
+
+.modern-product-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.modern-product-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2D3436;
+    margin-bottom: 4px;
+}
+
+.modern-product-weight {
+    font-size: 0.85rem;
+    color: #8D6E63;
+    /* Subtitle color matching video text */
+    margin-bottom: 12px;
+}
+
+.modern-product-price {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #8B4513;
+    margin-bottom: 18px;
+}
+
+/* Sleek minimalist button */
+.modern-btn-add {
+    background-color: transparent;
+    color: #8B4513;
+    border: 1.5px solid #8B4513;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s;
+    margin-top: auto;
+    width: 100%;
+}
+
+.modern-btn-add:hover {
+    background-color: #8B4513;
+    color: #FFFFFF;
+}
+
+
+/* ========================= */
+/* Pagination  */
+/* ========================= */
+
+.custom-pagination {
+    margin-top: 40px;
+}
+
+.custom-pagination .page-link {
+    color: #8B4513;
+    border: 1px solid #F5E6D3;
+    margin: 0 4px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    padding: 8px 16px;
+}
+
+.custom-pagination .page-link:hover {
+    background-color: #FFF8F0;
+    color: #6D3410;
+    border-color: #8B4513;
+}
+
+.custom-pagination .page-item.active .page-link {
+    background-color: #8B4513;
+    border-color: #8B4513;
+    color: #FFFFFF;
+    box-shadow: 0 4px 10px rgba(139, 69, 19, 0.2);
+}
+
+.custom-pagination .page-item.disabled .page-link {
+    color: #A0A0A0;
+    border-color: #E0E0E0;
+    background-color: #F9F9F9;
+    cursor: not-allowed;
+}

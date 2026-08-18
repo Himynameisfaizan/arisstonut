@@ -17,6 +17,7 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
         $p_name = htmlspecialchars($product['pro_name']);
         $p_mrp = $product['mrp'];
         $p_price = $product['selling_price'];
+        $p_cate = $product['pro_cate']; // Category ID for Related Products
         
         $p_img = $site . 'admin/assets/img/uploads/' . htmlspecialchars($product['pro_img']);
         $p_short_desc = $product['short_desc']; 
@@ -35,6 +36,9 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
             }
         }
         $variations_json = json_encode($variations);
+
+        // --- Fetch Related Products (Same Category, Excluding Current Product) ---
+        $related_query = $conn->query("SELECT id, pro_name, selling_price, pro_img, slug_url FROM products WHERE pro_cate = '$p_cate' AND id != '$p_id' AND status = 1 ORDER BY id DESC LIMIT 4");
 
     } else {
         header("Location: " . $site . "index.php");
@@ -115,13 +119,45 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
             border-color: #8B4513;
             box-shadow: 0 4px 8px rgba(139, 69, 19, 0.2);
         }
+
+        /* Related Products CSS */
+        .related-card {
+            border: 1px solid #F5E6D3;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: 0.3s;
+            background: #fff;
+        }
+        .related-card:hover {
+            box-shadow: 0 10px 20px rgba(139, 69, 19, 0.1);
+            transform: translateY(-5px);
+            border-color: #8B4513;
+        }
+        .related-img-box {
+            height: 220px;
+            background: #FFF8F0;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .related-img-box img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            transition: transform 0.4s;
+        }
+        .related-card:hover .related-img-box img {
+            transform: scale(1.08);
+        }
     </style>
 </head>
 
 <body>
     <?php include('inc/header.php'); ?>
 
-    <main class="container py-5">
+    <!-- Added pb-5 to ensure padding before footer -->
+    <main class="container py-5 mb-5">
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="<?php echo $site; ?>index.php" class="text-brown text-decoration-none">Home</a></li>
@@ -130,6 +166,7 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
             </ol>
         </nav>
 
+        <!-- Main Product Card -->
         <div class="card detail-wrapper-card p-4 shadow-sm mb-5 border-0" style="border-radius: 16px;">
             <div class="row g-5">
 
@@ -226,6 +263,45 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
                 </div>
             </div>
         </div>
+
+        <!-- Long Description Tabs -->
+        <div class="card detail-wrapper-card p-4 shadow-sm border-0 mb-5" style="border-radius: 16px;">
+            <ul class="nav nav-tabs mb-4" id="productTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active fw-bold text-brown" id="desc-tab" data-bs-toggle="tab" data-bs-target="#desc-pane" type="button" role="tab" style="border-bottom: 3px solid #8B4513;">Detailed Overview</button>
+                </li>
+            </ul>
+            <div class="tab-content text-muted p-2" id="productTabContent">
+                <div class="tab-pane fade show active" id="desc-pane" role="tabpanel" aria-labelledby="desc-tab">
+                    <div class="lh-lg fs-6 text-dark"><?php echo $p_long_desc; ?></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Products Section -->
+        <?php if ($related_query && $related_query->num_rows > 0): ?>
+        <section class="related-products mt-5 pt-4 border-top">
+            <h3 class="fw-bold text-brown mb-4"><i class="bi bi-stars me-2"></i>You Might Also Like</h3>
+            <div class="row g-4">
+                <?php while($r_prod = $related_query->fetch_assoc()): ?>
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="related-card">
+                            <a href="<?php echo $site; ?>product/<?php echo $r_prod['slug_url']; ?>" class="text-decoration-none">
+                                <div class="related-img-box">
+                                    <img src="<?php echo $site; ?>admin/assets/img/uploads/<?php echo $r_prod['pro_img']; ?>" alt="<?php echo htmlspecialchars($r_prod['pro_name']); ?>">
+                                </div>
+                                <div class="p-3 text-center border-top">
+                                    <h6 class="fw-bold text-dark text-truncate mb-2"><?php echo htmlspecialchars($r_prod['pro_name']); ?></h6>
+                                    <div class="text-danger fw-bold fs-5">₹<?php echo $r_prod['selling_price']; ?></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                <?php endwhile; ?>
+            </div>
+        </section>
+        <?php endif; ?>
+
     </main>
 
     <?php include('inc/footer.php'); ?>
@@ -248,7 +324,6 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
             document.querySelectorAll('.var-thumb').forEach(thumb => {
                 thumb.addEventListener('click', function() {
                     const index = this.getAttribute('data-index');
-                    // Radio button ko programmatically click karna
                     const radio = document.querySelectorAll('.variation-radio')[index];
                     radio.checked = true;
                     radio.dispatchEvent(new Event('change'));
@@ -343,46 +418,40 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
                 if (qty > 1) { qty--; document.getElementById('product-qty').value = qty; updateUI(); }
             });
 
-            // =====================================
-            // REAL ADD TO CART AJAX EXECUTION
-            // =====================================
-            // =====================================
-// REAL ADD TO CART AJAX EXECUTION
-// =====================================
-document.getElementById('custom-add-to-cart-btn').addEventListener('click', () => {
-    if (currentVariation && parseInt(currentVariation.stock) > 0) {
-        let productId = <?php echo $p_id; ?>;
-        let variationId = currentVariation.id;
-        let finalQty = qty;
-        
-        $.ajax({
-            url: '<?php echo $site; ?>cart_action.php', // <--- Yahan file ka naam theek kar diya gaya hai
-            type: 'POST',
-            data: {
-                action: 'add_to_cart',
-                product_id: productId,
-                variation_id: variationId,
-                quantity: finalQty
-            },
-            dataType: 'json',
-            success: function(response) {
-                if(response.status === 'success') {
-                    // Header Cart Badge Update
-                    $('.cart-count').text(response.cart_count);
-                    alert("Success: " + finalQty + " Pack of " + currentVariation.weight_size + " added to your basket!");
+            // ADD TO CART AJAX
+            document.getElementById('custom-add-to-cart-btn').addEventListener('click', () => {
+                if (currentVariation && parseInt(currentVariation.stock) > 0) {
+                    let productId = <?php echo $p_id; ?>;
+                    let variationId = currentVariation.id;
+                    let finalQty = qty;
+                    
+                    $.ajax({
+                        url: '<?php echo $site; ?>cart_action.php',
+                        type: 'POST',
+                        data: {
+                            action: 'add_to_cart',
+                            product_id: productId,
+                            variation_id: variationId,
+                            quantity: finalQty
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            if(response.status === 'success') {
+                                $('.cart-count').text(response.cart_count);
+                                alert("Success: " + finalQty + " Pack of " + currentVariation.weight_size + " added to your basket!");
+                            } else {
+                                alert("Error: " + response.message);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
+                            alert("System Error: Could not connect to the cart server. Check console for details.");
+                        }
+                    });
                 } else {
-                    alert("Error: " + response.message);
+                    alert('Cannot add out of stock item to basket.');
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error(xhr.responseText);
-                alert("System Error: Could not connect to the cart server. Check console for details.");
-            }
-        });
-    } else {
-        alert('Cannot add out of stock item to basket.');
-    }
-});
+            });
             updateUI();
         });
     </script>
