@@ -75,13 +75,15 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
             </a>
 
             <div class="d-flex align-items-center gap-3">
-                <!-- Mobile Cart Icon (Visible only on mobile/tablet) -->
+                <a href="<?php echo $site; ?>wishlist.php" class="nav-icon-link d-lg-none text-decoration-none">
+                    <i class="bi bi-heart" style="font-size: 1.5rem;"></i>
+                </a>
+
                 <a href="<?php echo $site; ?>cart.php" class="nav-icon-link d-lg-none position-relative text-decoration-none">
                     <i class="bi bi-bag" style="font-size: 1.5rem;"></i>
                     <span class="cart-count" id="header-mobile-cart-badge"><?php echo $total_cart_items; ?></span>
                 </a>
 
-                <!-- Hamburger Menu Button (Already existing) -->
                 <button class="navbar-toggler border-0" type="button" id="custom-mobile-toggler-btn">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -95,18 +97,28 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" style="cursor: pointer;">
                             PRODUCTS
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item fw-bold text-dark border-bottom mb-1" href="<?php echo $site; ?>product.php">All Products</a></li>
+                        <ul class="dropdown-menu border-0 shadow-lg" aria-labelledby="navbarDropdown" style="border-radius: 12px; min-width: 240px; padding: 10px 0;">
+                            <li>
+                                <a class="dropdown-item fw-bold border-bottom mb-2 py-2" href="<?php echo $site; ?>product.php" style="color: #8B4513;">
+                                    <i class="bi bi-grid-fill me-2"></i>All Products
+                                </a>
+                            </li>
                             <?php
-                            $cate_nav_query = "SELECT `categories`, `slug_url` FROM `categories` WHERE `status` = 1 ORDER BY `id` ASC";
+                            $cate_nav_query = "SELECT `categories`, `slug_url`, `image` FROM `categories` WHERE `status` = 1 ORDER BY `id` ASC";
                             $cate_nav_res = $conn->query($cate_nav_query);
 
                             if ($cate_nav_res && $cate_nav_res->num_rows > 0) {
                                 while ($cat_row = $cate_nav_res->fetch_assoc()) {
                                     $cat_name = htmlspecialchars($cat_row['categories']);
                                     $cat_slug = htmlspecialchars($cat_row['slug_url']);
+                                    $cat_img = !empty($cat_row['image']) ? $site . 'admin/uploads/category/' . htmlspecialchars($cat_row['image']) : $site . 'assets/images/hero.webp';
 
-                                    echo '<li><a class="dropdown-item" href="' . $site . 'category/' . $cat_slug . '">' . $cat_name . '</a></li>';
+                                    echo '<li>
+                        <a class="dropdown-item d-flex align-items-center gap-3 py-2" href="' . $site . 'category/' . $cat_slug . '">
+                            <img src="' . $cat_img . '" alt="' . $cat_name . '" style="width: 38px; height: 38px; object-fit: contain; border-radius: 8px; background: #FFF8F0; border: 1px solid #F5E6D3; padding: 2px;">
+                            <span class="fw-medium" style="color: #5D4037; font-size: 0.95rem;">' . $cat_name . '</span>
+                        </a>
+                      </li>';
                                 }
                             } else {
                                 echo '<li><a class="dropdown-item text-muted" href="#">No Categories Mapped</a></li>';

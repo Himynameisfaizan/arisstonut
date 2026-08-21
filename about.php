@@ -4,19 +4,31 @@
 <section class="swiper-banner-section my-4" data-aos="fade-down" data-aos-duration="1000">
   <div class="swiper mySwiper">
     <div class="swiper-wrapper">
-      <div class="swiper-slide" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.5)), url('assets/images/1.png');">
+      <div class="swiper-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0,0,0,0.1)), url('assets/images/1.png');">
         <div class="banner-content">
           <h2>Mithila Ki Parampara</h2>
           <p>Directly from the heart of Bihar to the global stage.</p>
         </div>
       </div>
-      <div class="swiper-slide" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.5)), url('assets/images/2.png');">
+      <div class="swiper-slide" style="background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url('assets/images/2.png');">
         <div class="banner-content">
           <h2>100% Roasted, Zero Guilt</h2>
           <p>Say goodbye to oily snacks, switch to premium nutrient-rich Makhana.</p>
         </div>
       </div>
-      <div class="swiper-slide" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.5)), url('assets/images/3.png');">
+      <div class="swiper-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0,0,0,0.1)), url('assets/images/3.png');">
+        <div class="banner-content">
+          <h2>Global Standards & Quality</h2>
+          <p>Serving Retailers, Wholesalers & Global Importers worldwide.</p>
+        </div>
+      </div>
+      <div class="swiper-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0,0,0,0.1)), url('assets/images/4.png');">
+        <div class="banner-content">
+          <h2>Global Standards & Quality</h2>
+          <p>Serving Retailers, Wholesalers & Global Importers worldwide.</p>
+        </div>
+      </div>
+      <div class="swiper-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0,0,0,0.1)), url('assets/images/5.png');">
         <div class="banner-content">
           <h2>Global Standards & Quality</h2>
           <p>Serving Retailers, Wholesalers & Global Importers worldwide.</p>
