@@ -219,18 +219,10 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
                 <?php endif; ?>
 
                 <div class="subtitle">Premium Quality</div>
-                <p class="pe-lg-4 mb-2">
+                <p class="pe-lg-4">
                     India's finest premium makhana, crafted with tradition and quality.
                     Experience the perfect blend of health, crispness, and delicious taste.
                 </p>
-                <!-- NAYA CODE: Parent Company Branding -->
-                <div class="mb-4">
-                    <span class="d-inline-block border border-warning text-danger px-3 py-1 rounded-pill"
-                        style="font-size: 0.75rem; font-weight: 600; letter-spacing: 1px;">
-                        A BRAND BY NK ENTERPRISES
-                    </span>
-                </div>
-
                 <?php
                 // Contacts table se live social links columns fetch karna
                 $social_query = "SELECT `facebook`, `instagram`, `twitter`, `linkdin` FROM `contacts` LIMIT 1";
@@ -284,12 +276,12 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
             <div class="col-lg-3 col-md-6 col-6 mb-2">
                 <h5>Our Products</h5>
                 <?php
-                $footer_prod_query = "SELECT categories, slug_url FROM categories WHERE status = 1 ORDER BY id DESC LIMIT 6";
+                $footer_prod_query = "SELECT pro_name, slug_url FROM products WHERE status = 1 ORDER BY id DESC LIMIT 6";
                 $footer_prod_res = $conn->query($footer_prod_query);
 
                 if ($footer_prod_res && $footer_prod_res->num_rows > 0) {
                     while ($f_prod = $footer_prod_res->fetch_assoc()) {
-                        $f_prod_name = htmlspecialchars($f_prod['categories']);
+                        $f_prod_name = htmlspecialchars($f_prod['pro_name']);
                         $f_prod_slug = htmlspecialchars($f_prod['slug_url']);
 
                         echo '<a href="' . $site . 'product/' . $f_prod_slug . '">' . $f_prod_name . '</a>';
@@ -306,7 +298,9 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
                 <h5>Get In Touch</h5>
                 <div class="contact-item">
                     <i class="bi bi-geo-alt-fill"></i>
-                    <p class="mb-0"><?php echo $db_address; ?></p>
+                    <p class="mb-0">
+                        <?php echo $db_address; ?>
+                    </p>
                 </div>
                 <div class="contact-item">
                     <i class="bi bi-telephone-fill"></i>
@@ -333,14 +327,12 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
 
         <div class="row align-items-center">
             <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                <!-- NAYA CODE: Copyright text update with NK Enterprises -->
-                <p class="mb-0 small text-muted">© <?php echo date('Y'); ?> <span
-                        class="text-black fw-bold">AristoNut</span> (NK Enterprises). All rights reserved.</p>
+                <p class="mb-0 small text-muted">©
+                    <?php echo date('Y'); ?> <span class="text-black fw-medium">AristoNut</span>. All rights reserved.
+                </p>
             </div>
             <div class="col-md-6 text-center text-md-end">
                 <p class="developer-credit mb-0 small">
-                    <!-- NAYA CODE: Powered By update -->
-                    Powered by <strong class="text-black">NK Enterprises</strong> <span class="mx-2 opacity-50">|</span>
                     Made with <i class="bi bi-heart-fill text-danger mx-1"></i>
                 </p>
             </div>
