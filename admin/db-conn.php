@@ -11,11 +11,8 @@ if ($local) {
     $username = 'root';
     $password = '';
     $dbName = 'aristonut';
-<<<<<<< HEAD
     $site = "http://localhost/projects/aristonut/";
-=======
-    $site = "http://localhost/office_php_project/aristonut/";
->>>>>>> 9f70d3fd0e71bcc96fe8fa18851eb6a1b9dc0084
+
 } else {
     $host = 'localhost';
     $username = 'u776339737_aristonut';
@@ -34,8 +31,4 @@ if ($conn->connect_error) {
 // Optional: Set Character Encoding to UTF-8
 $conn->set_charset("utf8");
 
-<<<<<<< HEAD
 ?>
-=======
-?>
->>>>>>> 9f70d3fd0e71bcc96fe8fa18851eb6a1b9dc0084

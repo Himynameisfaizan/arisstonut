@@ -1,5 +1,5 @@
 <?php
-if(session_status() === PHP_SESSION_NONE){
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 if (!isset($_SESSION['admin_logged_in'])) {
@@ -29,8 +29,8 @@ if (!isset($_SESSION['admin_logged_in'])) {
             <span class="input-group-text bg-dark border-secondary text-muted">
                 <i class="fas fa-search"></i>
             </span>
-            <input type="text" id="sidebarSearch" class="form-control bg-dark border-secondary text-white" 
-                   placeholder="Search menu..." style="caret-color: white;">
+            <input type="text" id="sidebarSearch" class="form-control bg-dark border-secondary text-white"
+                placeholder="Search menu..." style="caret-color: white;">
         </div>
     </div>
 
@@ -48,13 +48,13 @@ if (!isset($_SESSION['admin_logged_in'])) {
 
             <!-- Home Content -->
             <li class="nav-item">
-                <a class="nav-link text-white py-3 px-4 d-flex align-items-center" 
-                   data-bs-toggle="collapse" href="#homeContent" role="button">
+                <a class="nav-link text-white py-3 px-4 d-flex align-items-center" data-bs-toggle="collapse"
+                    href="#homeContent" role="button">
                     <i class="fas fa-home fa-fw me-3"></i>
                     <span class="flex-grow-1">Home Content</span>
-                    <i class="fas fa-chevron-down ms-auto"></i>
+                    <!-- <i class="fas fa-chevron-down ms-auto"></i> -->
                 </a>
-                <div class="collapse <?php echo in_array(basename($_SERVER['PHP_SELF']), ['home-items.php', 'add-banner.php']) ? 'show' : ''; ?>" 
+                <!-- <div class="collapse <?php echo in_array(basename($_SERVER['PHP_SELF']), ['home-items.php', 'add-banner.php']) ? 'show' : ''; ?>" 
                      id="homeContent">
                     <ul class="nav flex-column ps-5">
                         <li class="nav-item">
@@ -72,7 +72,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
                             </a>
                         </li>
                     </ul>
-                </div>
+                </div> -->
             </li>
 
             <!-- About Us -->
@@ -83,23 +83,24 @@ if (!isset($_SESSION['admin_logged_in'])) {
                     <span>About Us</span>
                 </a>
             </li>
-            
-           
+
+
 
 
             <!-- Contact -->
             <li class="nav-item">
-                <a class="nav-link text-white py-3 px-4 d-flex align-items-center" 
-                   data-bs-toggle="collapse" href="#contactMenu" role="button">
+                <a class="nav-link text-white py-3 px-4 d-flex align-items-center" data-bs-toggle="collapse"
+                    href="#contactMenu" role="button">
                     <i class="fas fa-address-book fa-fw me-3"></i>
                     <span class="flex-grow-1">Contact</span>
                     <i class="fas fa-chevron-down ms-auto"></i>
                 </a>
-                <div class="collapse <?php echo in_array(basename($_SERVER['PHP_SELF']), ['add_contact.php', 'new-leads.php']) ? 'show' : ''; ?>" 
-                     id="contactMenu">
+                <div class="collapse <?php echo in_array(basename($_SERVER['PHP_SELF']), ['add_contact.php', 'new-leads.php']) ? 'show' : ''; ?>"
+                    id="contactMenu">
                     <ul class="nav flex-column ps-5">
                         <li class="nav-item">
-                            <a href="add_contact.php" class="nav-link text-muted py-2 d-flex align-items-center 
+                            <a href="add_contact.php"
+                                class="nav-link text-muted py-2 d-flex align-items-center 
                                <?php echo basename($_SERVER['PHP_SELF']) == 'add_contact.php' ? 'text-primary' : ''; ?>">
                                 <i class="fas fa-edit fa-sm me-2"></i>
                                 <span>Edit Contact</span>
@@ -118,38 +119,42 @@ if (!isset($_SESSION['admin_logged_in'])) {
 
             <!-- Categories -->
             <li class="nav-item">
-                <a class="nav-link text-white py-3 px-4 d-flex align-items-center" 
-                   data-bs-toggle="collapse" href="#categoryMenu" role="button">
+                <a class="nav-link text-white py-3 px-4 d-flex align-items-center" data-bs-toggle="collapse"
+                    href="#categoryMenu" role="button">
                     <i class="fas fa-sitemap fa-fw me-3"></i>
                     <span class="flex-grow-1">Categories</span>
                     <i class="fas fa-chevron-down ms-auto"></i>
                 </a>
-                <div class="collapse <?php echo in_array(basename($_SERVER['PHP_SELF']), ['add-categories.php', 'view-categories.php', 'add-sub-category.php', 'view-sub-categories.php']) ? 'show' : ''; ?>" 
-                     id="categoryMenu">
+                <div class="collapse <?php echo in_array(basename($_SERVER['PHP_SELF']), ['add-categories.php', 'view-categories.php', 'add-sub-category.php', 'view-sub-categories.php']) ? 'show' : ''; ?>"
+                    id="categoryMenu">
                     <ul class="nav flex-column ps-5">
                         <li class="nav-item">
-                            <a href="add-categories.php" class="nav-link text-muted py-2 d-flex align-items-center 
+                            <a href="add-categories.php"
+                                class="nav-link text-muted py-2 d-flex align-items-center 
                                <?php echo basename($_SERVER['PHP_SELF']) == 'add-categories.php' ? 'text-primary' : ''; ?>">
                                 <i class="fas fa-plus-circle fa-sm me-2"></i>
                                 <span>Add Category</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="view-categories.php" class="nav-link text-muted py-2 d-flex align-items-center 
+                            <a href="view-categories.php"
+                                class="nav-link text-muted py-2 d-flex align-items-center 
                                <?php echo basename($_SERVER['PHP_SELF']) == 'view-categories.php' ? 'text-primary' : ''; ?>">
                                 <i class="fas fa-list fa-sm me-2"></i>
                                 <span>View Categories</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="add-sub-category.php" class="nav-link text-muted py-2 d-flex align-items-center 
+                            <a href="add-sub-category.php"
+                                class="nav-link text-muted py-2 d-flex align-items-center 
                                <?php echo basename($_SERVER['PHP_SELF']) == 'add-sub-category.php' ? 'text-primary' : ''; ?>">
                                 <i class="fas fa-plus-square fa-sm me-2"></i>
                                 <span>Add Sub Category</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="view-sub-categories.php" class="nav-link text-muted py-2 d-flex align-items-center 
+                            <a href="view-sub-categories.php"
+                                class="nav-link text-muted py-2 d-flex align-items-center 
                                <?php echo basename($_SERVER['PHP_SELF']) == 'view-sub-categories.php' ? 'text-primary' : ''; ?>">
                                 <i class="fas fa-list-ol fa-sm me-2"></i>
                                 <span>View Sub Categories</span>
@@ -161,24 +166,26 @@ if (!isset($_SESSION['admin_logged_in'])) {
 
             <!-- Products -->
             <li class="nav-item">
-                <a class="nav-link text-white py-3 px-4 d-flex align-items-center" 
-                   data-bs-toggle="collapse" href="#productMenu" role="button">
+                <a class="nav-link text-white py-3 px-4 d-flex align-items-center" data-bs-toggle="collapse"
+                    href="#productMenu" role="button">
                     <i class="fas fa-box fa-fw me-3"></i>
                     <span class="flex-grow-1">Products</span>
                     <i class="fas fa-chevron-down ms-auto"></i>
                 </a>
-                <div class="collapse <?php echo in_array(basename($_SERVER['PHP_SELF']), ['add-products.php', 'show-products.php']) ? 'show' : ''; ?>" 
-                     id="productMenu">
+                <div class="collapse <?php echo in_array(basename($_SERVER['PHP_SELF']), ['add-products.php', 'show-products.php']) ? 'show' : ''; ?>"
+                    id="productMenu">
                     <ul class="nav flex-column ps-5">
                         <li class="nav-item">
-                            <a href="add-products.php" class="nav-link text-muted py-2 d-flex align-items-center 
+                            <a href="add-products.php"
+                                class="nav-link text-muted py-2 d-flex align-items-center 
                                <?php echo basename($_SERVER['PHP_SELF']) == 'add-products.php' ? 'text-primary' : ''; ?>">
                                 <i class="fas fa-plus fa-sm me-2"></i>
                                 <span>Add Products</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="show-products.php" class="nav-link text-muted py-2 d-flex align-items-center 
+                            <a href="show-products.php"
+                                class="nav-link text-muted py-2 d-flex align-items-center 
                                <?php echo basename($_SERVER['PHP_SELF']) == 'show-products.php' ? 'text-primary' : ''; ?>">
                                 <i class="fas fa-eye fa-sm me-2"></i>
                                 <span>Show Products</span>
@@ -187,8 +194,8 @@ if (!isset($_SESSION['admin_logged_in'])) {
                     </ul>
                 </div>
             </li>
-            
-             <li class="nav-item">
+
+            <li class="nav-item">
                 <a href="orders.php" class="nav-link text-white py-3 px-4 d-flex align-items-center 
                    <?php echo basename($_SERVER['PHP_SELF']) == 'orders.php' ? 'active bg-primary' : ''; ?>">
                     <i class="fas fa-info-circle fa-fw me-3"></i>
@@ -197,64 +204,65 @@ if (!isset($_SESSION['admin_logged_in'])) {
             </li>
 
             <!-- Testimonials -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a href="testimonials.php" class="nav-link text-white py-3 px-4 d-flex align-items-center 
                    <?php echo basename($_SERVER['PHP_SELF']) == 'testimonials.php' ? 'active bg-primary' : ''; ?>">
                     <i class="fas fa-star fa-fw me-3"></i>
                     <span>Testimonials</span>
                 </a>
-            </li>
-            
-             <li class="nav-item">
+            </li> -->
+            <!-- 
+            <li class="nav-item">
                 <a href="video.php" class="nav-link text-white py-3 px-4 d-flex align-items-center 
                    <?php echo basename($_SERVER['PHP_SELF']) == 'video.php' ? 'active bg-primary' : ''; ?>">
                     <i class="fas fa-star fa-fw me-3"></i>
                     <span>Video</span>
                 </a>
-            </li>
-            
-             <li class="nav-item">
+            </li> -->
+
+            <li class="nav-item">
                 <a href="blog.php" class="nav-link text-white py-3 px-4 d-flex align-items-center 
                    <?php echo basename($_SERVER['PHP_SELF']) == 'blog.php' ? 'active bg-primary' : ''; ?>">
                     <i class="fas fa-star fa-fw me-3"></i>
                     <span>Blog</span>
                 </a>
             </li>
-            
-            
+
+
 
             <!-- Gallery -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a href="add-gallery.php" class="nav-link text-white py-3 px-4 d-flex align-items-center 
                    <?php echo basename($_SERVER['PHP_SELF']) == 'add-gallery.php' ? 'active bg-primary' : ''; ?>">
                     <i class="fas fa-photo-video fa-fw me-3"></i>
                     <span>Gallery</span>
                 </a>
-            </li>
-            
-             <li class="nav-item">
+            </li> -->
+            <!-- 
+            <li class="nav-item">
                 <a href="certificate.php" class="nav-link text-white py-3 px-4 d-flex align-items-center 
                    <?php echo basename($_SERVER['PHP_SELF']) == 'certificate.php' ? 'active bg-primary' : ''; ?>">
                     <i class="fas fa-photo-video fa-fw me-3"></i>
                     <span>Certificate</span>
                 </a>
-            </li>
-            
-            
+            </li> -->
+
+
 
             <!-- Users Management -->
-            <li class="nav-item">
-                <a class="nav-link text-white py-3 px-4 d-flex align-items-center" 
-                   data-bs-toggle="collapse" href="#userMenu" role="button">
+            <!-- <li class="nav-item">
+                <a class="nav-link text-white py-3 px-4 d-flex align-items-center" data-bs-toggle="collapse"
+                    href="#userMenu" role="button">
                     <i class="fas fa-users-cog fa-fw me-3"></i>
                     <span class="flex-grow-1">User Management</span>
                     <i class="fas fa-chevron-down ms-auto"></i>
                 </a>
-                <div class="collapse <?php echo in_array(basename($_SERVER['PHP_SELF']), ['all-admin.php', 'admin-create.php', 'manage-profile.php']) ? 'show' : ''; ?>" 
-                     id="userMenu">
+                <div class="collapse <?php echo in_array(basename($_SERVER['PHP_SELF']), ['all-admin.php', 'admin-create.php', 'manage-profile.php']) ? 'show' : ''; ?>"
+                    id="userMenu">
                     <ul class="nav flex-column ps-5">
                         <li class="nav-item">
-                            <a href="create-user.php" class="nav-link text-muted py-2 d-flex align-items-center 
+                            <a href="create-user.php"
+                                class="nav-link text-muted py-2 d-flex align-items-center 
                                <?php echo basename($_SERVER['PHP_SELF']) == 'create-user.php' ? 'text-primary' : ''; ?>">
                                 <i class="fas fa-user-plus fa-sm me-2"></i>
                                 <span>Create User</span>
@@ -268,7 +276,8 @@ if (!isset($_SESSION['admin_logged_in'])) {
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="manage-profile.php" class="nav-link text-muted py-2 d-flex align-items-center 
+                            <a href="manage-profile.php"
+                                class="nav-link text-muted py-2 d-flex align-items-center 
                                <?php echo basename($_SERVER['PHP_SELF']) == 'manage-profile.php' ? 'text-primary' : ''; ?>">
                                 <i class="fas fa-user-edit fa-sm me-2"></i>
                                 <span>Manage Profile</span>
@@ -276,27 +285,27 @@ if (!isset($_SESSION['admin_logged_in'])) {
                         </li>
                     </ul>
                 </div>
-            </li>
+            </li> -->
 
             <!-- Customers -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a href="all-customers.php" class="nav-link text-white py-3 px-4 d-flex align-items-center 
                    <?php echo basename($_SERVER['PHP_SELF']) == 'all-customers.php' ? 'active bg-primary' : ''; ?>">
                     <i class="fas fa-user-friends fa-fw me-3"></i>
                     <span>Customers</span>
                 </a>
-            </li>
+            </li> -->
 
             <!-- Orders & Invoice -->
             <li class="nav-item">
-                <a class="nav-link text-white py-3 px-4 d-flex align-items-center" 
-                   data-bs-toggle="collapse" href="#orderMenu" role="button">
+                <a class="nav-link text-white py-3 px-4 d-flex align-items-center" data-bs-toggle="collapse"
+                    href="#orderMenu" role="button">
                     <i class="fas fa-shopping-cart fa-fw me-3"></i>
                     <span class="flex-grow-1">Orders</span>
                     <i class="fas fa-chevron-down ms-auto"></i>
                 </a>
-                <div class="collapse <?php echo in_array(basename($_SERVER['PHP_SELF']), ['orders.php', 'invoice-generate.php']) ? 'show' : ''; ?>" 
-                     id="orderMenu">
+                <div class="collapse <?php echo in_array(basename($_SERVER['PHP_SELF']), ['orders.php', 'invoice-generate.php']) ? 'show' : ''; ?>"
+                    id="orderMenu">
                     <ul class="nav flex-column ps-5">
                         <li class="nav-item">
                             <a href="orders.php" class="nav-link text-muted py-2 d-flex align-items-center 
@@ -306,7 +315,8 @@ if (!isset($_SESSION['admin_logged_in'])) {
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="invoice-generate.php" class="nav-link text-muted py-2 d-flex align-items-center 
+                            <a href="invoice-generate.php"
+                                class="nav-link text-muted py-2 d-flex align-items-center 
                                <?php echo basename($_SERVER['PHP_SELF']) == 'invoice-generate.php' ? 'text-primary' : ''; ?>">
                                 <i class="fas fa-file-invoice fa-sm me-2"></i>
                                 <span>Generate Invoice</span>
@@ -332,70 +342,70 @@ if (!isset($_SESSION['admin_logged_in'])) {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Sidebar Toggle
-    const sidebar = document.querySelector('.sidebar');
-    const sidebarToggle = document.querySelectorAll('.sidebar-toggle');
-    const overlay = document.querySelector('.sidebar-overlay');
-    
-    sidebarToggle.forEach(btn => {
-        btn.addEventListener('click', function() {
-            sidebar.classList.toggle('show');
-            overlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
+    document.addEventListener('DOMContentLoaded', function () {
+        // Sidebar Toggle
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarToggle = document.querySelectorAll('.sidebar-toggle');
+        const overlay = document.querySelector('.sidebar-overlay');
+
+        sidebarToggle.forEach(btn => {
+            btn.addEventListener('click', function () {
+                sidebar.classList.toggle('show');
+                overlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
+            });
         });
-    });
-    
-    // Close sidebar on overlay click
-    overlay.addEventListener('click', function() {
-        sidebar.classList.remove('show');
-        overlay.style.display = 'none';
-    });
-    
-    // Search functionality
-    const sidebarSearch = document.getElementById('sidebarSearch');
-    const menuItems = document.querySelectorAll('#sidebarMenu .nav-item');
-    
-    sidebarSearch.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase().trim();
-        
-        menuItems.forEach(item => {
-            const text = item.textContent.toLowerCase();
-            const isVisible = text.includes(searchTerm);
-            
-            if (isVisible) {
-                item.style.display = '';
-                // Expand parent collapses if child matches
-                const parentCollapse = item.closest('.collapse');
-                if (parentCollapse && !parentCollapse.classList.contains('show')) {
-                    const collapseInstance = bootstrap.Collapse.getInstance(parentCollapse) || 
-                                           new bootstrap.Collapse(parentCollapse);
-                    collapseInstance.show();
+
+        // Close sidebar on overlay click
+        overlay.addEventListener('click', function () {
+            sidebar.classList.remove('show');
+            overlay.style.display = 'none';
+        });
+
+        // Search functionality
+        const sidebarSearch = document.getElementById('sidebarSearch');
+        const menuItems = document.querySelectorAll('#sidebarMenu .nav-item');
+
+        sidebarSearch.addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase().trim();
+
+            menuItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                const isVisible = text.includes(searchTerm);
+
+                if (isVisible) {
+                    item.style.display = '';
+                    // Expand parent collapses if child matches
+                    const parentCollapse = item.closest('.collapse');
+                    if (parentCollapse && !parentCollapse.classList.contains('show')) {
+                        const collapseInstance = bootstrap.Collapse.getInstance(parentCollapse) ||
+                            new bootstrap.Collapse(parentCollapse);
+                        collapseInstance.show();
+                    }
+                } else {
+                    item.style.display = 'none';
                 }
-            } else {
-                item.style.display = 'none';
+            });
+        });
+
+        // Highlight active menu
+        const currentPage = '<?php echo basename($_SERVER["PHP_SELF"]); ?>';
+        const activeLinks = document.querySelectorAll(`a[href="${currentPage}"]`);
+
+        activeLinks.forEach(link => {
+            link.classList.add('active', 'bg-primary');
+            // Expand parent collapses
+            const parentCollapse = link.closest('.collapse');
+            if (parentCollapse) {
+                const collapseInstance = bootstrap.Collapse.getInstance(parentCollapse) ||
+                    new bootstrap.Collapse(parentCollapse);
+                collapseInstance.show();
             }
         });
     });
-    
-    // Highlight active menu
-    const currentPage = '<?php echo basename($_SERVER["PHP_SELF"]); ?>';
-    const activeLinks = document.querySelectorAll(`a[href="${currentPage}"]`);
-    
-    activeLinks.forEach(link => {
-        link.classList.add('active', 'bg-primary');
-        // Expand parent collapses
-        const parentCollapse = link.closest('.collapse');
-        if (parentCollapse) {
-            const collapseInstance = bootstrap.Collapse.getInstance(parentCollapse) || 
-                                   new bootstrap.Collapse(parentCollapse);
-            collapseInstance.show();
-        }
-    });
-});
 
-// Style for mobile
-const style = document.createElement('style');
-style.textContent = `
+    // Style for mobile
+    const style = document.createElement('style');
+    style.textContent = `
     @media (max-width: 991.98px) {
         .sidebar {
             transform: translateX(-100%);
@@ -441,5 +451,5 @@ style.textContent = `
         padding-left: 0.5rem !important;
     }
 `;
-document.head.appendChild(style);
+    document.head.appendChild(style);
 </script>

@@ -18,7 +18,7 @@ include "db-conn.php";
 
 <body class="crm_body_bg">
 
-<?php  include "header.php"; ?>
+    <?php include "header.php"; ?>
     <section class="main_content dashboard_part large_header_bg">
 
         <div class="container-fluid g-0">
@@ -42,7 +42,8 @@ include "db-conn.php";
                         <div class="header_right d-flex justify-content-between align-items-center">
                             <div class="header_notification_warp d-flex align-items-center">
                                 <li>
-                                    <a class="bell_notification_clicker nav-link-notify" href="#"> <img src="assets/img/icon/bell.svg" alt>
+                                    <a class="bell_notification_clicker nav-link-notify" href="#"> <img
+                                            src="assets/img/icon/bell.svg" alt>
                                     </a>
 
                                     <div class="Menu_NOtification_Wrap">
@@ -132,7 +133,8 @@ include "db-conn.php";
 
                                 </li>
                                 <li>
-                                    <a class="CHATBOX_open nav-link-notify" href="#"> <img src="assets/img/icon/msg.svg" alt> </a>
+                                    <a class="CHATBOX_open nav-link-notify" href="#"> <img src="assets/img/icon/msg.svg"
+                                            alt> </a>
                                 </li>
                             </div>
                             <div class="profile_info">
@@ -159,11 +161,11 @@ include "db-conn.php";
             <div class="container-fluid p-0 sm_padding_15px">
                 <div class="row justify-content-center">
                     <div class="col-lg-12">
-                      <h1>For Taking this service contact Web 2 Tech Solutions </h1>
+                        <h1>For Taking this service contact Digital Web Trackers </h1>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
 
-       <?php  include "footer.php"; ?>
+        <?php include "footer.php"; ?>

@@ -9,8 +9,7 @@ if (isset($_GET['search']) && !empty(trim($_GET['search']))) {
     $search_query = $conn->real_escape_string(trim($_GET['search']));
 }
 
-// NEW: PAGINATION LOGIC START
-
+// PAGINATION LOGIC START
 $limit = 12; 
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($page - 1) * $limit;
@@ -34,15 +33,56 @@ if (!empty($search_query)) {
 
 $count_result = $conn->query($count_query);
 $total_rows = $count_result->fetch_assoc()['total'];
-$total_pages = ceil($total_rows / $limit); // Total pages calculate karna
+$total_pages = ceil($total_rows / $limit); 
 
 $product_result = $conn->query($product_query);
 // PAGINATION LOGIC END
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - AristoNut</title>
+    <style>
+        /* Modern Button Styles */
+        .modern-btn-add {
+            background-color: #FFF8F0;
+            color: #8B4513;
+            border: 1.5px solid #8B4513;
+            border-radius: 20px;
+            padding: 8px 5px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+        .modern-btn-add:hover {
+            background-color: #8B4513;
+            color: #FFFFFF;
+        }
+        .modern-btn-buy {
+            background-color: #8B4513;
+            color: #FFFFFF;
+            border: 1.5px solid #8B4513;
+            border-radius: 20px;
+            padding: 8px 5px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+        .modern-btn-buy:hover {
+            background-color: #6D3410;
+            border-color: #6D3410;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(139, 69, 19, 0.2);
+        }
+    </style>
+</head>
+<body>
+
     <?php include('inc/header.php'); ?>
 
-    <!-- Added pb-5 to ensure space before footer -->
     <section class="quick-products py-5 mb-5">
         <div class="container">
 
@@ -71,7 +111,6 @@ $product_result = $conn->query($product_query);
 
                         $p_img = $site . 'admin/assets/img/uploads/' . htmlspecialchars($row['pro_img']);
                 ?>
-
                         <!-- VIDEO-STYLE CARD STRUCTURE -->
                         <div class="col-6 col-md-4 col-lg-3">
                             <div class="modern-product-card">
@@ -98,11 +137,17 @@ $product_result = $conn->query($product_query);
                                     
                                     <div class="modern-product-price">₹<?php echo $p_price; ?></div>
 
-                                    <button class="modern-btn-add" onclick="addToCart(<?php echo $p_id; ?>)">
-                                        Add to Basket
-                                    </button>
+                                    <!-- NAYA CODE: TWO BUTTONS (CART & BUY NOW) -->
+                                    <div class="d-flex gap-2 w-100 mt-auto">
+                                        <button class="modern-btn-add w-50" onclick="addToCart(<?php echo $p_id; ?>)">
+                                            Cart
+                                        </button>
+                                        <button class="modern-btn-buy w-50" onclick="buyNow(<?php echo $p_id; ?>)">
+                                            Buy Now
+                                        </button>
+                                    </div>
+
                                 </div>
-                                
                             </div>
                         </div>
 
@@ -121,19 +166,15 @@ $product_result = $conn->query($product_query);
                 ?>
             </div>
 
-            <!-- NEW: PAGINATION UI BLOCK -->
+            <!-- PAGINATION UI BLOCK -->
             <?php if ($total_pages > 1): ?>
                 <nav aria-label="Product Page Navigation">
                     <ul class="pagination justify-content-center custom-pagination">
-                        
-                        <!-- Previous Page Button -->
                         <li class="page-item <?php echo ($page <= 1) ? 'disabled' : ''; ?>">
                             <a class="page-link" href="?page=<?php echo $page - 1; ?><?php echo !empty($search_query) ? '&search='.$search_query : ''; ?>" aria-label="Previous">
                                 <span aria-hidden="true"><i class="bi bi-chevron-left"></i></span>
                             </a>
                         </li>
-                        
-                        <!-- Page Numbers Dynamic Loop -->
                         <?php for($i = 1; $i <= $total_pages; $i++): ?>
                             <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
                                 <a class="page-link" href="?page=<?php echo $i; ?><?php echo !empty($search_query) ? '&search='.$search_query : ''; ?>">
@@ -141,18 +182,14 @@ $product_result = $conn->query($product_query);
                                 </a>
                             </li>
                         <?php endfor; ?>
-                        
-                        <!-- Next Page Button -->
                         <li class="page-item <?php echo ($page >= $total_pages) ? 'disabled' : ''; ?>">
                             <a class="page-link" href="?page=<?php echo $page + 1; ?><?php echo !empty($search_query) ? '&search='.$search_query : ''; ?>" aria-label="Next">
                                 <span aria-hidden="true"><i class="bi bi-chevron-right"></i></span>
                             </a>
                         </li>
-                        
                     </ul>
                 </nav>
             <?php endif; ?>
-            <!-- PAGINATION UI END -->
 
         </div>
     </section>
@@ -160,5 +197,34 @@ $product_result = $conn->query($product_query);
     <?php include('inc/footer.php'); ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- NEW: BUY NOW SCRIPT -->
+    <script>
+    function buyNow(productId, variationId = 0, qty = 1) {
+        $.ajax({
+            url: '<?php echo $site; ?>cart_action.php',
+            type: 'POST',
+            data: {
+                action: 'buy_now', // FIX: Yahan add_to_cart ko buy_now kar diya gaya hai
+                product_id: productId,
+                variation_id: variationId,
+                quantity: qty
+            },
+            dataType: 'json',
+            success: function(response) {
+                if(response.status === 'success') {
+                    // FIX: Checkout page par parameter pass kar rahe hain
+                    window.location.href = '<?php echo $site; ?>checkout.php?buy_now=true';
+                } else {
+                    alert("Error: " + response.message);
+                }
+            },
+            error: function() {
+                alert("System Error: Could not connect to the server.");
+            }
+        });
+    }
+</script>
 </body>
 </html>
