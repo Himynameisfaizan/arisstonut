@@ -1,0 +1,125 @@
+.text-brown {
+    color: #ff0100;
+}
+
+/* Legal Layout Custom Styling Canvas */
+.legal-wrapper-card {
+    background: #ffffff;
+    border-radius: 24px;
+    border: 2px solid #F5E6D3;
+    overflow: hidden;
+    padding: 40px;
+}
+
+.legal-header {
+    background: linear-gradient(135deg, #FFF8F0 0%, #FFE4C4 100%);
+    padding: 40px 0;
+    border-bottom: 2px solid #F5E6D3;
+    text-align: center;
+    margin-bottom: 40px;
+    border-radius: 20px;
+}
+
+.legal-content h4 {
+    color: #ff0100;
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-top: 25px;
+    margin-bottom: 12px;
+    position: relative;
+}
+
+.legal-content p {
+    color: #5D4037;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+.legal-content ul {
+    color: #5D4037;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    padding-left: 20px;
+}
+
+.legal-content li {
+    margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+    .legal-wrapper-card {
+        padding: 25px;
+    }
+
+    .legal-header {
+        padding: 30px 15px;
+    }
+}
+
+/* ======================== */
+/* Terms Condintion Page Styling */
+/* ======================== */
+
+.text-brown {
+    color: #ff0100;
+}
+
+/* Legal Layout Custom Styling Canvas */
+.legal-wrapper-card {
+    background: #ffffff;
+    border-radius: 24px;
+    border: 2px solid #F5E6D3;
+    overflow: hidden;
+    padding: 40px;
+}
+
+.legal-header {
+    background: linear-gradient(135deg, #FFF8F0 0%, #FFE4C4 100%);
+    padding: 40px 0;
+    border-bottom: 2px solid #F5E6D3;
+    text-align: center;
+    margin-bottom: 40px;
+    border-radius: 20px;
+}
+
+.legal-content h4 {
+    color: #ff0100;
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-top: 25px;
+    margin-bottom: 12px;
+    position: relative;
+}
+
+.legal-content p {
+    color: #5D4037;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+.legal-content ul {
+    color: #5D4037;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    padding-left: 20px;
+}
+
+.legal-content li {
+    margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+    .legal-wrapper-card {
+        padding: 25px;
+    }
+
+    .legal-header {
+        padding: 30px 15px;
+    }
+}
