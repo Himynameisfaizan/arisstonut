@@ -25,40 +25,22 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <!-- Google Fonts -->
-<<<<<<< HEAD
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
-
-    <!-- Google Fonts & Bootstrap Icons waise hi rahenge -->
-    <link rel="icon" type="image/webp" href="admin/uploads/logo/logo_header_6a2a43785437e.webp">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-
-    <!-- YAHAN CHANGES KARNE HAIN: Har CSS file path mein $site add karo -->
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/cart.css">
-    <link rel="stylesheet" href="assets/css/category.css">
-    <link rel="stylesheet" href="assets/css/contact.css">
-    <link rel="stylesheet" href="assets/css/privacy.css">
-    <link rel="stylesheet" href="assets/css/product.css">
-    <link rel="stylesheet" href="assets/css/wishlist.css">
-    <link rel="stylesheet" href="assets/css/blog.css">
-=======
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Google Fonts & Bootstrap Icons waise hi rahenge -->
     <link rel="icon" type="image/webp" href="<?php echo $site; ?>admin/uploads/logo/logo_header_6a2a43785437e.webp">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
     <!-- YAHAN CHANGES KARNE HAIN: Har CSS file path mein $site add karo -->
-    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/style.css">
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/cart.css">
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/category.css">
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/contact.css">
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/privacy.css">
-    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/product.css">
+    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/style.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/product.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/wishlist.css">
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/blog.css">
->>>>>>> 9f70d3fd0e71bcc96fe8fa18851eb6a1b9dc0084
 </head>
 
 <body>
@@ -98,12 +80,8 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
                     <i class="bi bi-heart" style="font-size: 1.5rem;"></i>
                 </a>
 
-<<<<<<< HEAD
                 <a href="<?php echo $site; ?>cart.php"
                     class="nav-icon-link d-lg-none position-relative text-decoration-none">
-=======
-                <a href="<?php echo $site; ?>cart.php" class="nav-icon-link d-lg-none position-relative text-decoration-none">
->>>>>>> 9f70d3fd0e71bcc96fe8fa18851eb6a1b9dc0084
                     <i class="bi bi-bag" style="font-size: 1.5rem;"></i>
                     <span class="cart-count" id="header-mobile-cart-badge"><?php echo $total_cart_items; ?></span>
                 </a>
@@ -118,7 +96,6 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
                     <li class="nav-item"><a class="nav-link" href="<?php echo $site; ?>index.php">HOME</a></li>
 
                     <li class="nav-item dropdown">
-<<<<<<< HEAD
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             style="cursor: pointer;">
                             PRODUCTS
@@ -128,14 +105,6 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
                             <li>
                                 <a class="dropdown-item fw-bold border-bottom mb-2 py-2"
                                     href="<?php echo $site; ?>product.php" style="color: #8B4513;">
-=======
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" style="cursor: pointer;">
-                            PRODUCTS
-                        </a>
-                        <ul class="dropdown-menu border-0 shadow-lg" aria-labelledby="navbarDropdown" style="border-radius: 12px; min-width: 240px; padding: 10px 0;">
-                            <li>
-                                <a class="dropdown-item fw-bold border-bottom mb-2 py-2" href="<?php echo $site; ?>product.php" style="color: #8B4513;">
->>>>>>> 9f70d3fd0e71bcc96fe8fa18851eb6a1b9dc0084
                                     <i class="bi bi-grid-fill me-2"></i>All Products
                                 </a>
                             </li>
@@ -175,7 +144,6 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
 
                     <div class="search-overlay-form" id="search-dropdown-box">
                         <form action="<?php echo $site; ?>product.php" method="GET" class="d-flex gap-2">
-<<<<<<< HEAD
                             <input type="text" name="search" class="form-control form-control-sm"
                                 placeholder="Search delicious Makhana..." required>
                             <button type="submit" class="btn btn-sm btn-dark"
@@ -185,14 +153,6 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
 
                     <a href="<?php echo $site; ?>wishlist.php" class="nav-icon-link me-3"><i
                             class="bi bi-heart"></i></a>
-=======
-                            <input type="text" name="search" class="form-control form-control-sm" placeholder="Search delicious Makhana..." required>
-                            <button type="submit" class="btn btn-sm btn-dark" style="background:#8B4513; border:none;"><i class="bi bi-search"></i></button>
-                        </form>
-                    </div>
-
-                    <a href="<?php echo $site; ?>wishlist.php" class="nav-icon-link me-3"><i class="bi bi-heart"></i></a>
->>>>>>> 9f70d3fd0e71bcc96fe8fa18851eb6a1b9dc0084
                     <a href="<?php echo $site; ?>cart.php" class="nav-icon-link">
                         <i class="bi bi-bag"></i>
                         <span class="cart-count" id="header-cart-badge"><?php echo $total_cart_items; ?></span>
