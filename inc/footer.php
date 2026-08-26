@@ -26,18 +26,28 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
 ?>
 
 <style>
+    :root {
+        --footer-bg: #1F130E;
+        /* Rich Dark Warm Brown */
+        --footer-text: #D7CCC8;
+        --footer-heading: #FFFFFF;
+        --footer-accent: #C67D44;
+        /* Warm Gold/Copper Accent */
+    }
+
     .footer {
-        background: #e5afaf52 !important;
-        /* Rich Dark Brown Chocolate Base */
-        color: #D7CCC8;
-        padding: 70px 0 25px;
+        background-color: var(--footer-bg) !important;
+        color: var(--footer-text);
+        padding: 80px 0 30px;
         font-family: 'Poppins', sans-serif;
+        position: relative;
+        border-top: 4px solid var(--footer-accent);
     }
 
     .footer h5 {
-        color: #0a0a0a;
+        color: var(--footer-heading);
         font-weight: 700;
-        font-size: 1.15rem;
+        font-size: 1.1rem;
         margin-bottom: 25px;
         position: relative;
         text-transform: uppercase;
@@ -49,48 +59,51 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
         position: absolute;
         left: 0;
         bottom: -8px;
-        width: 40px;
+        width: 35px;
         height: 2px;
-        background: #ff0100;
-        /* Gold Accent Underline Line */
+        background: var(--footer-accent);
     }
 
-    .footer a {
-        color: #000000 !important;
+    /* Links Styling */
+    .footer-links-col a {
+        color: var(--footer-text) !important;
         text-decoration: none;
         transition: all 0.3s ease;
         display: inline-block;
-        margin-bottom: 12px;
-        font-size: 0.92rem;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
         width: 100%;
+        opacity: 0.85;
     }
 
-    .footer a:hover {
-        color: #000000 !important;
+    .footer-links-col a:hover {
+        color: var(--footer-accent) !important;
         transform: translateX(5px);
+        opacity: 1;
     }
 
     .footer .brand {
         font-size: 2rem;
         font-weight: 800;
-        color: #ff0100;
-        margin-bottom: 5px;
+        color: #FFFFFF;
+        margin-bottom: 2px;
         letter-spacing: 0.5px;
     }
 
     .footer .subtitle {
-        color: #040404;
-        font-size: 0.85rem;
+        color: var(--footer-accent);
+        font-size: 0.8rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 3px;
-        margin-bottom: 18px;
+        margin-bottom: 15px;
     }
 
     .footer p {
         line-height: 1.7;
-        font-size: 0.92rem;
-        color: #080808;
+        font-size: 0.9rem;
+        color: var(--footer-text);
+        opacity: 0.8;
     }
 
     .contact-item {
@@ -98,15 +111,28 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
         align-items: flex-start;
         gap: 12px;
         margin-bottom: 15px;
-        color: #BCAAA4;
+        color: var(--footer-text);
+        opacity: 0.9;
+        font-size: 0.9rem;
     }
 
     .contact-item i {
-        color: #ff0100;
+        color: var(--footer-accent);
         font-size: 1.1rem;
         margin-top: 2px;
     }
 
+    .contact-item a {
+        color: var(--footer-text) !important;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .contact-item a:hover {
+        color: var(--footer-accent) !important;
+    }
+
+    /* Social Icons */
     .footer-social-icons {
         display: flex;
         gap: 12px;
@@ -114,8 +140,8 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
     }
 
     .footer-social-icons a {
-        width: 38px;
-        height: 38px;
+        width: 40px;
+        height: 40px;
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.1);
         color: #FFF;
@@ -129,37 +155,36 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
     }
 
     .footer-social-icons a:hover {
-        background: #FFD700;
-        color: #2D1B18 !important;
+        background: var(--footer-accent);
+        border-color: var(--footer-accent);
+        color: #FFF !important;
         transform: translateY(-3px);
     }
 
     .footer hr {
         border-color: rgba(255, 255, 255, 0.08) !important;
-        margin: 40px 0 25px;
+        margin: 45px 0 25px;
     }
 
-    /* Base Style dono buttons ke liye */
+    /* Floating Buttons Styling */
     .floating-btn {
         position: fixed;
         right: 30px;
         color: #fff;
-        width: 55px;
-        height: 55px;
+        width: 52px;
+        height: 52px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.9rem;
+        font-size: 1.7rem;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         z-index: 9999;
         text-decoration: none;
     }
 
-    /* 1. WhatsApp Button ki alag position aur color */
     .whatsapp-btn {
         bottom: 30px;
-        /* Ye sabse neeche rahega */
         background: #25D366;
         box-shadow: 0 8px 25px rgba(37, 211, 102, 0.35);
     }
@@ -170,33 +195,28 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
         box-shadow: 0 12px 30px rgba(37, 211, 102, 0.5);
     }
 
-    /* 2. Call Button ki alag position (WhatsApp ke upar) aur color */
     .phone-btn {
-        bottom: 100px;
-        /* Isko humne upar kar diya (30px + 70px spacing) */
-        background: #007bff;
-        /* Blue color call ke liye (Aap chahein to change kar sakte hain) */
-        box-shadow: 0 8px 25px rgba(0, 123, 255, 0.35);
+        bottom: 95px;
+        background: var(--footer-accent);
+        box-shadow: 0 8px 25px rgba(198, 125, 68, 0.35);
     }
 
     .phone-btn:hover {
         transform: scale(1.1) rotate(-10deg);
-        /* Isko opposite rotate diya hai cool look ke liye */
         color: #fff;
-        box-shadow: 0 12px 30px rgba(0, 123, 255, 0.5);
+        box-shadow: 0 12px 30px rgba(198, 125, 68, 0.5);
     }
 </style>
 
 <footer class="footer">
     <div class="container">
         <div class="row g-4">
-            <div class="col-lg-4 col-md-6 mb-2">
-                <?php
-                // Default Fallback Text/Image Block setup agar query empty ho
-                $footer_logo_img = "";
 
-                // Logos table se footer location ka active logo path fetch karna
-                $footer_logo_query = "SELECT `logo_path` FROM `logos` WHERE `location` = 'footer' AND `is_active` = 1 LIMIT 1";
+            <!-- Col 1: Brand Info & Socials -->
+            <div class="col-lg-4 col-md-6 mb-3">
+                <?php
+                $footer_logo_img = "";
+                $footer_logo_query = "SELECT `logo_path` FROM `logos` WHERE `location` = 'header' AND `is_active` = 1 LIMIT 1";
                 $footer_logo_res = $conn->query($footer_logo_query);
 
                 if ($footer_logo_res && $footer_logo_res->num_rows > 0) {
@@ -207,11 +227,12 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
                 }
                 ?>
 
+                <!-- Footer Logo Box Code Replace -->
                 <?php if (!empty($footer_logo_img)): ?>
                     <div class="footer-logo-box mb-3">
                         <a href="<?php echo $site; ?>index.php">
                             <img src="<?php echo $footer_logo_img; ?>" alt="AristoNut Logo" class="brand-logo-img"
-                                style="height: 52px; width: auto; object-fit: contain;">
+                                style="height: 48px; width: auto; object-fit: contain;">
                         </a>
                     </div>
                 <?php else: ?>
@@ -219,24 +240,23 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
                 <?php endif; ?>
 
                 <div class="subtitle">Premium Quality</div>
-                <p class="pe-lg-4 mb-2">
-                    India's finest premium makhana, crafted with tradition and quality.
-                    Experience the perfect blend of health, crispness, and delicious taste.
+                <p class="pe-lg-4 mb-3">
+                    India's finest premium makhana, crafted with tradition and quality. Experience the perfect blend of
+                    health, crispness, and delicious taste.
                 </p>
-                <!-- NAYA CODE: Parent Company Branding -->
+
+                <!-- Parent Company Tag -->
                 <div class="mb-4">
-                    <span class="d-inline-block border border-warning text-danger px-3 py-1 rounded-pill"
-                        style="font-size: 0.75rem; font-weight: 600; letter-spacing: 1px;">
+                    <span class="d-inline-block px-3 py-1 rounded-pill"
+                        style="font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; background: rgba(198, 125, 68, 0.15); color: #E6B180; border: 1px solid rgba(198, 125, 68, 0.3);">
                         A BRAND BY NK ENTERPRISES
                     </span>
                 </div>
 
                 <?php
-                // Contacts table se live social links columns fetch karna
                 $social_query = "SELECT `facebook`, `instagram`, `twitter`, `linkdin` FROM `contacts` LIMIT 1";
                 $social_res = $conn->query($social_query);
 
-                // Default empty strings initialization
                 $fb_link = $insta_link = $twitter_link = $linkedin_link = "";
 
                 if ($social_res && $social_res->num_rows > 0) {
@@ -244,7 +264,7 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
                     $fb_link = trim($social_row['facebook']);
                     $insta_link = trim($social_row['instagram']);
                     $twitter_link = trim($social_row['twitter']);
-                    $linkedin_link = trim($social_row['linkdin']); /* Table schema mein linkdin spelling hai */
+                    $linkedin_link = trim($social_row['linkdin']);
                 }
                 ?>
 
@@ -271,7 +291,8 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
                 </div>
             </div>
 
-            <div class="col-lg-2 col-md-6 col-6 mb-2">
+            <!-- Col 2: Quick Links -->
+            <div class="col-lg-2 col-md-6 col-6 mb-3 footer-links-col">
                 <h5>Quick Links</h5>
                 <a href="<?php echo $site; ?>index.php">Home</a>
                 <a href="<?php echo $site; ?>about.php">About Us</a>
@@ -281,7 +302,8 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
                 <a href="<?php echo $site; ?>terms-conditions.php">Terms & Conditions</a>
             </div>
 
-            <div class="col-lg-3 col-md-6 col-6 mb-2">
+            <!-- Col 3: Our Products -->
+            <div class="col-lg-3 col-md-6 col-6 mb-3 footer-links-col">
                 <h5>Our Products</h5>
                 <?php
                 $footer_prod_query = "SELECT categories, slug_url FROM categories WHERE status = 1 ORDER BY id DESC LIMIT 6";
@@ -292,7 +314,7 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
                         $f_prod_name = htmlspecialchars($f_prod['categories']);
                         $f_prod_slug = htmlspecialchars($f_prod['slug_url']);
 
-                        echo '<a href="' . $site . 'product/' . $f_prod_slug . '">' . $f_prod_name . '</a>';
+                        echo '<a href="' . $site . 'category/' . $f_prod_slug . '">' . $f_prod_name . '</a>';
                     }
                 } else {
                     echo '<a href="' . $site . 'product.php">Premium Makhana</a>';
@@ -302,7 +324,8 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
                 ?>
             </div>
 
-            <div class="col-lg-3 col-md-6 mb-2">
+            <!-- Col 4: Get In Touch -->
+            <div class="col-lg-3 col-md-6 mb-3">
                 <h5>Get In Touch</h5>
                 <div class="contact-item">
                     <i class="bi bi-geo-alt-fill"></i>
@@ -311,8 +334,7 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
                 <div class="contact-item">
                     <i class="bi bi-telephone-fill"></i>
                     <p class="mb-0">
-                        <a href="tel:<?php echo preg_replace('/[^0-9+]/', '', $db_phone); ?>"
-                            style="display:inline; color:inherit; padding:0; margin:0;">
+                        <a href="tel:<?php echo preg_replace('/[^0-9+]/', '', $db_phone); ?>">
                             <?php echo $db_phone; ?>
                         </a>
                     </p>
@@ -320,33 +342,47 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
                 <div class="contact-item">
                     <i class="bi bi-envelope-fill"></i>
                     <p class="mb-0">
-                        <a href="mailto:<?php echo $db_email; ?>"
-                            style="display:inline; color:inherit; padding:0; margin:0;">
+                        <a href="mailto:<?php echo $db_email; ?>">
                             <?php echo $db_email; ?>
                         </a>
                     </p>
                 </div>
             </div>
+
         </div>
 
         <hr>
 
+        <!-- Bottom Copyright Row -->
         <div class="row align-items-center">
-            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                <!-- NAYA CODE: Copyright text update with NK Enterprises -->
-                <p class="mb-0 small text-muted">© <?php echo date('Y'); ?> <span
-                        class="text-black fw-bold">AristoNut</span> (NK Enterprises). All rights reserved.</p>
+            <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                <p class="mb-0 small text-muted" style="color: #A1887F !important;">
+                    © <?php echo date('Y'); ?> <span class="text-white fw-bold">AristoNut</span> (NK Enterprises). All
+                    rights reserved.
+                </p>
             </div>
             <div class="col-md-6 text-center text-md-end">
-                <p class="developer-credit mb-0 small">
-                    <!-- NAYA CODE: Powered By update -->
-                    Powered by <strong class="text-black">NK Enterprises</strong> <span class="mx-2 opacity-50">|
+                <p class="mb-0 small" style="color: #A1887F !important;">
+                    Powered by <strong class="text-white">NK Enterprises</strong>
                 </p>
             </div>
         </div>
     </div>
 </footer>
 
+<!-- Floating Call & WhatsApp Buttons -->
+<?php if (!empty($db_phone)): ?>
+    <a href="tel:<?php echo preg_replace('/[^0-9+]/', '', $db_phone); ?>" class="floating-btn phone-btn" title="Call Us">
+        <i class="bi bi-telephone-fill"></i>
+    </a>
+<?php endif; ?>
+
+<?php if (!empty($wp_clean_link)): ?>
+    <a href="https://wa.me/<?php echo $wp_clean_link; ?>?text=Hello%20AristoNut,%20I%20want%20to%20know%20more%20about%20your%20products."
+        target="_blank" class="floating-btn whatsapp-btn" title="Chat on WhatsApp">
+        <i class="bi bi-whatsapp"></i>
+    </a>
+<?php endif; ?>
 <a href="https://wa.me/<?php echo $db_phone; ?>" class="floating-btn whatsapp-btn" target="_blank"
     title="Chat on WhatsApp">
     <i class="bi bi-whatsapp"></i>
@@ -358,7 +394,6 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <!-- Header Scripts -->
 <script>

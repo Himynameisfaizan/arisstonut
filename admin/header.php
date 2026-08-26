@@ -52,27 +52,28 @@ if (!isset($_SESSION['admin_logged_in'])) {
                     href="#homeContent" role="button">
                     <i class="fas fa-home fa-fw me-3"></i>
                     <span class="flex-grow-1">Home Content</span>
-                    <!-- <i class="fas fa-chevron-down ms-auto"></i> -->
+                    <i class="fas fa-chevron-down ms-auto"></i>
                 </a>
-                <!-- <div class="collapse <?php echo in_array(basename($_SERVER['PHP_SELF']), ['home-items.php', 'add-banner.php']) ? 'show' : ''; ?>" 
-                     id="homeContent">
+                <div class="collapse <?php echo in_array(basename($_SERVER['PHP_SELF']), ['home-items.php', 'add-banner.php']) ? 'show' : ''; ?>"
+                    id="homeContent">
                     <ul class="nav flex-column ps-5">
                         <li class="nav-item">
-                            <a href="home-items.php" class="nav-link text-muted py-2 d-flex align-items-center 
+                            <a href="home-items.php"
+                                class="nav-link text-muted py-2 d-flex align-items-center 
                                <?php echo basename($_SERVER['PHP_SELF']) == 'home-items.php' ? 'text-primary' : ''; ?>">
                                 <i class="fas fa-image fa-sm me-2"></i>
                                 <span>Logo</span>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a href="add-banner.php" class="nav-link text-muted py-2 d-flex align-items-center 
                                <?php echo basename($_SERVER['PHP_SELF']) == 'add-banner.php' ? 'text-primary' : ''; ?>">
                                 <i class="fas fa-images fa-sm me-2"></i>
                                 <span>Banners</span>
                             </a>
-                        </li>
+                        </li> -->
                     </ul>
-                </div> -->
+                </div>
             </li>
 
             <!-- About Us -->

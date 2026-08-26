@@ -1,0 +1,274 @@
+/* ========================== */
+/* HEADER SECTION */
+/* ========================== */
+
+:root {
+    --top-bar-bg: #9C5521;
+    /* Earthy brown matching the screenshot */
+    --badge-bg: #6B0000;
+    /* Dark maroon */
+    --nav-text: #4A4A4A;
+    --pill-bg: #FFF0E5;
+    /* Soft Peach */
+    --pill-text: #B85D19;
+    --cart-badge: #E02020;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* 1. Ultra-Modern Announcement Bar */
+.announcement-bar {
+    background-color: var(--top-bar-bg);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.85rem;
+    font-weight: 400;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    letter-spacing: 0.3px;
+}
+
+.announcement-badge {
+    background-color: var(--badge-bg);
+    color: #FFFFFF;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+/* 2. Sticky Glassmorphism Header */
+.modern-navbar {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+}
+
+.brand-logo-img {
+    max-height: 44px;
+    /* Slightly sleeker logo size */
+    background-color: transparent;
+    width: auto;
+    object-fit: contain;
+}
+
+/* 3. D2C Navigation Links */
+.desktop-nav .navbar-nav {
+    gap: 10px;
+    /* Space between pills */
+}
+
+.desktop-nav .nav-link {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--nav-text);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 10px 22px !important;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* Hover effect for non-active links */
+.desktop-nav .nav-link:not(.active-link):hover {
+    color: var(--pill-text);
+    background-color: rgba(255, 240, 229, 0.4);
+}
+
+/* DYNAMIC ACTIVE STATE: Pill + Dash combined */
+.desktop-nav .nav-link.active-link {
+    background-color: var(--pill-bg);
+    color: var(--pill-text);
+    font-weight: 600;
+}
+
+.desktop-nav .nav-link.active-link::after {
+    content: '';
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 14px;
+    height: 3px;
+    background-color: var(--pill-text);
+    border-radius: 4px;
+}
+
+/* 4. Minimalist Thin Icons */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    /* Breathing room between icons */
+}
+
+.nav-icon-link {
+    color: #222222;
+    font-size: 1.3rem;
+    text-decoration: none;
+    position: relative;
+    transition: transform 0.2s, color 0.2s;
+    /* Thins out the default bootstrap icons */
+    -webkit-text-stroke: 0.5px white;
+}
+
+.nav-icon-link:hover {
+    transform: translateY(-2px);
+    color: var(--pill-text);
+}
+
+/* Perfect Circular Cart Badge */
+.cart-badge-circle {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background-color: var(--cart-badge);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1.5px solid #fff;
+}
+
+/* Clean Dropdown */
+.dropdown-menu {
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    padding: 12px;
+    margin-top: 15px;
+}
+
+.dropdown-item {
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.dropdown-item:hover {
+    background-color: var(--pill-bg);
+    color: var(--pill-text);
+}
+
+/* Responsive Sidebar basics */
+.menu-toggle-btn {
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    color: #222;
+    cursor: pointer;
+}
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 1040;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modern-sidebar {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 320px;
+    max-width: 85%;
+    height: 100vh;
+    background: #fff;
+    z-index: 1050;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+    transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.modern-sidebar.active {
+    right: 0;
+}
+
+.sidebar-header {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.close-sidebar {
+    background: #f8f9fa;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.sidebar-links {
+    padding: 20px 0;
+}
+
+.sidebar-links a {
+    display: flex;
+    align-items: center;
+    padding: 12px 25px;
+    color: #333;
+    font-weight: 500;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: padding-left 0.3s;
+}
+
+.sidebar-links a i {
+    width: 32px;
+    font-size: 1.2rem;
+    color: #888;
+}
+
+.sidebar-links a:hover,
+.sidebar-links a.active-mobile {
+    color: var(--pill-text);
+    padding-left: 30px;
+}
+
+.sidebar-links a:hover i,
+.sidebar-links a.active-mobile i {
+    color: var(--pill-text);
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+    padding: 20px;
+    background: #fafafa;
+    border-top: 1px solid #f5f5f5;
+}
