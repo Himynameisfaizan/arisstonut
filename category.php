@@ -19,17 +19,16 @@ $cat_stmt->execute();
 $cat_res = $cat_stmt->get_result();
 
 if (!$cat_res || $cat_res->num_rows == 0) {
-    echo "<h2 style='text-align:center; margin-top:100px; color:#8B4513; font-family:sans-serif;'>Category Route Matrix Not Found.</h2>";
+    echo "<h2 style='text-align:center; margin-top:100px; color:#8B4513; font-family:sans-serif;'>Category Not Found.</h2>";
     exit();
 }
 
 $category_data = $cat_res->fetch_assoc();
-// Yahan humne aapke database ke mutabik 'cate_id' ko primary relation target banaya hai
 $current_cate_id = intval($category_data['cate_id']);
 $current_category_name = htmlspecialchars($category_data['categories']);
 $cat_stmt->close();
 
-// 3. RELATIONAL FIX: products table ke 'pro_cate' column ko 'cate_id' se match karna
+// RELATIONAL FIX: products table ke 'pro_cate' column ko 'cate_id' se match karna
 $prod_query = "SELECT * FROM `products` WHERE `pro_cate` = '$current_cate_id' AND `status` = 1 AND `is_disabled` = 0 ORDER BY `id` DESC";
 $products_result = $conn->query($prod_query);
 ?>
@@ -42,117 +41,100 @@ $products_result = $conn->query($prod_query);
     <title><?php echo htmlspecialchars($category_data['meta_title']); ?> - AristoNut</title>
     <meta name="description" content="<?php echo htmlspecialchars($category_data['meta_desc']); ?>">
 
-    <?php include('inc/header.php'); ?>
+    <?php 
+    // DYNAMIC BREADCRUMB SETUP
+    $pageTitle = $current_category_name;
+    $parentName = "All Categories";
+    $parentUrl = $site . "product.php";
+    include('inc/header.php'); 
+    include('inc/breadcrumb.php'); 
+    ?>
 
-    <style>
-        /* Modern Dual Button Styles */
-        .modern-btn-add {
-            background-color: #FFF8F0;
-            color: #8B4513;
-            border: 1.5px solid #8B4513;
-            border-radius: 20px;
-            padding: 8px 5px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            transition: all 0.3s;
-            width: 50%;
-        }
-
-        .modern-btn-add:hover {
-            background-color: #8B4513;
-            color: #FFFFFF;
-        }
-
-        .modern-btn-buy {
-            background-color: #8B4513;
-            color: #FFFFFF;
-            border: 1.5px solid #8B4513;
-            border-radius: 20px;
-            padding: 8px 5px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            transition: all 0.3s;
-            width: 50%;
-        }
-
-        .modern-btn-buy:hover {
-            background-color: #6D3410;
-            border-color: #6D3410;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(139, 69, 19, 0.2);
-        }
-    </style>
 </head>
 
 <body>
 
-    <section class="category-banner text-center mb-5">
+    <main class="category-products-wrapper">
         <div class="container">
-            <span class="badge mb-2 px-3 py-2 rounded-pill text-uppercase"
-                style="letter-spacing:1px; background:#ff0100 !important;">Collection</span>
-            <h1 class="fw-bold display-5" style="color: #8B4513;"><?php echo $current_category_name; ?></h1>
-            <p class="text-muted mx-auto" style="max-width: 600px;">Freshly picked, high-nutrition crisp premium
-                flavored makhana directly from Mithila.</p>
-        </div>
-    </section>
+            
+            <div class="row g-4 justify-content-center">
+                <?php
+                if ($products_result && $products_result->num_rows > 0) {
+                    while ($product = $products_result->fetch_assoc()) {
+                        $p_id = intval($product['id']);
+                        $p_name = htmlspecialchars($product['pro_name']);
+                        $p_price = htmlspecialchars($product['selling_price']);
+                        $p_qty = htmlspecialchars($product['qty']);
+                        $p_slug = htmlspecialchars($product['slug_url']);
+                        $p_img = !empty($product['pro_img']) ? $site . 'admin/assets/img/uploads/' . htmlspecialchars($product['pro_img']) : $site . 'assets/images/hero.webp';
 
-    <main class="container mb-5">
-        <div class="row g-4">
-            <?php
-            if ($products_result && $products_result->num_rows > 0) {
-                while ($product = $products_result->fetch_assoc()) {
-                    $p_id = intval($product['id']);
-                    $p_name = htmlspecialchars($product['pro_name']);
-                    $p_price = htmlspecialchars($product['selling_price']);
-                    $p_mrp = htmlspecialchars($product['mrp']);
-                    $p_img = htmlspecialchars($product['pro_img']);
-                    $p_qty = htmlspecialchars($product['qty']);
-                    $p_slug = htmlspecialchars($product['slug_url']);
-
-                    // 🎯 SEO Friendly Link Structure Generation
-                    $seo_detail_url = $site . "product/" . $p_slug;
-                    ?>
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="product-card h-100 d-flex flex-column"
-                            style="background: #fff; border-radius: 20px; border: 2px solid #f5e6d3; overflow: hidden; padding: 15px;">
-                            <a href="<?php echo $seo_detail_url; ?>" class="product-link text-center mb-3">
-                                <div class="product-image-box position-relative" style="height: 180px;">
-                                    <img src="<?php echo $site; ?>admin/assets/img/uploads/<?php echo $p_img; ?>"
-                                        alt="<?php echo $p_name; ?>" style="height:100%; object-fit:contain;">
+                        // 🎯 SEO Friendly Link Structure
+                        $seo_detail_url = $site . "product/" . $p_slug;
+                        $is_wished = (isset($_SESSION['wishlist']) && in_array($p_id, $_SESSION['wishlist'])) ? 'bi-heart-fill text-danger' : 'bi-heart';
+                        ?>
+                        
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                            <div class="video-prod-card">
+                                
+                                <!-- Wishlist Toggle -->
+                                <div class="v-wish-btn" onclick="handleWishlist(<?php echo $p_id; ?>, this)">
+                                    <i class="bi <?php echo $is_wished; ?>"></i>
                                 </div>
-                            </a>
-                            <div class="product-info text-center d-flex flex-column flex-grow-1">
-                                <a href="<?php echo $seo_detail_url; ?>" class="product-link text-decoration-none">
-                                    <h5 class="product-name fw-bold mb-1 text-truncate"
-                                        style="font-size:1.05rem; color:#3E2723;"><?php echo $p_name; ?></h5>
+
+                                <!-- Product Image with 360 Hover Rotation -->
+                                <a href="<?php echo $seo_detail_url; ?>" class="v-img-box">
+                                    <img src="<?php echo $p_img; ?>" alt="<?php echo $p_name; ?>">
                                 </a>
-                                <p class="text-muted small mb-2">Net Wt: <?php echo !empty($p_qty) ? $p_qty : '100'; ?>g</p>
-                                <div class="product-price mb-3">
-                                    <span class="fw-bold fs-5" style="color: #ff0100;">₹<?php echo $p_price; ?></span>
-                                    <?php if (!empty($p_mrp) && $p_mrp > $p_price): ?>
-                                        <span
-                                            class="text-decoration-line-through text-muted small ms-2">₹<?php echo $p_mrp; ?></span>
-                                    <?php endif; ?>
+
+                                <!-- Rating Stars -->
+                                <div class="v-rating">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <span class="text-muted ms-1">(4.9)</span>
                                 </div>
 
-                                <!-- NAYA CODE: TWO BUTTONS (CART & BUY NOW) -->
-                                <div class="d-flex gap-2 w-100 mt-auto">
-                                    <button class="modern-btn-add" onclick="addToCart(<?php echo $p_id; ?>)">
-                                        Cart
-                                    </button>
-                                    <button class="modern-btn-buy" onclick="buyNow(<?php echo $p_id; ?>)">
-                                        Buy Now
-                                    </button>
+                                <!-- Product Title & Weight -->
+                                <a href="<?php echo $seo_detail_url; ?>" class="v-title" title="<?php echo $p_name; ?>">
+                                    <?php echo $p_name; ?>
+                                </a>
+                                <div class="v-weight">Net Wt: <?php echo !empty($p_qty) ? $p_qty : '100g'; ?></div>
+
+                                <!-- Price & Action Buttons -->
+                                <div class="v-bottom-section">
+                                    <div class="v-price">₹<?php echo $p_price; ?></div>
+                                    <div class="v-action-buttons">
+                                        <button class="v-btn-cart" onclick="addToCart(<?php echo $p_id; ?>)">
+                                            Cart
+                                        </button>
+                                        <button class="v-btn-buy" onclick="buyNow(<?php echo $p_id; ?>)">
+                                            Buy Now
+                                        </button>
+                                    </div>
                                 </div>
+
                             </div>
+                        </div>
+                        <?php
+                    }
+                } else {
+                    // Modern Empty State Design
+                    ?>
+                    <div class="col-12 text-center py-5 my-5">
+                        <div class="p-5 rounded-4 border" style="background: #FFFFFF; border-style: dashed !important; border-color: rgba(156,85,33,0.3) !important;">
+                            <i class="bi bi-box-seam display-2 d-block mb-3" style="color: var(--brand-accent);"></i>
+                            <h4 class="fw-bold" style="color: var(--text-dark); font-family: 'Poppins', sans-serif;">Coming Soon!</h4>
+                            <p class="text-muted" style="font-family: 'Inter', sans-serif;">We are currently updating products in the <strong>"<?php echo $current_category_name; ?>"</strong> collection.</p>
+                            <a href="<?php echo $site; ?>product.php" class="btn text-white px-4 py-2 mt-3 rounded-pill" style="background: var(--text-dark); font-weight: 500;">Explore Other Categories</a>
                         </div>
                     </div>
                     <?php
                 }
-            } else {
-                echo "<div class='col-12 text-center py-5'><i class='bi bi-box-seizer text-muted display-1'></i><h4 class='text-muted mt-3'>Is category ke andar abhi koi product listed nahi hai.</h4></div>";
-            }
-            ?>
+                ?>
+            </div>
+
         </div>
     </main>
 
@@ -161,8 +143,35 @@ $products_result = $conn->query($prod_query);
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- NEW: BUY NOW SCRIPT -->
+    <!-- ================= SAFE AJAX WITH TOAST POPUP ================= -->
     <script>
+        // ADD TO CART FUNCTION
+        function addToCart(productId, variationId = 0, qty = 1) {
+            $.ajax({
+                url: '<?php echo $site; ?>cart_action.php',
+                type: 'POST',
+                data: {
+                    action: 'add_to_cart',
+                    product_id: productId,
+                    variation_id: variationId,
+                    quantity: qty
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if(response.status === 'success') {
+                        $('.cart-count').text(response.cart_count);
+                        showToast("Added to Cart!", "Item successfully added to your basket.", "success");
+                    } else {
+                        showToast("Action Failed", response.message, "error");
+                    }
+                },
+                error: function() {
+                    showToast("System Error", "Could not connect to the server.", "error");
+                }
+            });
+        }
+
+        // BUY NOW FUNCTION
         function buyNow(productId, variationId = 0, qty = 1) {
             $.ajax({
                 url: '<?php echo $site; ?>cart_action.php',
@@ -176,14 +185,14 @@ $products_result = $conn->query($prod_query);
                 dataType: 'json',
                 success: function (response) {
                     if (response.status === 'success') {
-                        // Successfully added to direct buy session -> Redirect to checkout instantly
+                        // Redirect to checkout specifically for Buy Now
                         window.location.href = '<?php echo $site; ?>checkout.php?buy_now=true';
                     } else {
-                        alert("Error: " + response.message);
+                        showToast("Action Failed", response.message, "error");
                     }
                 },
                 error: function () {
-                    alert("System Error: Could not connect to the server.");
+                    showToast("System Error", "Could not connect to the server.", "error");
                 }
             });
         }

@@ -369,10 +369,7 @@ include('inc/header.php');
     </div>
 </section>
 
-<!-- THE BIG BRAND STATEMENT (DARK PREMIUM THEME) -->
-
 <!-- SECTION 6: THE BIG BRAND STATEMENT (EVOLUTION TIMELINE DESIGN) -->
-
 <section class="evolution-section">
     <div class="container">
 
@@ -457,8 +454,6 @@ include('inc/header.php');
 </section>
 
 <!-- SECTION 6 END -->
-
-
 <section class="why-makhana-section">
     <div class="container">
         <div class="row align-items-center">
@@ -547,8 +542,7 @@ include('inc/header.php');
 <section class="homepage-tail-section">
     <div class="container">
 
-        <!-- ================= SECTION 8: BESTSELLERS (EXACT 8 LIMIT & VIDEO UI) ================= -->
-        <div class="tail-header">
+       <div class="tail-header">
             <span class="tail-subtitle">YOUR NEXT FAVOURITE IS HERE</span>
             <h2 class="tail-title">AristoNut Bestsellers</h2>
             <p class="tail-desc">Not sure where to start? Start with what everyone loves.</p>
@@ -660,13 +654,13 @@ include('inc/header.php');
                     $bdate = date('d M, Y', strtotime($blog['created_at']));
 
                     // Image mapping
-                    $bimg = !empty($blog['image']) ? $site . 'admin/uploads/blog/' . htmlspecialchars($blog['image']) : $site . 'assets/images/hero.webp';
+                    $bimg = !empty($blog['image']) ? $site . 'admin/assets/img/uploads/blogs/' . htmlspecialchars($blog['image']) : $site . 'assets/images/hero.webp';
                     if (!file_exists($_SERVER['DOCUMENT_ROOT'] . parse_url($bimg, PHP_URL_PATH))) {
                         $bimg = $site . 'admin/uploads/' . htmlspecialchars($blog['image']);
                     }
                     ?>
                     <div class="col-lg-4 col-md-6 col-12">
-                        <a href="<?php echo $site; ?>blog-detail.php?slug=<?php echo $bslug; ?>" class="modern-blog-card">
+                        <a href="<?php echo $site; ?>blog-details.php?slug=<?php echo $bslug; ?>" class="modern-blog-card">
 
                             <div class="blog-img-box">
                                 <img src="<?php echo $bimg; ?>" alt="<?php echo $btitle; ?>"
@@ -870,6 +864,7 @@ include('inc/header.php');
 
 <!-- NEW: BUY NOW SCRIPT -->
 <script>
+    // BUY NOW FUNCTION
     function buyNow(productId, variationId = 0, qty = 1) {
         $.ajax({
             url: '<?php echo $site; ?>cart_action.php',
@@ -886,11 +881,37 @@ include('inc/header.php');
                     // Redirect to checkout specifically for Buy Now
                     window.location.href = '<?php echo $site; ?>checkout.php?buy_now=true';
                 } else {
-                    alert("Error: " + response.message);
+                    showToast("Action Failed", response.message, "error");
                 }
             },
             error: function () {
-                alert("System Error: Could not connect to the server.");
+                showToast("System Error", "Could not connect to the server.", "error");
+            }
+        });
+    }
+
+    // ADD TO CART FUNCTION
+    function addToCart(productId, variationId = 0, qty = 1) {
+        $.ajax({
+            url: '<?php echo $site; ?>cart_action.php',
+            type: 'POST',
+            data: {
+                action: 'add_to_cart',
+                product_id: productId,
+                variation_id: variationId,
+                quantity: qty
+            },
+            dataType: 'json',
+            success: function(response) {
+                if(response.status === 'success') {
+                    $('.cart-count').text(response.cart_count);
+                    showToast("Added to Cart!", "Item successfully added to your basket.", "success");
+                } else {
+                    showToast("Action Failed", response.message, "error");
+                }
+            },
+            error: function() {
+                showToast("System Error", "Could not connect to the server.", "error");
             }
         });
     }
