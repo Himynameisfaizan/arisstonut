@@ -1981,7 +1981,7 @@ body {
     position: absolute;
     top: 0;
     right: 0;
-    width: 30%;
+    width: 40%;
     height: 100%;
     background-color: var(--accent-light);
     opacity: 0.5;
@@ -2013,8 +2013,8 @@ body {
 .story-image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    min-height: 500px;
+    object-fit: contain;
+    min-height: 400px;
     transition: transform 0.8s ease;
 }
 
@@ -2022,7 +2022,7 @@ body {
     transform: scale(1.05);
 }
 
-/* Floating Trust Badge on Image */
+
 .story-badge {
     position: absolute;
     bottom: 30px;
