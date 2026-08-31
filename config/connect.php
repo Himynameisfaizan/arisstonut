@@ -23,14 +23,14 @@ if ($local) {
     $username = 'root';
     $password = '';
     $dbName = 'aristonut';
-    // $site = "http://localhost/projects/aristonut/";
-    $site = "http://localhost/office_php_project/aristonut/";
+    $site = "http://localhost/projects/aristonut/";
+    // $site = "http://localhost/office_php_project/aristonut/";
 } else {
     $host = 'localhost';
     $username = 'u776339737_aristonut';
-    $password = 'UuR@~m3C2!Kj';
+    $password = 'Aristo@nut1';
     $dbName = 'u776339737_aristonut';
-    $site = 'https://www.aristonut.com/';
+    $site = 'https://www.aristonut.com/aristonut/';
 }
 
 global $site;
@@ -43,4 +43,3 @@ if ($conn->connect_error) {
 }
 
 $conn->set_charset("utf8");
-?>

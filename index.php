@@ -270,7 +270,7 @@ include('inc/header.php');
                         $col_class = "col-lg-4 col-md-6";
                         $layout_class = "bento-vertical";
                     }
-            ?>
+                    ?>
                     <div class="<?php echo $col_class; ?>">
                         <a href="<?php echo $site; ?>category/<?php echo $c_slug; ?>"
                             class="bento-card <?php echo $mapped_data['bg_class']; ?> <?php echo $layout_class; ?>">
@@ -290,7 +290,7 @@ include('inc/header.php');
 
                         </a>
                     </div>
-            <?php
+                    <?php
                     $count++;
                 }
             } else {
@@ -318,6 +318,8 @@ include('inc/header.php');
             <!-- Left Side: Editorial Image -->
             <div class="col-lg-5 col-md-12 reveal-up" id="storyImage">
                 <div class="story-image-wrapper">
+                    <!-- SUGGESTION: Yahan koi achhi farm ki ya traditional makhana processing ki real image lagana -->
+                    <!-- YEH NAYA SAHI CODE HAI -->
                     <img src="<?php echo $site; ?>assets/images/banner.jpeg"
                         alt="Mithila Origin Makhana" class="story-image">
 
@@ -540,7 +542,7 @@ include('inc/header.php');
 <section class="homepage-tail-section">
     <div class="container">
 
-        <div class="tail-header">
+       <div class="tail-header">
             <span class="tail-subtitle">YOUR NEXT FAVOURITE IS HERE</span>
             <h2 class="tail-title">AristoNut Bestsellers</h2>
             <p class="tail-desc">Not sure where to start? Start with what everyone loves.</p>
@@ -565,7 +567,7 @@ include('inc/header.php');
 
                     // Wishlist check
                     $is_wished = (isset($_SESSION['wishlist']) && in_array($pid, $_SESSION['wishlist'])) ? 'bi-heart-fill text-danger' : 'bi-heart';
-            ?>
+                    ?>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-12">
                         <div class="video-prod-card">
 
@@ -611,7 +613,7 @@ include('inc/header.php');
 
                         </div>
                     </div>
-            <?php
+                    <?php
                 }
             } else {
                 echo "<div class='col-12 text-center'><p class='text-muted'>No bestsellers found right now.</p></div>";
@@ -654,15 +656,15 @@ include('inc/header.php');
                     // Image mapping
                     $bimg = !empty($blog['image']) ? $site . 'admin/assets/img/uploads/blogs/' . htmlspecialchars($blog['image']) : $site . 'assets/images/hero.webp';
                     if (!file_exists($_SERVER['DOCUMENT_ROOT'] . parse_url($bimg, PHP_URL_PATH))) {
-                        $bimg = $site . 'admin/uploads/' . htmlspecialchars($blog['image']);
+                        $bimg = $site . 'admin/assets/img/uploads/blogs/' . htmlspecialchars($blog['image']);
                     }
-            ?>
+                    ?>
                     <div class="col-lg-4 col-md-6 col-12">
                         <a href="<?php echo $site; ?>blog-details.php?slug=<?php echo $bslug; ?>" class="modern-blog-card">
 
                             <div class="blog-img-box">
                                 <img src="<?php echo $bimg; ?>" alt="<?php echo $btitle; ?>"
-                                    onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=600&auto=format&fit=crop';">
+                                    onerror="this.src='https://thumbs.dreamstime.com/b/roasted-lotus-seed-makhana-22764990.jpg?w=768';">
                             </div>
 
                             <div class="blog-content">
@@ -677,7 +679,7 @@ include('inc/header.php');
 
                         </a>
                     </div>
-            <?php
+                    <?php
                 }
             } else {
                 echo "<div class='col-12 text-center'><p class='text-muted'>No health articles or recipes posted yet.</p></div>";
@@ -824,7 +826,7 @@ include('inc/header.php');
 
                     // Image fallback logic
                     $b_img = !empty($blog['image']) ? $site . 'admin/assets/img/uploads/blogs/' . htmlspecialchars($blog['image']) : $site . 'assets/images/hero.webp';
-            ?>
+                    ?>
                     <div class="col-md-6 col-lg-4">
                         <div class="card blog-card h-100 border-0 shadow-sm" style="border-radius: 16px;">
                             <div class="blog-img-wrapper">
@@ -851,7 +853,7 @@ include('inc/header.php');
             } else {
                 echo "<div class='col-12 text-center'><p class='text-muted fs-5'>No blogs published yet. Stay tuned!</p></div>";
             }
-                    ?>
+            ?>
         </div>
     </div>
 </section> -->
@@ -874,7 +876,7 @@ include('inc/header.php');
                 quantity: qty
             },
             dataType: 'json',
-            success: function(response) {
+            success: function (response) {
                 if (response.status === 'success') {
                     // Redirect to checkout specifically for Buy Now
                     window.location.href = '<?php echo $site; ?>checkout.php?buy_now=true';
@@ -882,8 +884,34 @@ include('inc/header.php');
                     showToast("Action Failed", response.message, "error");
                 }
             },
+            error: function () {
+                showToast("System Error", "Could not connect to the server.", "error");
+            }
+        });
+    }
+
+    // ADD TO CART FUNCTION
+    function addToCart(productId, variationId = 0, qty = 1) {
+        $.ajax({
+            url: '<?php echo $site; ?>cart_action.php',
+            type: 'POST',
+            data: {
+                action: 'add_to_cart',
+                product_id: productId,
+                variation_id: variationId,
+                quantity: qty
+            },
+            dataType: 'json',
+            success: function(response) {
+                if(response.status === 'success') {
+                    $('.cart-count').text(response.cart_count);
+                    showToast("Added to Cart!", "Item successfully added to your basket.", "success");
+                } else {
+                    showToast("Action Failed", response.message, "error");
+                }
+            },
             error: function() {
-                alert("System Error: Could not connect to the server.");
+                showToast("System Error", "Could not connect to the server.", "error");
             }
         });
     }
@@ -891,7 +919,7 @@ include('inc/header.php');
 
 <!-- YEH SAHI KAREGA ISKO -->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         var heroSwiper = new Swiper(".heroSwiper", {
             spaceBetween: 30,
             effect: "fade",
@@ -899,8 +927,7 @@ include('inc/header.php');
                 crossFade: true
             },
             loop: true,
-            grabCursor: true,
-            /* Shows hand cursor to indicate swipeability */
+            grabCursor: true, /* Shows hand cursor to indicate swipeability */
             autoplay: {
                 delay: 4500,
                 disableOnInteraction: false,
@@ -915,7 +942,7 @@ include('inc/header.php');
 
 <!-- Vanilla JS for Scroll Reveal Animation -->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const observerOptions = {
             root: null,
             rootMargin: '0px',
@@ -945,7 +972,7 @@ include('inc/header.php');
 
 <!-- Vanilla JS for Scroll Reveal Animation -->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const observerOptions = {
             root: null,
             rootMargin: '0px',
@@ -972,7 +999,7 @@ include('inc/header.php');
 
 <!-- Vanilla JS for Staggered Scroll Reveal -->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const observerOpts = {
             root: null,
             rootMargin: '0px',
@@ -996,12 +1023,8 @@ include('inc/header.php');
 
 <!-- Vanilla JS for Scroll Reveal -->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const wmOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.15
-        };
+    document.addEventListener("DOMContentLoaded", function () {
+        const wmOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
 
         const wmObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {

@@ -53,7 +53,7 @@ include('inc/breadcrumb.php');
                             
                             <!-- Image Frame with Smooth Hover Zoom -->
                             <div class="blog-img-box">
-                                <img src="<?php echo $b_img; ?>" alt="<?php echo $b_title; ?>" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=600&auto=format&fit=crop';">
+                                <img src="<?php echo $b_img; ?>" alt="<?php echo $b_title; ?>" onerror="this.src='https://thumbs.dreamstime.com/b/roasted-lotus-seed-makhana-22764990.jpg?w=768';">
                                 <span class="blog-author-badge"><i class="bi bi-person-fill me-1"></i> <?php echo $b_author; ?></span>
                             </div>
 
