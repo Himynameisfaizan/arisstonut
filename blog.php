@@ -2,23 +2,18 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-// Database & Global Configuration
+
 include('config/connect.php');
 
-// ==========================================
-// PAGINATION & FETCH LOGIC
-// ==========================================
-$limit = 9; // Ek page par 9 blogs dikhayenge
+$limit = 9; 
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($page - 1) * $limit;
 
-// Total active blogs count for pagination
 $count_query = "SELECT COUNT(*) as total FROM blogs WHERE status = 1";
 $count_result = $conn->query($count_query);
 $total_rows = $count_result->fetch_assoc()['total'];
 $total_pages = ceil($total_rows / $limit);
 
-// Fetch blogs for current page
 $blog_query = "SELECT blog_id, title, slug, author, image, description, created_at 
                FROM blogs 
                WHERE status = 1 
@@ -26,108 +21,108 @@ $blog_query = "SELECT blog_id, title, slug, author, image, description, created_
                LIMIT $limit OFFSET $offset";
 $blog_result = $conn->query($blog_query);
 ?>
-    <?php include('inc/header.php'); ?>
+<?php 
+$pageTitle = "Blog & Recipes";
+include('inc/header.php');
+include('inc/breadcrumb.php');
+?>
 
-    <!-- Blog Header Banner -->
-    <section class="blog-banner text-center">
-        <div class="container">
-            <span class="badge bg-white text-brown border mb-3 px-4 py-2 rounded-pill shadow-sm" style="color: #8B4513; font-weight: bold; letter-spacing: 1px;">JOURNAL & RECIPES</span>
-            <h1 class="fw-bold display-4 text-brown mb-3">AristoNut Blog</h1>
-            <p class="text-muted mx-auto fs-5" style="max-width: 650px;">Discover the health benefits of Makhana, exciting recipes, and the latest news from India's finest premium makhana brand.</p>
-        </div>
-    </section>
 
-    <!-- Main Blog Grid -->
-    <main class="container mb-5 pb-5">
+<main class="blog-listing-section">
+    <div class="container">
+        
         <div class="row g-4 align-items-stretch">
             <?php if ($blog_result && $blog_result->num_rows > 0): ?>
-                <?php while ($blog = $blog_result->fetch_assoc()): 
-                    // Sanitize dynamic database fields
+                <?php while ($blog = $blog_result->fetch_assoc()):
                     $b_title = htmlspecialchars($blog['title']);
                     $b_slug = htmlspecialchars($blog['slug']);
-                    $b_author = htmlspecialchars($blog['author'] ?? 'AristoNut Team');
+                    $b_author = htmlspecialchars($blog['author'] ?? 'AristoNut');
                     $b_date = date('d M, Y', strtotime($blog['created_at']));
-                    
-                    // Format Description safely
-                    $b_desc = strip_tags($blog['description']);
-                    $b_desc = strlen($b_desc) > 120 ? substr($b_desc, 0, 120) . '...' : $b_desc;
 
-                    // Fallback Image
+                    $b_desc = strip_tags($blog['description']);
+                    $b_desc = strlen($b_desc) > 130 ? substr($b_desc, 0, 130) . '...' : $b_desc;
+
+                    // Image matching index page logic with uploads/blog fallback
                     $b_img = !empty($blog['image']) ? $site . 'admin/assets/img/uploads/blogs/' . htmlspecialchars($blog['image']) : $site . 'assets/images/hero.webp';
+                    if(!file_exists($_SERVER['DOCUMENT_ROOT'] . parse_url($b_img, PHP_URL_PATH))) {
+                        $b_img = $site . 'admin/uploads/' . htmlspecialchars($blog['image']);
+                    }
                 ?>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card blog-card h-100 shadow-sm border-0">
-                            <!-- Image Wrap with Link -->
-                            <a href="<?php echo $site; ?>blog-details.php?slug=<?php echo $b_slug; ?>" class="text-decoration-none">
-                                <div class="blog-img-wrapper">
-                                    <img src="<?php echo $b_img; ?>" alt="<?php echo $b_title; ?>">
-                                    <span class="blog-date-badge"><i class="bi bi-calendar3 me-1"></i> <?php echo $b_date; ?></span>
-                                </div>
-                            </a>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <a href="<?php echo $site; ?>blog-details.php?slug=<?php echo $b_slug; ?>" class="modern-blog-card">
                             
-                            <!-- Card Body -->
-                            <div class="card-body p-4 d-flex flex-column">
-                                <p class="blog-author mb-2"><i class="bi bi-pen-fill me-1"></i> By <?php echo $b_author; ?></p>
-                                
-                                <a href="<?php echo $site; ?>blog-details.php?slug=<?php echo $b_slug; ?>" class="text-decoration-none">
-                                    <h4 class="card-title fw-bold mb-3" style="line-height: 1.3; color: #3E2723;"><?php echo $b_title; ?></h4>
-                                </a>
-                                
-                                <p class="card-text text-muted small mb-4 flex-grow-1" style="line-height: 1.6;"><?php echo $b_desc; ?></p>
-                                
-                                <!-- CTA Button -->
-                                <a href="<?php echo $site; ?>blog-details.php?slug=<?php echo $b_slug; ?>" class="btn btn-outline-brown rounded-pill fw-bold w-100 mt-auto" style="border: 2px solid #8B4513; color: #8B4513; transition: 0.3s;" onmouseover="this.style.background='#8B4513'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='#8B4513';">
-                                    Read Full Article <i class="bi bi-arrow-right ms-2"></i>
-                                </a>
+                            <!-- Image Frame with Smooth Hover Zoom -->
+                            <div class="blog-img-box">
+                                <img src="<?php echo $b_img; ?>" alt="<?php echo $b_title; ?>" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=600&auto=format&fit=crop';">
+                                <span class="blog-author-badge"><i class="bi bi-person-fill me-1"></i> <?php echo $b_author; ?></span>
                             </div>
-                        </div>
+
+                            <!-- Content -->
+                            <div class="blog-content">
+                                <div class="blog-date">
+                                    <i class="bi bi-calendar3"></i> <?php echo $b_date; ?>
+                                </div>
+
+                                <h3 class="blog-title" title="<?php echo $b_title; ?>"><?php echo $b_title; ?></h3>
+                                <p class="blog-snippet"><?php echo $b_desc; ?></p>
+                                
+                                <div class="blog-read-more">
+                                    Read Full Article <i class="bi bi-arrow-right"></i>
+                                </div>
+                            </div>
+
+                        </a>
                     </div>
                 <?php endwhile; ?>
             <?php else: ?>
                 <!-- Empty State -->
-                <div class="col-12 text-center py-5 my-5 bg-light rounded-4 border" style="border-style: dashed !important;">
-                    <i class="bi bi-journal-x text-muted display-1 d-block mb-3"></i>
-                    <h3 class="fw-bold text-brown">No Blogs Published Yet</h3>
-                    <p class="text-muted fs-5">We are currently cooking up some exciting content. Check back soon!</p>
-                    <a href="<?php echo $site; ?>index.php" class="btn text-white px-4 py-2 mt-3 rounded-pill" style="background:#8B4513;">Return to Homepage</a>
+                <div class="col-12 text-center py-5 my-5">
+                    <div class="p-5 rounded-4 border" style="background: #FFFFFF; border-style: dashed !important; border-color: rgba(156,85,33,0.3) !important;">
+                        <i class="bi bi-journal-x display-2 d-block mb-3" style="color: var(--brand-accent);"></i>
+                        <h3 class="fw-bold" style="color: var(--text-dark); font-family: 'Poppins', sans-serif;">No Articles Published Yet</h3>
+                        <p class="text-muted" style="font-family: 'Inter', sans-serif;">We are working on fresh recipes and nutritional guides. Check back soon!</p>
+                        <a href="<?php echo $site; ?>index.php" class="btn text-white px-4 py-2 mt-2 rounded-pill" style="background: var(--text-dark); font-weight: 500;">Return to Homepage</a>
+                    </div>
                 </div>
             <?php endif; ?>
         </div>
 
-        <!-- Dynamic Pagination UI -->
+        <!-- Dynamic Circular Pagination -->
         <?php if ($total_pages > 1): ?>
             <nav aria-label="Blog Page Navigation">
                 <ul class="pagination justify-content-center custom-pagination">
-                    
+
                     <!-- Previous Button -->
                     <li class="page-item <?php echo ($page <= 1) ? 'disabled' : ''; ?>">
                         <a class="page-link" href="?page=<?php echo $page - 1; ?>" aria-label="Previous">
-                            <span aria-hidden="true"><i class="bi bi-chevron-left"></i></span>
+                            <i class="bi bi-chevron-left"></i>
                         </a>
                     </li>
-                    
+
                     <!-- Page Numbers -->
-                    <?php for($i = 1; $i <= $total_pages; $i++): ?>
+                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                         <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
                             <a class="page-link" href="?page=<?php echo $i; ?>">
                                 <?php echo $i; ?>
                             </a>
                         </li>
                     <?php endfor; ?>
-                    
+
                     <!-- Next Button -->
                     <li class="page-item <?php echo ($page >= $total_pages) ? 'disabled' : ''; ?>">
                         <a class="page-link" href="?page=<?php echo $page + 1; ?>" aria-label="Next">
-                            <span aria-hidden="true"><i class="bi bi-chevron-right"></i></span>
+                            <i class="bi bi-chevron-right"></i>
                         </a>
                     </li>
-                    
+
                 </ul>
             </nav>
         <?php endif; ?>
-    </main>
+        
+    </div>
+</main>
 
-    <?php include('inc/footer.php'); ?>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<?php include('inc/footer.php'); ?>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

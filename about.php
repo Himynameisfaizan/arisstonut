@@ -1,7 +1,11 @@
-<?php include('inc/header.php'); ?>
+<?php 
+$pageTitle = "About AristoNut";
+include('inc/header.php');
+include ('inc/breadcrumb.php');
+?>
 
 <!-- Banner / Swiper Hero Section -->
-<section class="swiper-banner-section my-4" data-aos="fade-down" data-aos-duration="1000">
+<!-- <section class="swiper-banner-section my-4" data-aos="fade-down" data-aos-duration="1000">
   <div class="swiper mySwiper">
     <div class="swiper-wrapper">
       <div class="swiper-slide"
@@ -44,7 +48,7 @@
     <div class="swiper-button-next"></div>
     <div class="swiper-button-prev"></div>
   </div>
-</section>
+</section> -->
 
 <!-- About Brand Story Section -->
 <section class="container py-5">
@@ -127,64 +131,77 @@
 </section>
 
 <!-- Our Capabilities / Offerings -->
-<section class="container py-5">
-  <div class="text-center mb-5" data-aos="fade-up">
-    <span class="section-tag">Comprehensive Solutions</span>
-    <h2 class="fw-bold">Our Focus & Capabilities</h2>
-    <p class="text-muted">Meeting the requirements of modern retail consumers and high-volume commercial buyers.</p>
-  </div>
+<section class="capabilities-section">
+    <div class="container">
+        
+        <!-- Section Header -->
+        <div class="cap-header cap-reveal">
+            <span class="cap-tag">Comprehensive Solutions</span>
+            <h2 class="cap-title">Our Focus & Capabilities</h2>
+            <p class="cap-desc">Meeting the strict requirements of modern retail consumers and high-volume commercial buyers worldwide.</p>
+        </div>
 
-  <div class="row g-4">
-    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-      <div class="feature-card">
-        <div class="icon-box"><i class="bi bi-bag-check"></i></div>
-        <h5 class="fw-bold">Retail-Ready Makhana</h5>
-        <p class="text-muted small">Consumer-ready retail packs in multiple weights with shelf-appealing, airtight
-          modern packaging.</p>
-      </div>
+        <div class="row g-4">
+            <!-- Card 1 -->
+            <div class="col-lg-4 col-md-6 col-12 cap-reveal cap-delay-1">
+                <div class="cap-card">
+                    <div class="cap-icon-box"><i class="bi bi-bag-check"></i></div>
+                    <h5 class="cap-card-title">Retail-Ready Makhana</h5>
+                    <p class="cap-card-desc">Consumer-ready retail packs in multiple weights with shelf-appealing, airtight modern packaging.</p>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="col-lg-4 col-md-6 col-12 cap-reveal cap-delay-2">
+                <div class="cap-card">
+                    <div class="cap-icon-box"><i class="bi bi-boxes"></i></div>
+                    <h5 class="cap-card-title">Bulk & Wholesale</h5>
+                    <p class="cap-card-desc">High-capacity bulk shipments with consistent grading, standard sizing, and strict moisture control.</p>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="col-lg-4 col-md-6 col-12 cap-reveal cap-delay-3">
+                <div class="cap-card">
+                    <div class="cap-icon-box"><i class="bi bi-stars"></i></div>
+                    <h5 class="cap-card-title">Flavoured Innovations</h5>
+                    <p class="cap-card-desc">Roasted, non-fried flavored makhana recipes expertly designed to cater to modern snacking trends.</p>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="col-lg-4 col-md-6 col-12 cap-reveal cap-delay-1">
+                <div class="cap-card">
+                    <div class="cap-icon-box"><i class="bi bi-tag"></i></div>
+                    <h5 class="cap-card-title">Private-Label</h5>
+                    <p class="cap-card-desc">Custom white-label and private-label processing and packaging support for domestic and global brands.</p>
+                </div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="col-lg-4 col-md-6 col-12 cap-reveal cap-delay-2">
+                <div class="cap-card">
+                    <div class="cap-icon-box"><i class="bi bi-award"></i></div>
+                    <h5 class="cap-card-title">Quality Standardisation</h5>
+                    <p class="cap-card-desc">Carefully handpicked grading focusing intensely on appearance, crunch, size uniformity, and freshness.</p>
+                </div>
+            </div>
+
+            <!-- Card 6 -->
+            <div class="col-lg-4 col-md-6 col-12 cap-reveal cap-delay-3">
+                <div class="cap-card">
+                    <div class="cap-icon-box"><i class="bi bi-globe2"></i></div>
+                    <h5 class="cap-card-title">Export & Logistics</h5>
+                    <p class="cap-card-desc">End-to-end support for international documentation, phytosanitary standards, and safe export logistics.</p>
+                </div>
+            </div>
+        </div>
+        
     </div>
-    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-      <div class="feature-card">
-        <div class="icon-box"><i class="bi bi-boxes"></i></div>
-        <h5 class="fw-bold">Bulk & Wholesale Supply</h5>
-        <p class="text-muted small">High-capacity bulk shipments with consistent grading, standard sizing, and strict
-          moisture control.</p>
-      </div>
-    </div>
-    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-      <div class="feature-card">
-        <div class="icon-box"><i class="bi bi-stars"></i></div>
-        <h5 class="fw-bold">Flavoured Innovations</h5>
-        <p class="text-muted small">Roasted, non-fried flavored makhana recipes designed to cater to modern snacking
-          trends.</p>
-      </div>
-    </div>
-    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
-      <div class="feature-card">
-        <div class="icon-box"><i class="bi bi-tag"></i></div>
-        <h5 class="fw-bold">Private-Label Opportunities</h5>
-        <p class="text-muted small">Custom white-label and private-label processing and packaging support for domestic
-          and global brands.</p>
-      </div>
-    </div>
-    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
-      <div class="feature-card">
-        <div class="icon-box"><i class="bi bi-award"></i></div>
-        <h5 class="fw-bold">Quality Standardisation</h5>
-        <p class="text-muted small">Carefully handpicked grading focusing on appearance, crunch, size uniformity, and
-          freshness.</p>
-      </div>
-    </div>
-    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
-      <div class="feature-card">
-        <div class="icon-box"><i class="bi bi-globe2"></i></div>
-        <h5 class="fw-bold">Export & Documentation</h5>
-        <p class="text-muted small">End-to-end support for international documentation, phytosanitary standards, and
-          export logistics.</p>
-      </div>
-    </div>
-  </div>
 </section>
+
+<!-- Vanilla JS for Scroll Reveal Animation (No AOS Needed) -->
+
 
 <!-- International B2B Partners Section -->
 <section class="py-5" style="background-color: #fafafa;">
@@ -235,6 +252,24 @@
     once: true,
     easing: 'ease-in-out'
   });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const capOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
+
+        const capObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Runs only once
+                }
+            });
+        }, capOptions);
+
+        const capElements = document.querySelectorAll('.cap-reveal');
+        capElements.forEach(el => capObserver.observe(el));
+    });
 </script>
 
 <?php include('inc/footer.php'); ?>

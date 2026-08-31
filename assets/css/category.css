@@ -1,10 +1,166 @@
- body { background: #fffaf5; font-family: 'Poppins', sans-serif; color: #3E2723; }
-        .category-banner { background: linear-gradient(135deg, #FFF8F0 0%, #FFE4C4 100%); border-bottom: 2px solid #F5E6D3; padding: 50px 0; border-radius: 0 0 30px 30px; }
-        .product-card { background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.03); transition: all 0.4s; border: 2px solid #F5E6D3; margin-bottom: 30px; }
-        .product-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(139, 69, 19, 0.12); border-color: #8B4513; }
-        .product-image-box { height: 250px; background: #FFF8F0; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 20px; }
-        .product-image-box img { max-width: 90%; max-height: 90%; object-fit: contain; transition: transform 0.4s; }
-        .product-card:hover .product-image-box img { transform: scale(1.08); }
-        .product-link { text-decoration: none; color: inherit; display: block; }
-        .btn-add-cart-custom { background: #ff0100; color: #fff; border: none; padding: 10px 25px; border-radius: 25px; font-weight: 500; width: 100%; transition: 0.3s; }
-        .btn-add-cart-custom:hover { background: #6D3410; }
+:root {
+  --cat-bg: #fcfaf8;
+  --card-bg: #ffffff;
+  --text-dark: #2c1e16;
+  --text-muted: #6b5b53;
+  --brand-accent: #9c5521;
+}
+
+.category-products-wrapper {
+  background-color: var(--cat-bg);
+  padding: 80px 0 120px 0;
+  min-height: 60vh;
+}
+
+/* --- EXACT INDEX PAGE PRODUCT CARD CSS --- */
+.video-prod-card {
+  background: var(--card-bg);
+  border-radius: 24px;
+  padding: 24px 20px;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.video-prod-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(156, 85, 33, 0.08);
+  border-color: rgba(156, 85, 33, 0.15);
+}
+
+.v-wish-btn {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: #ffffff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  z-index: 3;
+  color: #777;
+  transition: all 0.2s ease;
+}
+.v-wish-btn:hover {
+  transform: scale(1.1);
+  color: #e02020;
+}
+
+.v-img-box {
+  height: 210px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: #f8f5f0;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+/* 360 Degree Smooth Rotation Effect */
+.v-img-box img {
+  max-height: 85%;
+  max-width: 85%;
+  object-fit: contain;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.video-prod-card:hover .v-img-box img {
+  transform: rotate(360deg) scale(1.1);
+}
+
+.v-rating {
+  font-size: 0.75rem;
+  color: #f39c12;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.v-title {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+  text-align: center;
+  text-decoration: none;
+  display: -webkit-box;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.v-title:hover {
+  color: var(--brand-accent);
+}
+
+.v-weight {
+  font-family: "Inter", sans-serif;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.v-bottom-section {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.v-price {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  text-align: center;
+}
+
+.v-action-buttons {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.v-btn-cart,
+.v-btn-buy {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 50px;
+  font-family: "Inter", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid #d2b48c;
+}
+
+.v-btn-cart {
+  background: #ffffff;
+  color: var(--text-dark);
+}
+.v-btn-cart:hover {
+  background: #fdf4e6;
+  border-color: var(--brand-accent);
+}
+
+.v-btn-buy {
+  background: #5c2c16;
+  color: #ffffff;
+  border-color: #5c2c16;
+}
+.v-btn-buy:hover {
+  background: var(--brand-accent);
+  border-color: var(--brand-accent);
+  transform: translateY(-2px);
+}

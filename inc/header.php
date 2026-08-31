@@ -36,26 +36,38 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
 
 
     <!-- CSS Files -->
-    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/cart.css">
-    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/category.css">
-    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/contact.css">
-    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/privacy.css">
+    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/cart.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/category.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/contact.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/privacy.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/style.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/product.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/include.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/wishlist.css">
-    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/blog.css">
+    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/wishlist.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/blog.css?v=<?php echo time(); ?>">
 
 
 </head>
 
 <body>
 
-    <!-- 1. Top Announcement Bar -->
-    <div class="announcement-bar">
-        <span>🎉 Free shipping on orders over ₹699</span>
-        <span class="announcement-badge">10% OFF FIRST ORDER</span>
+<div class="premium-topbar">
+    <div class="marquee-container">
+        
+        <!-- Main Content -->
+        <div class="topbar-content">
+            <span class="topbar-text">🎉 Free shipping on orders over ₹699</span>
+            <span class="topbar-badge">10% OFF FIRST ORDER</span>
+        </div>
+
+        <!-- Duplicate Content (Only visible on mobile for infinite seamless scroll) -->
+        <div class="topbar-content mobile-duplicate" aria-hidden="true">
+            <span class="topbar-text">🎉 Free shipping on orders over ₹699</span>
+            <span class="topbar-badge">10% OFF FIRST ORDER</span>
+        </div>
+
     </div>
+</div>
 
     <!-- 2. NAVBAR START -->
     <nav class="navbar navbar-expand-lg sticky-top modern-navbar">
@@ -87,35 +99,52 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
                             href="<?php echo $site; ?>index.php">HOME</a>
                     </li>
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link <?php echo ($current_page == 'product.php' || strpos($_SERVER['REQUEST_URI'], '/category/') !== false) ? 'active-link' : ''; ?>"
-                            href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                            PRODUCTS
+                    <li class="nav-item dropdown premium-dropdown">
+                        <!-- Main Link -->
+                        <a class="nav-link dropdown-toggle" href="<?php echo $site; ?>product.php" id="navbarProducts" role="button" aria-expanded="false">
+                            Products
                         </a>
-                        <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="navbarDropdown">
-                            <li>
-                                <a class="dropdown-item fw-bold border-bottom mb-2 pb-2"
-                                    href="<?php echo $site; ?>product.php" style="color: var(--pill-text);">
-                                    All Products
-                                </a>
-                            </li>
+
+                        <!-- Hover Dropdown Menu -->
+                        <ul class="dropdown-menu" aria-labelledby="navbarProducts">
                             <?php
-                            $cate_nav_query = "SELECT `categories`, `slug_url`, `image` FROM `categories` WHERE `status` = 1 ORDER BY `id` ASC";
-                            $cate_nav_res = $conn->query($cate_nav_query);
-                            if ($cate_nav_res && $cate_nav_res->num_rows > 0) {
-                                while ($cat_row = $cate_nav_res->fetch_assoc()) {
-                                    $cat_name = htmlspecialchars($cat_row['categories']);
-                                    $cat_slug = htmlspecialchars($cat_row['slug_url']);
-                                    $cat_img = !empty($cat_row['image']) ? $site . 'admin/uploads/category/' . htmlspecialchars($cat_row['image']) : $site . 'assets/images/hero.webp';
-                                    echo '<li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3 py-2" href="' . $site . 'category/' . $cat_slug . '">
-                                                <img src="' . $cat_img . '" alt="' . $cat_name . '" style="width: 28px; height: 28px; object-fit: contain; border-radius: 4px; background: #FFF8F0; padding: 2px;">
-                                                <span style="font-size: 0.9rem; font-weight: 500;">' . $cat_name . '</span>
-                                            </a>
-                                          </li>';
+                            // Fetch Top Categories & IMAGES dynamically from database
+                            $head_cat_query = "SELECT categories, slug_url, image FROM categories WHERE status = 1 ORDER BY id ASC LIMIT 5";
+                            $head_cat_res = $conn->query($head_cat_query);
+
+                            if ($head_cat_res && $head_cat_res->num_rows > 0) {
+                                while ($h_cat = $head_cat_res->fetch_assoc()) {
+                                    $h_name = htmlspecialchars($h_cat['categories']);
+                                    $h_slug = htmlspecialchars($h_cat['slug_url']);
+
+                                    // Image Handling with Fallback
+                                    $h_img = !empty($h_cat['image']) ? $site . 'admin/uploads/category/' . htmlspecialchars($h_cat['image']) : $site . 'assets/images/default-cat.png';
+
+                                    // Print individual rich category link
+                            ?>
+                                    <li>
+                                        <a class="dropdown-item" href="<?php echo $site; ?>category/<?php echo $h_slug; ?>">
+                                            <div class="nav-cat-img-box">
+                                                <!-- Image included here -->
+                                                <img src="<?php echo $h_img; ?>" alt="<?php echo $h_name; ?>" onerror="this.src='<?php echo $site; ?>assets/images/default-cat.png';">
+                                            </div>
+                                            <span><?php echo $h_name; ?></span>
+                                        </a>
+                                    </li>
+                            <?php
                                 }
+                            } else {
+                                // Fallback just in case DB is empty
+                                echo '<li><a class="dropdown-item" href="' . $site . 'product.php"><div class="nav-cat-img-box"><i class="bi bi-box-seam text-muted"></i></div><span>Premium Makhana</span></a></li>';
                             }
                             ?>
+
+                            <!-- View All Products Link at the bottom -->
+                            <li class="dropdown-view-all">
+                                <a class="dropdown-item" href="<?php echo $site; ?>product.php">
+                                    View All Range <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </li>
                         </ul>
                     </li>
 
@@ -219,7 +248,7 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
 
     <!-- Vanilla JS for Sidebar -->
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const openBtn = document.getElementById('openSidebarBtn');
             const closeBtn = document.getElementById('closeSidebarBtn');
             const sidebar = document.getElementById('mobileSidebar');

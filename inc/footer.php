@@ -370,6 +370,12 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
     </div>
 </footer>
 
+
+<!-- ================= PREMIUM TOAST NOTIFICATION SYSTEM ================= -->
+<div id="aristo-toast-container" class="aristo-toast-container"></div>
+
+
+
 <!-- Floating Call & WhatsApp Buttons -->
 <?php if (!empty($db_phone)): ?>
     <a href="tel:<?php echo preg_replace('/[^0-9+]/', '', $db_phone); ?>" class="floating-btn phone-btn" title="Call Us">
@@ -587,3 +593,38 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
         }
     });
 </script>
+
+
+<script>
+    // Global function to show beautiful toasts anywhere on the website
+    function showToast(title, message, type = 'success') {
+        const container = document.getElementById('aristo-toast-container');
+        
+        // Create Toast Element
+        const toast = document.createElement('div');
+        toast.className = `aristo-toast ${type}`;
+        
+        // Set Icon based on type
+        const iconClass = type === 'success' ? 'bi-check-circle-fill' : 'bi-x-circle-fill';
+        
+        toast.innerHTML = `
+            <i class="bi ${iconClass} toast-icon"></i>
+            <div class="toast-content">
+                <span class="toast-title">${title}</span>
+                <p class="toast-msg">${message}</p>
+            </div>
+        `;
+        
+        container.appendChild(toast);
+        
+        // Trigger animation
+        setTimeout(() => { toast.classList.add('show'); }, 10);
+        
+        // Remove toast after 3 seconds
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => { toast.remove(); }, 400); // Wait for fade out animation
+        }, 3000);
+    }
+</script>
+<!-- ================= END TOAST SYSTEM ================= -->

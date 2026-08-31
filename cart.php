@@ -1,91 +1,186 @@
 <?php
 session_start();
 include('config/connect.php');
+
+$pageTitle = "Shopping Cart";
+include('inc/header.php'); 
+include('inc/breadcrumb.php'); 
 ?>
 
-<?php include('inc/header.php'); ?>
-
+<!-- ================= PREMIUM CART UI ================= -->
 <style>
-    /* Premium Quantity Control Styling */
-    .quantity-control {
+    :root {
+        --cart-bg: #FCFAF8;
+        --cart-card-bg: #FFFFFF;
+        --cart-dark: #2C1E16;
+        --cart-muted: #6B5B53;
+        --cart-accent: #9C5521;
+        --cart-light: #FFF0E5;
+        --cart-danger: #E02020;
+    }
+
+    body { background-color: var(--cart-bg); }
+
+    .cart-page-wrapper {
+        padding: 60px 0 100px 0;
+    }
+
+    /* Premium Box Styling */
+    .cart-box {
+        background: var(--cart-card-bg);
+        border-radius: 24px;
+        padding: 40px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.03);
+        border: 1px solid rgba(0,0,0,0.02);
+    }
+
+    /* Header Row */
+    .cart-header-row {
+        display: flex;
+        align-items: center;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+        border-bottom: 2px dashed rgba(156, 85, 33, 0.15);
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        color: var(--cart-muted);
+        font-size: 0.95rem;
+    }
+
+    /* Individual Cart Item */
+    .cart-item-row {
+        display: flex;
+        align-items: center;
+        padding: 25px 0;
+        border-bottom: 1px solid rgba(0,0,0,0.04);
+        transition: all 0.3s ease;
+    }
+    .cart-item-row:last-child { border-bottom: none; padding-bottom: 0; }
+    
+    .cart-img-box {
+        width: 90px;
+        height: 90px;
+        background: #F9F6F0;
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        padding: 10px; flex-shrink: 0;
+        border: 1px solid rgba(0,0,0,0.03);
+    }
+    .cart-img-box img { max-width: 100%; max-height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+
+    .cart-product-title {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        color: var(--cart-dark);
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+        line-height: 1.3;
+    }
+    .cart-product-meta { font-family: 'Inter', sans-serif; font-size: 0.85rem; color: var(--cart-muted); }
+
+    .cart-price-col { font-family: 'Inter', sans-serif; font-weight: 600; color: var(--cart-muted); font-size: 1.05rem; }
+    .cart-subtotal-col { font-family: 'Poppins', sans-serif; font-weight: 700; color: var(--cart-dark); font-size: 1.15rem; }
+
+    /* Quantity Control */
+    .premium-qty-control {
         display: inline-flex;
         align-items: center;
-        border: 2px solid #F5E6D3;
-        border-radius: 30px;
-        background: #FFF8F0;
-        padding: 4px 12px;
+        background: #FFFFFF;
+        border: 1px solid rgba(156, 85, 33, 0.2);
+        border-radius: 50px;
+        padding: 4px 6px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.02);
     }
-    .quantity-control button {
-        background: none;
+    .premium-qty-control button {
+        background: var(--cart-light);
         border: none;
-        color: #8B4513;
-        font-weight: bold;
-        font-size: 1.2rem;
-        cursor: pointer;
-        padding: 0 8px;
+        color: var(--cart-accent);
+        width: 32px; height: 32px;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: bold; cursor: pointer; transition: 0.3s;
     }
-    .quantity-control span {
-        font-weight: bold;
-        color: #3E2723;
-        min-width: 25px;
-        text-align: center;
-    }
-    .btn-trash-action {
-        color: #ff0100;
-        background: #ffe5e5;
-        border: none;
-        padding: 8px 12px;
-        border-radius: 8px;
-        transition: 0.3s;
-    }
-    .btn-trash-action:hover {
-        background: #ff0100;
-        color: white;
+    .premium-qty-control button:hover { background: var(--cart-accent); color: #FFF; }
+    .premium-qty-control span {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700; color: var(--cart-dark);
+        min-width: 35px; text-align: center; font-size: 0.95rem;
     }
 
-    /* Mobile Specific Overrides */
-    @media (max-width: 767px) {
-        .quantity-control {
-            padding: 2px 8px;
-        }
-        .quantity-control button {
-            font-size: 1.1rem;
-            padding: 0 5px;
-        }
-        .mobile-cart-label {
-            font-size: 0.75rem;
-            color: #8D6E63;
-            display: block;
-            margin-bottom: 2px;
-            font-weight: 500;
-        }
+    /* Trash Button */
+    .btn-trash-action {
+        background: rgba(224, 32, 32, 0.08);
+        color: var(--cart-danger);
+        border: none;
+        width: 40px; height: 40px;
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.1rem; cursor: pointer; transition: 0.3s;
+    }
+    .btn-trash-action:hover { background: var(--cart-danger); color: #FFF; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(224, 32, 32, 0.2); }
+
+    /* Cart Summary Sidebar */
+    .cart-summary-box {
+        background: var(--cart-light);
+        border-radius: 24px;
+        padding: 40px;
+        position: sticky;
+        top: 100px;
+    }
+    .summary-title { font-family: 'Poppins', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--cart-dark); margin-bottom: 25px; border-bottom: 2px dashed rgba(156, 85, 33, 0.15); padding-bottom: 15px; }
+    
+    .summary-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-family: 'Inter', sans-serif; font-size: 1rem; color: var(--cart-muted); }
+    .summary-row.total { font-family: 'Poppins', sans-serif; font-size: 1.35rem; font-weight: 800; color: var(--cart-dark); margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.06); }
+    
+    .btn-checkout {
+        background: var(--cart-accent);
+        color: #FFFFFF;
+        border: none;
+        width: 100%;
+        padding: 16px;
+        border-radius: 50px;
+        font-family: 'Inter', sans-serif;
+        font-weight: 700;
+        font-size: 1.05rem;
+        transition: all 0.3s ease;
+        display: flex; align-items: center; justify-content: center; gap: 10px;
+        margin-top: 30px;
+    }
+    .btn-checkout:hover { background: #7A4219; transform: translateY(-3px); box-shadow: 0 10px 25px rgba(156, 85, 33, 0.3); color: #FFF; }
+
+    /* Empty Cart State */
+    .empty-cart-wrap { background: #FFFFFF; border-radius: 24px; padding: 80px 20px; text-align: center; border: 1px dashed rgba(156, 85, 33, 0.2); }
+    .empty-icon { font-size: 4rem; color: var(--cart-accent); margin-bottom: 20px; opacity: 0.8; }
+
+    @media (max-width: 991px) {
+        .cart-box, .cart-summary-box { padding: 25px; }
+        .cart-header-row { display: none; } /* Hide headers on mobile */
+        .cart-item-row { flex-wrap: wrap; position: relative; padding: 20px 0; }
+        .cart-img-box { width: 70px; height: 70px; }
+        .mobile-label { display: block; font-size: 0.75rem; color: var(--cart-muted); margin-bottom: 3px; }
+        .btn-trash-action { position: absolute; top: 15px; right: 0; width: 35px; height: 35px; }
+        .cart-price-col, .cart-subtotal-col { text-align: left !important; margin-top: 15px; }
     }
 </style>
 
-<main class="container py-5">
-    <div class="row mb-4">
-        <div class="col-12">
-            <h2 class="fw-bold text-brown"><i class="bi bi-cart3 me-2"></i>Shopping Cart</h2>
-        </div>
-    </div>
-
-    <div class="row g-4" id="cart-main-container" <?php echo empty($_SESSION['cart']) ? 'style="display:none;"' : ''; ?>>
+<main class="cart-page-wrapper container">
+    <div class="row g-5" id="cart-main-container" <?php echo empty($_SESSION['cart']) ? 'style="display:none;"' : ''; ?>>
         
-        <!-- Cart Items Section -->
+        <!-- ================= CART ITEMS LIST ================= -->
         <div class="col-lg-8">
-            <div class="card cart-wrapper-card p-2 p-md-4 border-0 shadow-sm" style="border-radius: 16px;">
+            <div class="cart-box">
                 
-                <!-- Desktop Header Row (Hidden on Mobile) -->
-                <div class="d-none d-md-flex row align-items-center text-muted fw-bold pb-3 mb-2 px-3" style="border-bottom: 2px dashed #F5E6D3;">
-                    <div class="col-md-5">Product Info</div>
+                <!-- Desktop Table Header -->
+                <div class="cart-header-row d-none d-md-flex row">
+                    <div class="col-md-5">Product Details</div>
                     <div class="col-md-2 text-center">Unit Price</div>
                     <div class="col-md-2 text-center">Quantity</div>
                     <div class="col-md-2 text-center">Subtotal</div>
-                    <div class="col-md-1 text-center"><i class="bi bi-trash text-danger"></i></div>
+                    <div class="col-md-1 text-end"><i class="bi bi-trash"></i></div>
                 </div>
 
-                <!-- Dynamic Cart Items Loop -->
-                <div id="cart-tbody" class="px-2 px-md-3">
+                <!-- Cart Items -->
+                <div id="cart-tbody">
                     <?php
                     $grand_total = 0;
                     if (!empty($_SESSION['cart'])) {
@@ -95,7 +190,6 @@ include('config/connect.php');
                             $v_id = isset($item['variation_id']) ? $item['variation_id'] : 0;
                             $qty = $item['quantity'];
 
-                            // 1. Fetch Main Product Details
                             $query = $conn->query("SELECT pro_name, pro_img FROM products WHERE id = '$p_id'");
                             if ($query && $query->num_rows > 0) {
                                 $p = $query->fetch_assoc();
@@ -105,7 +199,6 @@ include('config/connect.php');
                                 $unit_price = 0;
                                 $bulk_badge = "";
 
-                                // 2. Fetch Variation Details
                                 if ($v_id > 0) {
                                     $var_query = $conn->query("SELECT * FROM product_variations WHERE id = '$v_id'");
                                     if($var_query && $var_query->num_rows > 0) {
@@ -114,7 +207,6 @@ include('config/connect.php');
                                         $item_name .= " <span class='text-muted fs-6 d-inline-block'>(" . htmlspecialchars($v_data['weight_size']) . ")</span>";
                                         if (!empty($v_data['image_path'])) { $item_img = $v_data['image_path']; }
 
-                                        // Bulk Pricing Logic
                                         $unit_price = $v_data['single_price'];
                                         if($qty >= 6 && $v_data['price_6_plus'] > 0) { $unit_price = $v_data['price_6_plus']; $bulk_badge = "6+ Bulk Deal"; }
                                         elseif($qty >= 5 && $v_data['price_5_plus'] > 0) { $unit_price = $v_data['price_5_plus']; $bulk_badge = "5+ Bulk Deal"; }
@@ -127,55 +219,54 @@ include('config/connect.php');
 
                                 $subtotal = $unit_price * $qty;
                                 $grand_total += $subtotal;
+                                $img_src = !empty($item_img) ? $site . 'admin/assets/img/uploads/' . htmlspecialchars($item_img) : $site . 'assets/images/hero.webp';
                     ?>
-                                <!-- INDIVIDUAL CART ITEM ROW (Grid Based) -->
-                                <div class="row align-items-center cart-item-row py-3 border-bottom position-relative" id="row-<?php echo $cart_key; ?>">
+                                <!-- Dynamic Item Row -->
+                                <div class="cart-item-row row" id="row-<?php echo $cart_key; ?>">
                                     
                                     <!-- Mobile Absolute Remove Button -->
-                                    <div class="position-absolute d-md-none" style="top: 15px; right: 0; width: auto; z-index: 10;">
-                                        <button type="button" class="btn btn-trash-action btn-sm px-2 py-1" onclick="removeItem('<?php echo $cart_key; ?>')">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-                                    </div>
+                                    <button type="button" class="btn-trash-action d-md-none" onclick="removeItem('<?php echo $cart_key; ?>')" title="Remove Item">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </button>
 
-                                    <!-- Image & Title -->
-                                    <div class="col-12 col-md-5 mb-3 mb-md-0">
-                                        <div class="d-flex align-items-center gap-3 pe-4 pe-md-0">
-                                            <img src="<?php echo $site; ?>admin/assets/img/uploads/<?php echo htmlspecialchars($item_img); ?>" style="width:70px; height:70px; object-fit:contain; border: 1px solid #eee; border-radius: 8px; background: #fff;" alt="">
-                                            <div>
-                                                <h6 class="mb-1 fw-bold text-brown" style="line-height: 1.3;"><?php echo $item_name; ?></h6>
-                                                <?php if(!empty($bulk_badge)): ?>
-                                                    <span class="badge bg-success rounded-pill mt-1" style="font-size: 0.7rem;"><i class="bi bi-tag-fill me-1"></i><?php echo $bulk_badge; ?></span>
-                                                <?php endif; ?>
-                                            </div>
+                                    <!-- Product Info -->
+                                    <div class="col-12 col-md-5 d-flex align-items-center gap-3 mb-3 mb-md-0">
+                                        <div class="cart-img-box">
+                                            <img src="<?php echo $img_src; ?>" alt="">
+                                        </div>
+                                        <div>
+                                            <h3 class="cart-product-title"><?php echo $item_name; ?></h3>
+                                            <?php if(!empty($bulk_badge)): ?>
+                                                <span class="badge bg-success rounded-pill mt-1" style="font-size: 0.7rem; background: rgba(39, 174, 96, 0.1) !important; color: #27AE60 !important;"><i class="bi bi-tag-fill me-1"></i><?php echo $bulk_badge; ?></span>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
 
                                     <!-- Unit Price -->
-                                    <div class="col-4 col-md-2 text-start text-md-center">
-                                        <span class="d-md-none mobile-cart-label">Price</span>
-                                        <span class="text-muted fw-bold">₹<span id="unit-price-<?php echo $cart_key; ?>"><?php echo number_format($unit_price, 2); ?></span></span>
+                                    <div class="col-4 col-md-2 text-md-center cart-price-col">
+                                        <span class="d-md-none mobile-label">Unit Price</span>
+                                        ₹<span id="unit-price-<?php echo $cart_key; ?>"><?php echo number_format($unit_price, 2); ?></span>
                                     </div>
 
                                     <!-- Quantity Control -->
                                     <div class="col-4 col-md-2 text-center">
-                                        <span class="d-md-none mobile-cart-label">Qty</span>
-                                        <div class="quantity-control mx-auto">
-                                            <button type="button" onclick="updateQty('<?php echo $cart_key; ?>', 'dec')">-</button>
+                                        <span class="d-md-none mobile-label text-center">Qty</span>
+                                        <div class="premium-qty-control mx-auto">
+                                            <button type="button" onclick="updateQty('<?php echo $cart_key; ?>', 'dec')"><i class="bi bi-dash"></i></button>
                                             <span id="qty-<?php echo $cart_key; ?>"><?php echo $qty; ?></span>
-                                            <button type="button" onclick="updateQty('<?php echo $cart_key; ?>', 'inc')">+</button>
+                                            <button type="button" onclick="updateQty('<?php echo $cart_key; ?>', 'inc')"><i class="bi bi-plus"></i></button>
                                         </div>
                                     </div>
 
                                     <!-- Subtotal -->
-                                    <div class="col-4 col-md-2 text-end text-md-center">
-                                        <span class="d-md-none mobile-cart-label">Total</span>
-                                        <span class="fw-bold fs-5 text-brown">₹<span id="subtotal-<?php echo $cart_key; ?>"><?php echo number_format($subtotal, 2); ?></span></span>
+                                    <div class="col-4 col-md-2 text-end text-md-center cart-subtotal-col">
+                                        <span class="d-md-none mobile-label text-end">Subtotal</span>
+                                        ₹<span id="subtotal-<?php echo $cart_key; ?>"><?php echo number_format($subtotal, 2); ?></span>
                                     </div>
 
                                     <!-- Desktop Remove Button -->
-                                    <div class="col-md-1 text-center d-none d-md-block">
-                                        <button type="button" class="btn btn-trash-action" onclick="removeItem('<?php echo $cart_key; ?>')">
+                                    <div class="col-md-1 text-end d-none d-md-flex justify-content-end">
+                                        <button type="button" class="btn-trash-action" onclick="removeItem('<?php echo $cart_key; ?>')" title="Remove Item">
                                             <i class="bi bi-trash3-fill"></i>
                                         </button>
                                     </div>
@@ -190,49 +281,51 @@ include('config/connect.php');
             </div>
         </div>
 
-        <!-- Cart Summary Section -->
+        <!-- ================= CART SUMMARY SIDEBAR ================= -->
         <div class="col-lg-4">
-            <div class="card cart-wrapper-card p-4 border-0 shadow-sm" style="border-radius: 16px;">
-                <h5 class="fw-bold mb-3 pb-3 text-brown" style="border-bottom: 2px dashed #F5E6D3;"><i class="bi bi-receipt me-2"></i>Cart Summary</h5>
+            <div class="cart-summary-box shadow-sm">
+                <h3 class="summary-title"><i class="bi bi-receipt me-2"></i>Cart Summary</h3>
                 
-                <div class="d-flex justify-content-between mb-3 text-muted">
-                    <span>Subtotal Price</span>
+                <div class="summary-row">
+                    <span>Subtotal</span>
                     <span class="fw-bold text-dark">₹<span class="grand-total-val"><?php echo number_format($grand_total, 2); ?></span></span>
                 </div>
                 
-                <div class="d-flex justify-content-between mb-3 text-muted">
+                <div class="summary-row">
                     <span>Delivery</span>
                     <span class="text-success fw-bold">FREE</span>
                 </div>
                 
-                <hr class="my-3" style="border-top: 1px dashed #F5E6D3;">
-                
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <span class="fw-bold fs-5 text-dark">Grand Total</span>
-                    <span class="fw-bold fs-3 text-brown">₹<span class="grand-total-val"><?php echo number_format($grand_total, 2); ?></span></span>
+                <div class="summary-row total">
+                    <span>Grand Total</span>
+                    <span>₹<span class="grand-total-val"><?php echo number_format($grand_total, 2); ?></span></span>
                 </div>
                 
-                <a href="checkout.php" class="btn btn-primary-custom w-100 py-3 rounded-pill fw-bold" style="background:#8B4513; border:none; color:white;">
-                    Proceed to Checkout <i class="bi bi-arrow-right-circle ms-2"></i>
+                <a href="<?php echo $site; ?>checkout.php" class="btn-checkout text-decoration-none">
+                    Proceed to Checkout <i class="bi bi-arrow-right-circle ms-1"></i>
                 </a>
             </div>
         </div>
+
     </div>
 
-    <!-- Empty Cart Fallback -->
-    <div id="empty-cart-msg" class="text-center py-5" <?php echo !empty($_SESSION['cart']) ? 'style="display:none;"' : ''; ?>>
-        <i class="bi bi-bag-x text-muted display-1 d-block mb-3"></i>
-        <h3 class="fw-bold text-brown">Your cart feels light!</h3>
-        <p class="text-muted">Looks like you haven't added anything to your cart yet.</p>
-        <a href="product.php" class="btn btn-primary-custom px-4 py-2 mt-2 rounded-pill shadow" style="background:#8B4513; border:none; color:white;">Explore Premium Flavors</a>
+    <!-- ================= EMPTY CART FALLBACK ================= -->
+    <div id="empty-cart-msg" class="empty-cart-wrap shadow-sm" <?php echo !empty($_SESSION['cart']) ? 'style="display:none;"' : ''; ?>>
+        <i class="bi bi-cart-x empty-icon d-block"></i>
+        <h2 class="fw-bold mb-3" style="color: var(--cart-dark); font-family: 'Poppins', sans-serif;">Your cart feels light!</h2>
+        <p class="text-muted mb-4" style="font-family: 'Inter', sans-serif;">Looks like you haven't added any premium makhana to your cart yet.</p>
+        <a href="<?php echo $site; ?>product.php" class="btn text-white px-5 py-3 rounded-pill fw-bold shadow-sm" style="background: var(--cart-dark);">Explore Premium Range</a>
     </div>
+
 </main>
 
 <?php include('inc/footer.php'); ?>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- ================= SAFE AJAX WITH TOAST POPUP ================= -->
 <script>
-    // Quantity Increase / Decrease Handler
+    // Quantity Update Handler
     function updateQty(cartKey, type) {
         $.ajax({
             url: 'cart_action.php',
@@ -245,43 +338,60 @@ include('config/connect.php');
             dataType: 'json',
             success: function(res) {
                 if (res.status == 'success') {
+                    // Update DOM smoothly without page reload!
                     $('#qty-' + cartKey).text(res.quantity);
                     $('#subtotal-' + cartKey).text(res.subtotal);
                     $('.grand-total-val').text(res.grand_total);
                     $('.cart-count').text(res.cart_count); 
-                    location.reload(); 
+                    
+                    // Show Premium Toast
+                    showToast("Cart Updated", "Quantity has been adjusted successfully.", "success");
+                } else {
+                    showToast("Update Failed", res.message, "error");
                 }
+            },
+            error: function() {
+                showToast("System Error", "Could not connect to the server.", "error");
             }
         });
     }
 
-    // Remove Item from Cart Handler
+    // Remove Item Handler
     function removeItem(cartKey) {
-        if (confirm("Are you sure you want to remove this item?")) {
-            $.ajax({
-                url: 'cart_action.php',
-                type: 'POST',
-                data: {
-                    action: 'remove_item',
-                    product_id: cartKey
-                },
-                dataType: 'json',
-                success: function(res) {
-                    if (res.status == 'success') {
-                        $('#row-' + cartKey).fadeOut(300, function() {
-                            $(this).remove();
-                            $('.grand-total-val').text(res.grand_total);
-                            $('.cart-count').text(res.cart_count); 
+        // Removed the annoying confirm() browser popup. Straight to action!
+        $.ajax({
+            url: 'cart_action.php',
+            type: 'POST',
+            data: {
+                action: 'remove_item',
+                product_id: cartKey
+            },
+            dataType: 'json',
+            success: function(res) {
+                if (res.status == 'success') {
+                    // Smoothly fade out the item row
+                    $('#row-' + cartKey).fadeOut(300, function() {
+                        $(this).remove();
+                        $('.grand-total-val').text(res.grand_total);
+                        $('.cart-count').text(res.cart_count); 
 
-                            if (res.cart_empty) {
-                                $('#cart-main-container').hide();
-                                $('#empty-cart-msg').fadeIn();
-                            }
-                        });
-                    }
+                        // Show Premium Toast
+                        showToast("Item Removed", "Product has been removed from your basket.", "success");
+
+                        // If cart is empty, show empty state
+                        if (res.cart_empty) {
+                            $('#cart-main-container').hide();
+                            $('#empty-cart-msg').fadeIn();
+                        }
+                    });
+                } else {
+                    showToast("Action Failed", res.message, "error");
                 }
-            });
-        }
+            },
+            error: function() {
+                showToast("System Error", "Could not connect to the server.", "error");
+            }
+        });
     }
 </script>
 </body>
