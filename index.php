@@ -320,7 +320,7 @@ include('inc/header.php');
                 <div class="story-image-wrapper">
                     <!-- SUGGESTION: Yahan koi achhi farm ki ya traditional makhana processing ki real image lagana -->
                     <!-- YEH NAYA SAHI CODE HAI -->
-                    <img src="<?php echo $site; ?>assets/images/flavoure/pack1/chatkara/2.jpg"
+                     <img src="<?php echo $site; ?>assets/images/banner.jpeg"
                         alt="Mithila Origin Makhana" class="story-image">
 
                     <!-- Trust Badge Floating over image -->
