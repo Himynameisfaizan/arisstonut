@@ -243,7 +243,7 @@ include('inc/breadcrumb.php');
 </style>
 
 <main class="checkout-wrapper container">
-    <form action="process_checkout.php" method="POST">
+    <form action="process_checkout.php" method="POST" id="checkoutForm">
         <!-- Identifying order type for backend processing -->
         <input type="hidden" name="is_buy_now" value="<?php echo $is_buy_now ? 'true' : 'false'; ?>">
 
@@ -253,6 +253,13 @@ include('inc/breadcrumb.php');
             <div class="col-lg-7">
                 <div class="checkout-box">
                     <h2 class="box-title"><i class="bi bi-geo-alt"></i> Shipping Address</h2>
+
+                    <input type="hidden" name="is_buy_now" value="<?php echo $is_buy_now ? 'true' : 'false'; ?>">
+    
+    <!-- Razorpay Hidden Fields -->
+    <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+    <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
+    <input type="hidden" name="razorpay_signature" id="razorpay_signature">
 
                     <div class="row g-3">
                         <div class="col-md-6 mb-2">
@@ -399,6 +406,88 @@ include('inc/breadcrumb.php');
 <?php include('inc/footer.php'); ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- RAZORPAY SCRIPT -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Stop standard submission
+    
+    const form = this;
+    // Check form validation natively
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+
+    const payBtn = document.querySelector('.btn-pay');
+    const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+    const isBuyNow = document.querySelector('input[name="is_buy_now"]').value;
+    
+    const customerName = document.querySelector('input[name="first_name"]').value + " " + document.querySelector('input[name="last_name"]').value;
+    const customerEmail = document.querySelector('input[name="email"]').value;
+    const customerPhone = document.querySelector('input[name="phone"]').value;
+
+    if (paymentMethod === 'COD') {
+        // Submit directly if COD
+        payBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Processing...';
+        form.submit();
+    } else {
+        // It's Online Payment -> Generate Order from Server
+        payBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Initializing Payment...';
+        
+        $.ajax({
+            url: 'create_razorpay_order.php',
+            type: 'POST',
+            data: { is_buy_now: isBuyNow },
+            dataType: 'json',
+            success: function(res) {
+                if (res.status === 'success') {
+                    
+                    var options = {
+                        "key": res.key, 
+                        "amount": res.amount, 
+                        "currency": "INR",
+                        "name": "AristoNut",
+                        "description": "Premium Makhana Order",
+                        "image": "assets/images/logo.webp", 
+                        "order_id": res.order_id, 
+                        "handler": function (response){
+                            // ON SUCCESS: Fill hidden fields & submit form to process_checkout.php
+                            document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                            document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+                            document.getElementById('razorpay_signature').value = response.razorpay_signature;
+                            payBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Verifying...';
+                            form.submit();
+                        },
+                        "prefill": {
+                            "name": customerName,
+                            "email": customerEmail,
+                            "contact": customerPhone
+                        },
+                        "theme": { "color": "#9C5521" }, // Brand Color
+                        "modal": {
+                            "ondismiss": function(){
+                                payBtn.innerHTML = 'Confirm & Pay <i class="bi bi-lock-fill"></i>';
+                            }
+                        }
+                    };
+                    var rzp = new Razorpay(options);
+                    rzp.open();
+                } else {
+                    alert("Error: " + res.message);
+                    payBtn.innerHTML = 'Confirm & Pay <i class="bi bi-lock-fill"></i>';
+                }
+            },
+            error: function() {
+                alert("Server error while initializing payment.");
+                payBtn.innerHTML = 'Confirm & Pay <i class="bi bi-lock-fill"></i>';
+            }
+        });
+    }
+});
+</script>
+
 </body>
 
 </html>
