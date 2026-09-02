@@ -230,10 +230,10 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
         <!-- Sidebar Bottom -->
         <div class="sidebar-bottom">
             <div class="d-flex flex-column gap-2">
-                <a href="<?php echo $site; ?>profile.php"
-                    class="btn btn-light border text-start rounded-pill px-4 shadow-sm" style="font-weight: 500;">
-                    <i class="bi bi-person me-2"></i> Profile & Addresses
-                </a>
+                <!--<a href="<?php echo $site; ?>profile.php"-->
+                <!--    class="btn btn-light border text-start rounded-pill px-4 shadow-sm" style="font-weight: 500;">-->
+                <!--    <i class="bi bi-person me-2"></i> Profile & Addresses-->
+                <!--</a>-->
                 <a href="<?php echo $site; ?>wishlist.php"
                     class="btn btn-light border text-start rounded-pill px-4 shadow-sm" style="font-weight: 500;">
                     <i class="bi bi-heart me-2"></i> My Wishlist

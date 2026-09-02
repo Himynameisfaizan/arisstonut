@@ -318,7 +318,9 @@ include('inc/header.php');
             <!-- Left Side: Editorial Image -->
             <div class="col-lg-5 col-md-12 reveal-up" id="storyImage">
                 <div class="story-image-wrapper">
-                    <img src="<?php echo $site; ?>assets/images/banner.jpeg"
+                    <!-- SUGGESTION: Yahan koi achhi farm ki ya traditional makhana processing ki real image lagana -->
+                    <!-- YEH NAYA SAHI CODE HAI -->
+                    <img src="<?php echo $site; ?>assets/images/flavoure/pack1/chatkara/2.jpg"
                         alt="Mithila Origin Makhana" class="story-image">
 
                     <!-- Trust Badge Floating over image -->
@@ -650,7 +652,7 @@ include('inc/header.php');
                     // Image mapping
                     $bimg = !empty($blog['image']) ? $site . 'admin/assets/img/uploads/blogs/' . htmlspecialchars($blog['image']) : $site . 'assets/images/hero.webp';
                     if (!file_exists($_SERVER['DOCUMENT_ROOT'] . parse_url($bimg, PHP_URL_PATH))) {
-                        $bimg = $site . 'admin/uploads/' . htmlspecialchars($blog['image']);
+                        $bimg = $site . 'admin/assets/img/uploads/blogs/' . htmlspecialchars($blog['image']);
                     }
                     ?>
                     <div class="col-lg-4 col-md-6 col-12">
@@ -658,7 +660,7 @@ include('inc/header.php');
 
                             <div class="blog-img-box">
                                 <img src="<?php echo $bimg; ?>" alt="<?php echo $btitle; ?>"
-                                    onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=600&auto=format&fit=crop';">
+                                    onerror="this.src='https://thumbs.dreamstime.com/b/roasted-lotus-seed-makhana-22764990.jpg?w=768';">
                             </div>
 
                             <div class="blog-content">

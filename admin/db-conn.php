@@ -12,13 +12,12 @@ if ($local) {
     $password = '';
     $dbName = 'aristonut';
     $site = "http://localhost/projects/aristonut/";
-
 } else {
     $host = 'localhost';
     $username = 'u776339737_aristonut';
-    $password = 'UuR@~m3C2!Kj';
+    $password = 'Aristo@nut1';
     $dbName = 'u776339737_aristonut';
-    $site = 'https://www.aristonut.com/';
+    $site = 'https://www.aristonut.com/aristonut/';
 }
 // Create Database Connection
 $conn = new mysqli($host, $username, $password, $dbName);
@@ -30,5 +29,3 @@ if ($conn->connect_error) {
 
 // Optional: Set Character Encoding to UTF-8
 $conn->set_charset("utf8");
-
-?>
