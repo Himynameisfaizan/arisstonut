@@ -320,7 +320,7 @@ include('inc/header.php');
                 <div class="story-image-wrapper">
                     <!-- SUGGESTION: Yahan koi achhi farm ki ya traditional makhana processing ki real image lagana -->
                     <!-- YEH NAYA SAHI CODE HAI -->
-                     <img src="<?php echo $site; ?>assets/images/banner.jpeg"
+                    <img src="<?php echo $site; ?>assets/images/banner.jpeg"
                         alt="Mithila Origin Makhana" class="story-image">
 
                     <!-- Trust Badge Floating over image -->
@@ -462,8 +462,12 @@ include('inc/header.php');
             <div class="col-lg-5 col-md-12 slide-in-left" id="wmImgBox">
                 <div class="wm-image-wrapper">
                     <!-- Note for admin: Use a high-quality image of raw makhana in a wooden bowl or similar aesthetic -->
-                    <img src="<?php echo $site; ?>assets/images/why.jpeg"
+                    <img src="<?php echo $site; ?>assets/images/flavoure/pack1/chatkara/1.jpg"
                         alt="Mithila Origin Makhana" class="story-image">
+
+                    <div class="wm-floating-badge">
+                        <i class="bi bi-shield-check"></i> Nature's Superfood
+                    </div>
                 </div>
             </div>
 
