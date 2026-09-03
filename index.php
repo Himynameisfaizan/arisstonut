@@ -124,7 +124,7 @@ include('inc/header.php');
     <!-- SMALL TRUST LINE -->
     <div class="hero-trust-strip">
         <div class="container">
-            <div class="row text-center m-0">
+            <div class="row text-center m-0 hero-trust">
                 <div class="col-lg-4 col-4 trust-item p-0">
                     <i class="bi bi-check2-circle"></i> Mithila Origin
                 </div>
@@ -318,13 +318,11 @@ include('inc/header.php');
             <!-- Left Side: Editorial Image -->
             <div class="col-lg-5 col-md-12 reveal-up" id="storyImage">
                 <div class="story-image-wrapper">
-                    <!-- SUGGESTION: Yahan koi achhi farm ki ya traditional makhana processing ki real image lagana -->
-                    <!-- YEH NAYA SAHI CODE HAI -->
                     <img src="<?php echo $site; ?>assets/images/banner.jpeg"
                         alt="Mithila Origin Makhana" class="story-image">
 
                     <!-- Trust Badge Floating over image -->
-                    <div class="story-badge">
+                    <div class="story-badge py-6">
                         <i class="bi bi-geo-alt-fill"></i>
                         <div class="story-badge-text">
                             Darbhanga, Bihar
@@ -404,7 +402,7 @@ include('inc/header.php');
                 <div class="journey-card">
                     <div class="step-number-bg">02</div>
                     <div class="journey-icon"><i class="bi bi-fire"></i></div>
-                    <h3 class="journey-title">ROASTED & Flavoured</h3>
+                    <h3 class="journey-title">ROASTED & FLAVOURED</h3>
                     <p class="journey-text">Slowly air-roasted to achieve the perfect crunch and coated with bold,
                         guilt-free spices to satisfy your everyday snack cravings perfectly.</p>
                 </div>
@@ -462,12 +460,8 @@ include('inc/header.php');
             <div class="col-lg-5 col-md-12 slide-in-left" id="wmImgBox">
                 <div class="wm-image-wrapper">
                     <!-- Note for admin: Use a high-quality image of raw makhana in a wooden bowl or similar aesthetic -->
-                    <img src="<?php echo $site; ?>assets/images/flavoure/pack1/chatkara/1.jpg"
+                    <img src="<?php echo $site; ?>assets/images/why.jpeg"
                         alt="Mithila Origin Makhana" class="story-image">
-
-                    <div class="wm-floating-badge">
-                        <i class="bi bi-shield-check"></i> Nature's Superfood
-                    </div>
                 </div>
             </div>
 

@@ -241,7 +241,7 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
 
                 <div class="subtitle">Premium Quality</div>
                 <p class="pe-lg-4 mb-3">
-                    India's finest premium makhana, crafted with tradition and quality. Experience the perfect blend of
+                    India's 1 of finest premium makhana, crafted with tradition and quality. Experience the perfect blend of
                     health, crispness, and delicious taste.
                 </p>
 
