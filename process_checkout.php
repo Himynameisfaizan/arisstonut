@@ -110,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         // ============================================
         // 📧 SEND ANTI-SPAM EMAIL CONFIRMATION
-        // ============================================
+        // ============================================ 
         if (file_exists('vendor/autoload.php')) {
             require_once 'vendor/autoload.php';
             $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
@@ -121,6 +121,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $mail->SMTPAuth   = true;
                 $mail->Username   = 'faizanonlink@gmail.com'; 
                 $mail->Password   = 'ujjk fkni icdd vmyb';   
+                // $mail->Username   = 'aristowebin@gmail.com';
+                // $mail->Password   = 'kzte hzkh tysh cezg'; 
                 $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port       = 587;
 
