@@ -18,9 +18,21 @@ if (isset($_POST['action']) && $_POST['action'] == 'add_to_cart') {
     $qty = isset($_POST['quantity']) ? intval($_POST['quantity']) : 1;
 
     if ($pid > 0) {
+        
+        // 🔥 THE MASTER FIX: Agar Index ya Shop page se direct click aaya hai (vid = 0), 
+        // toh hum automatically is product ki sabse pehli (default) variation nikal lenge!
+        if ($vid == 0) {
+            $check_var = $conn->query("SELECT id FROM product_variations WHERE product_id = '$pid' ORDER BY id ASC LIMIT 1");
+            if ($check_var && $check_var->num_rows > 0) {
+                $vid = intval($check_var->fetch_assoc()['id']);
+            }
+        }
+
         if (!isset($_SESSION['cart'])) {
             $_SESSION['cart'] = [];
         }
+        
+        // Cart key variation id ke sath banegi taaki same product ki alag variations alag row mein aayein
         $cart_key = ($vid > 0) ? $pid . '_' . $vid : $pid;
 
         if (array_key_exists($cart_key, $_SESSION['cart'])) {
@@ -159,6 +171,15 @@ if (isset($_POST['action']) && $_POST['action'] == 'buy_now') {
     $qty = isset($_POST['quantity']) ? intval($_POST['quantity']) : 1;
 
     if ($pid > 0) {
+        
+        // 🔥 THE MASTER FIX FOR BUY NOW: 
+        if ($vid == 0) {
+            $check_var = $conn->query("SELECT id FROM product_variations WHERE product_id = '$pid' ORDER BY id ASC LIMIT 1");
+            if ($check_var && $check_var->num_rows > 0) {
+                $vid = intval($check_var->fetch_assoc()['id']);
+            }
+        }
+
         $_SESSION['buy_now'] = []; // Clear previous
         $cart_key = ($vid > 0) ? $pid . '_' . $vid : $pid;
 
