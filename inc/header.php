@@ -60,7 +60,6 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
             <span class="topbar-badge">10% OFF FIRST ORDER</span>
         </div>
 
-        <!-- Duplicate Content (Only visible on mobile for infinite seamless scroll) -->
         <div class="topbar-content mobile-duplicate" aria-hidden="true">
             <span class="topbar-text">🎉 Free shipping on orders over ₹699</span>
             <span class="topbar-badge">10% OFF FIRST ORDER</span>
@@ -230,10 +229,10 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
         <!-- Sidebar Bottom -->
         <div class="sidebar-bottom">
             <div class="d-flex flex-column gap-2">
-                <!--<a href="<?php echo $site; ?>profile.php"-->
-                <!--    class="btn btn-light border text-start rounded-pill px-4 shadow-sm" style="font-weight: 500;">-->
-                <!--    <i class="bi bi-person me-2"></i> Profile & Addresses-->
-                <!--</a>-->
+                <a href="<?php echo $site; ?>track-order.php"
+                  class="btn btn-light border text-start rounded-pill px-4 shadow-sm" style="font-weight: 500;">
+                    <i class="bi bi-geo-alt"></i> Track Your Order
+                </a>
                 <a href="<?php echo $site; ?>wishlist.php"
                     class="btn btn-light border text-start rounded-pill px-4 shadow-sm" style="font-weight: 500;">
                     <i class="bi bi-heart me-2"></i> My Wishlist

@@ -182,13 +182,14 @@ $order_id = isset($_GET['order_id']) ? htmlspecialchars($_GET['order_id']) : 'OR
                     Order ID: <?php echo $order_id; ?>
                 </div>
 
-                <div class="btn-group-custom">
+               <div class="btn-group-custom">
+                    <!-- Continue Shopping (Primary) -->
                     <a href="<?php echo $site; ?>product.php" class="btn-primary-action">
                         Continue Shopping <i class="bi bi-arrow-right"></i>
                     </a>
-                    <!-- Optional: Agar user account system hai toh yaha link de sakte ho -->
-                    <a href="<?php echo $site; ?>index.php" class="btn-secondary-action">
-                        <i class="bi bi-house-door"></i> Back to Home
+                    
+                    <a href="<?php echo $site; ?>track-order.php" class="btn-secondary-action">
+                        <i class="bi bi-geo-alt"></i> Track Order
                     </a>
                 </div>
             </div>
