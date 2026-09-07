@@ -5,8 +5,10 @@ include('config/connect.php');
 header('Content-Type: application/json');
 
 // --- TUMHARI RAZORPAY KEYS (YAHAN APNI LIVE KEYS DAALNA) ---
-$razorpay_key_id = 'rzp_live_TWjOQkUEcLZpaN'; 
-$razorpay_key_secret = 'JU6fS1arI1DlbwcaebAF9aUK';
+// $razorpay_key_id = 'rzp_live_TWjOQkUEcLZpaN'; 
+// $razorpay_key_secret = 'JU6fS1arI1DlbwcaebAF9aUK';
+$razorpay_key_id = 'rzp_test_TZ1rm9pNLpdrhZ'; 
+$razorpay_key_secret = 'NQ9g2FiTNj5Yn7pb6K194HG7';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     

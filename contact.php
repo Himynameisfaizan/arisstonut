@@ -217,7 +217,7 @@ include ('inc/breadcrumb.php');
                     </button>
                     <div class="custom-faq-content">
                         <div class="custom-faq-body">
-                            Yes! We offer free delivery across India on all orders over ₹500. For orders below this amount, a nominal standard shipping fee applies.
+                            Yes! We offer free delivery across India on all orders over ₹600. For orders below this amount, a nominal standard shipping fee applies.
                         </div>
                     </div>
                 </div>
