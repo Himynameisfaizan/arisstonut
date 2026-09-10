@@ -5,7 +5,8 @@ if (session_status() === PHP_SESSION_NONE) {
 include('config/connect.php'); // Global path configuration
 
 // --- RAZORPAY TEST SECRET KEY (Must match create_razorpay_order.php) ---
-$razorpay_key_secret = 'NQ9g2FiTNj5Yn7pb6K194HG7';
+// $razorpay_key_secret = 'NQ9g2FiTNj5Yn7pb6K194HG7'; 
+$razorpay_key_secret = 'JU6fS1arI1DlbwcaebAF9aUK'; // Live Key
 
 // We just check if it's a POST request (Bypassing the input name conflict)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
