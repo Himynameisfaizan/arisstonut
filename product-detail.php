@@ -158,7 +158,7 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
 
                         <!-- BULK DISCOUNT TABLE -->
                         <div id="bulk-pricing-table-container" class="bulk-table-wrap" style="display: none;">
-                            <p class="fw-bold text-success mb-2 small"><i class="bi bi-percent"></i> Bulk Discount Applied!</p>
+                            <!-- <p class="fw-bold text-success mb-2 small"><i class="bi bi-percent"></i> Bulk Discount Applied!</p> -->
                             <table class="table table-bordered text-center align-middle mb-0">
                                 <thead>
                                     <tr>
