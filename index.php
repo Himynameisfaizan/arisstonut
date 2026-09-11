@@ -551,10 +551,14 @@ include('inc/header.php');
             if ($bestseller_result && $bestseller_result->num_rows > 0) {
                 while ($prod = $bestseller_result->fetch_assoc()) {
                     $pid = $prod['id'];
-                    $pname = htmlspecialchars($prod['pro_name']);
-                    $pprice = htmlspecialchars($prod['selling_price']);
-                    $pweight = htmlspecialchars($prod['qty']);
-                    $pslug = htmlspecialchars($prod['slug_url']);
+                    // 🔥 PHP 8 NULL SAFETY FIXES 🔥
+                    $pname = htmlspecialchars($prod['pro_name'] ?? '');
+                    $pprice = htmlspecialchars($prod['selling_price'] ?? '0');
+                    $pweight = htmlspecialchars($prod['qty'] ?? '100g'); // Default to 100g if missing
+                    
+                    // 🔥 SLUG FALLBACK FIX (Click karne par ab index pe nahi jayega)
+                    $raw_slug = !empty($prod['slug_url']) ? trim($prod['slug_url']) : $pid;
+                    $pslug = htmlspecialchars($raw_slug);
 
                     // Correct image path from database
                     $pimg = !empty($prod['pro_img']) ? $site . 'admin/assets/img/uploads/' . htmlspecialchars($prod['pro_img']) : $site . 'assets/images/hero.webp';
@@ -590,9 +594,9 @@ include('inc/header.php');
                                 title="<?php echo $pname; ?>">
                                 <?php echo $pname; ?>
                             </a>
-                            <div class="v-weight">Net Wt: <?php echo !empty($pweight) ? $pweight : '100g'; ?></div>
+                            <div class="v-weight">Net Wt: <?php echo $pweight; ?></div>
 
-                            <!-- Price & Side-by-Side Cart/Buy Now Buttons (Exact Video Match) -->
+                            <!-- Price & Side-by-Side Cart/Buy Now Buttons -->
                             <div class="v-bottom-section">
                                 <div class="v-price">₹<?php echo $pprice; ?></div>
                                 <div class="v-action-buttons">
@@ -642,15 +646,19 @@ include('inc/header.php');
 
             if ($blog_result && $blog_result->num_rows > 0) {
                 while ($blog = $blog_result->fetch_assoc()) {
-                    $btitle = htmlspecialchars($blog['title']);
-                    $bslug = htmlspecialchars($blog['slug']);
-                    $bdesc = strip_tags($blog['description']);
+                    // 🔥 PHP 8 NULL SAFETY FIXES FOR BLOGS 🔥
+                    $btitle = htmlspecialchars($blog['title'] ?? '');
+                    
+                    $raw_bslug = !empty($blog['slug']) ? trim($blog['slug']) : $blog['blog_id'];
+                    $bslug = htmlspecialchars($raw_bslug);
+                    
+                    $bdesc = strip_tags($blog['description'] ?? '');
                     $bdate = date('d M, Y', strtotime($blog['created_at']));
 
                     // Image mapping
                     $bimg = !empty($blog['image']) ? $site . 'admin/assets/img/uploads/blogs/' . htmlspecialchars($blog['image']) : $site . 'assets/images/hero.webp';
                     if (!file_exists($_SERVER['DOCUMENT_ROOT'] . parse_url($bimg, PHP_URL_PATH))) {
-                        $bimg = $site . 'admin/assets/img/uploads/blogs/' . htmlspecialchars($blog['image']);
+                        $bimg = $site . 'admin/assets/img/uploads/blogs/' . htmlspecialchars($blog['image'] ?? '');
                     }
                     ?>
                     <div class="col-lg-4 col-md-6 col-12">
