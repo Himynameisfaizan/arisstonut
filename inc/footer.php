@@ -347,7 +347,14 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
                         </a>
                     </p>
                 </div>
-            </div>
+           <div class="contact-item">
+                    <i class="bi bi-globe"></i>
+                    <p class="mb-0">
+                        <a href="https://www.aristonut.com" target="_blank" rel="noopener noreferrer">
+                            www.aristonut.com
+                        </a>
+                    </p>
+                </div>
 
         </div>
 
@@ -363,7 +370,7 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
             </div>
             <div class="col-md-6 text-center text-md-end">
                 <p class="mb-0 small" style="color: #A1887F !important;">
-                    Powered by <strong class="text-white">NK Enterprises</strong>
+                    Powered by <strong class="text-white"><a href="https://www.digitalwebtrackers.com" target="_blank" style="display: inline-block;">Digital Web Trackers</a></strong>
                 </p>
             </div>
         </div>

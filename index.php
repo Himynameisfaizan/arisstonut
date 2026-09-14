@@ -971,7 +971,6 @@ include('inc/header.php');
 </script>
 <!-- WHY ARISTONUT SECTION END -->
 
-
 <!-- Vanilla JS for Scroll Reveal Animation -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -1021,7 +1020,6 @@ include('inc/header.php');
         revealElements.forEach(el => stmtObserver.observe(el));
     });
 </script>
-
 
 <!-- Vanilla JS for Scroll Reveal -->
 <script>
