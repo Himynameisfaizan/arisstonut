@@ -165,10 +165,10 @@ include('inc/breadcrumb.php');
                             <a href="<?php echo $seo_detail_url; ?>" class="v-title" title="<?php echo $p_name; ?>">
                                 <?php echo $p_name; ?>
                             </a>
-                            <div class="v-weight">Net Wt: <?php echo !empty($p_qty) ? $p_qty : '100g'; ?></div>
+                            <!-- <div class="v-weight">Net Wt: <?php echo !empty($p_qty) ? $p_qty : '100g'; ?></div> -->
 
                             <div class="v-bottom-section">
-                                <div class="v-price">₹<?php echo $p_price; ?></div>
+                                <!-- <div class="v-price">₹<?php echo $p_price; ?></div> -->
                                 <div class="v-action-buttons">
                                     <button class="v-btn-cart" onclick="addToCart(<?php echo $p_id; ?>)">Cart</button>
                                     <button class="v-btn-buy" onclick="buyNow(<?php echo $p_id; ?>)">Buy Now</button>

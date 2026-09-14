@@ -66,7 +66,7 @@ include('inc/breadcrumb.php');
                     $p_id = $row['id'];
                     $p_name = htmlspecialchars($row['pro_name']);
                     $p_price = htmlspecialchars($row['selling_price']);
-                    $p_weight = htmlspecialchars($row['qty']);
+                    $p_weight = htmlspecialchars($row['qty'] ?? '100g');
                     $p_slug = htmlspecialchars($row['slug_url']);
 
                     $p_img = !empty($row['pro_img']) ? $site . 'admin/assets/img/uploads/' . htmlspecialchars($row['pro_img']) : $site . 'assets/images/hero.webp';
@@ -100,11 +100,11 @@ include('inc/breadcrumb.php');
                             <a href="<?php echo $site; ?>product/<?php echo $p_slug; ?>" class="v-title" title="<?php echo $pname; ?>">
                                 <?php echo $p_name; ?>
                             </a>
-                            <div class="v-weight">Net Wt: <?php echo !empty($p_weight) ? $p_weight : '100g'; ?></div>
+                            <!-- <div class="v-weight">Net Wt: <?php echo !empty($p_weight) ? $p_weight : '100g'; ?></div> -->
 
                             <!-- Price & Side-by-Side Cart/Buy Now Buttons -->
                             <div class="v-bottom-section">
-                                <div class="v-price">₹<?php echo $p_price; ?></div>
+                                <!-- <div class="v-price">₹<?php echo $p_price; ?></div> -->
                                 <div class="v-action-buttons">
                                     <button class="v-btn-cart" onclick="addToCart(<?php echo $p_id; ?>)">
                                         Cart

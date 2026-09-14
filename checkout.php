@@ -260,28 +260,76 @@ include('inc/breadcrumb.php');
 
                     <div class="row g-3">
                         <div class="col-md-6 mb-2">
-                            <label class="form-label">First Name</label>
+                            <label class="form-label">First Name <span class="text-danger">*</span></label>
                             <input type="text" name="first_name" class="form-control custom-input" placeholder="e.g. John" required>
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label class="form-label">Last Name</label>
+                            <label class="form-label">Last Name <span class="text-danger">*</span></label>
                             <input type="text" name="last_name" class="form-control custom-input" placeholder="e.g. Doe" required>
                         </div>
                     </div>
 
-                    <div class="mb-4 mt-3">
-                        <label class="form-label">Email Address</label>
-                        <input type="email" name="email" class="form-control custom-input" placeholder="name@example.com" required>
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">Email Address <span class="text-danger">*</span></label>
+                            <input type="email" name="email" class="form-control custom-input" placeholder="name@example.com" required>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">Phone Number <span class="text-danger">*</span></label>
+                            <input type="tel" name="phone" class="form-control custom-input" placeholder="+91 98765 43210" pattern="[0-9]{10}" title="Enter 10 digit mobile number" required>
+                        </div>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="form-label">Contact Number</label>
-                        <input type="text" name="phone" class="form-control custom-input" placeholder="+91 98765 43210" required>
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">Alternate Number <span class="text-muted small">(Optional)</span></label>
+                            <input type="tel" name="alternate_phone" class="form-control custom-input" placeholder="+91 00000 00000" pattern="[0-9]{10}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">Pincode <span class="text-danger">*</span></label>
+                            <input type="text" name="pincode" id="pincode" class="form-control custom-input" placeholder="e.g. 110001" pattern="[0-9]{6}" maxlength="6" required>
+                        </div>
                     </div>
 
-                    <div class="mb-2">
-                        <label class="form-label">Complete Address</label>
-                        <textarea name="address" class="form-control custom-input" rows="4" placeholder="House/Flat No, Street Name, Landmark, City, State, Pincode" required></textarea>
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">City <span class="text-danger">*</span></label>
+                            <input type="text" name="city" id="city" class="form-control custom-input" placeholder="e.g. New Delhi" required>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">State <span class="text-danger">*</span></label>
+                            <select name="state" id="state" class="form-select custom-input" required>
+                                <option value="" disabled selected>Select State</option>
+                                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                <option value="Bihar">Bihar</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="Gujarat">Gujarat</option>
+                                <option value="Haryana">Haryana</option>
+                                <option value="Karnataka">Karnataka</option>
+                                <option value="Maharashtra">Maharashtra</option>
+                                <option value="Punjab">Punjab</option>
+                                <option value="Rajasthan">Rajasthan</option>
+                                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                <option value="West Bengal">West Bengal</option>
+                                <!-- Add other states as needed -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-2 mt-3">
+                        <label class="form-label">Flat, House no., Building, Company, Apartment <span class="text-danger">*</span></label>
+                        <textarea name="address" class="form-control custom-input" rows="3" placeholder="Enter your full street address" required></textarea>
+                    </div>
+
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">Landmark <span class="text-muted small">(Optional)</span></label>
+                            <input type="text" name="landmark" class="form-control custom-input" placeholder="e.g. Near Apollo Hospital">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">Order Notes <span class="text-muted small">(Optional)</span></label>
+                            <input type="text" name="order_notes" class="form-control custom-input" placeholder="e.g. Leave with guard">
+                        </div>
                     </div>
                 </div>
 

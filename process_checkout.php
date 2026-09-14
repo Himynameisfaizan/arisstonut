@@ -21,6 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // 2. Form Variables Sanitization
+   // 2. Form Variables Sanitization
     $f_name   = htmlspecialchars(trim($_POST['first_name']));
     $l_name   = htmlspecialchars(trim($_POST['last_name']));
     $full_name = htmlspecialchars(trim($f_name . ' ' . $l_name));
@@ -29,8 +30,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $raw_address = htmlspecialchars(trim($_POST['address']));
     $pay_mode  = htmlspecialchars(trim($_POST['payment_method']));
 
-    $city    = isset($_POST['city']) ? htmlspecialchars(trim($_POST['city'])) : 'N/A';
-    $pincode = isset($_POST['pincode']) ? htmlspecialchars(trim($_POST['pincode'])) : 'N/A';
+    $city     = htmlspecialchars(trim($_POST['city']));
+    $state    = htmlspecialchars(trim($_POST['state']));
+    $pincode  = htmlspecialchars(trim($_POST['pincode']));
+    
+    // NEW OPTIONAL FIELDS
+    $alt_phone = isset($_POST['alternate_phone']) ? htmlspecialchars(trim($_POST['alternate_phone'])) : '';
+    $landmark  = isset($_POST['landmark']) ? htmlspecialchars(trim($_POST['landmark'])) : '';
+    $order_notes = isset($_POST['order_notes']) ? htmlspecialchars(trim($_POST['order_notes'])) : '';
+
+    // Format a beautiful address block for Emails
+    $formatted_address = $raw_address;
+    if(!empty($landmark)) { $formatted_address .= "\nLandmark: " . $landmark; }
+    $formatted_address .= "\n" . $city . ", " . $state . " - " . $pincode;
+    if(!empty($alt_phone)) { $formatted_address .= "\nAlt Phone: " . $alt_phone; }
+    if(!empty($order_notes)) { $formatted_address .= "\nNotes: " . $order_notes; }
 
     // Razorpay Inputs
     $rzp_payment_id = isset($_POST['razorpay_payment_id']) ? $_POST['razorpay_payment_id'] : null;
@@ -99,14 +113,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $order_number = 'ANT' . date('Ymd') . rand(1000, 9999); 
     $user_id = isset($_SESSION['user_id']) ? intval($_SESSION['user_id']) : 0; 
-    $final_address_block = "--- Shipping Address ---\n" . $raw_address . "\n\n--- Items List ---\n" . $product_list;
+   $final_address_block = "--- Shipping Address ---\n" . $formatted_address . "\n\n--- Items List ---\n" . $product_list;
 
-    // 4. DB Insertion (WITH Razorpay Columns)
-    $stmt = $conn->prepare("INSERT INTO `orders` (`user_id`, `total_amount`, `order_number`, `customer_name`, `customer_email`, `customer_phone`, `customer_address`, `customer_city`, `customer_pincode`, `payment_method`, `grand_total`, `order_status`, `payment_status`, `razorpay_order_id`, `razorpay_payment_id`, `razorpay_signature`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    // 4. DB Insertion (20 Columns updated for Shiprocket readiness)
+    $stmt = $conn->prepare("INSERT INTO `orders` (`user_id`, `total_amount`, `order_number`, `customer_name`, `customer_email`, `customer_phone`, `alternate_phone`, `customer_address`, `customer_city`, `customer_state`, `customer_pincode`, `customer_landmark`, `order_notes`, `payment_method`, `grand_total`, `order_status`, `payment_status`, `razorpay_order_id`, `razorpay_payment_id`, `razorpay_signature`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    $stmt->bind_param("idssssssssdsssss", $user_id, $total, $order_number, $full_name, $email, $phone, $final_address_block, $city, $pincode, $pay_mode, $total, $order_status, $payment_status, $rzp_order_id, $rzp_payment_id, $rzp_signature);
-
-    if ($stmt->execute()) {
+    $stmt->bind_param("idssssssssssssdsssss", $user_id, $total, $order_number, $full_name, $email, $phone, $alt_phone, $final_address_block, $city, $state, $pincode, $landmark, $order_notes, $pay_mode, $total, $order_status, $payment_status, $rzp_order_id, $rzp_payment_id, $rzp_signature);   if ($stmt->execute()) {
+        
         $stmt->close();
         
         // ============================================
