@@ -111,13 +111,13 @@ if (!isset($_SESSION['admin_logged_in'])) {
                                 <span>Edit Contact</span>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a href="new-leads.php" class="nav-link text-muted py-2 d-flex align-items-center 
                                <?php echo basename($_SERVER['PHP_SELF']) == 'new-leads.php' ? 'text-primary' : ''; ?>">
                                 <i class="fas fa-inbox fa-sm me-2"></i>
                                 <span>Inquiries</span>
                             </a>
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
             </li>
