@@ -65,6 +65,13 @@ if (!isset($_SESSION['admin_logged_in'])) {
                                 <span>Logo</span>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="about_us.php" class="nav-link text-muted py-2 d-flex align-items-center 
+                               <?php echo basename($_SERVER['PHP_SELF']) == 'about_us.php' ? 'text-primary' : ''; ?>">
+                                <i class="fas fa-images fa-sm me-2"></i>
+                                <span>About Us</span>
+                            </a>
+                        </li>
                         <!-- <li class="nav-item">
                             <a href="add-banner.php" class="nav-link text-muted py-2 d-flex align-items-center 
                                <?php echo basename($_SERVER['PHP_SELF']) == 'add-banner.php' ? 'text-primary' : ''; ?>">
@@ -77,16 +84,13 @@ if (!isset($_SESSION['admin_logged_in'])) {
             </li>
 
             <!-- About Us -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a href="about_us.php" class="nav-link text-white py-3 px-4 d-flex align-items-center 
                    <?php echo basename($_SERVER['PHP_SELF']) == 'about_us.php' ? 'active bg-primary' : ''; ?>">
                     <i class="fas fa-info-circle fa-fw me-3"></i>
                     <span>About Us</span>
                 </a>
-            </li>
-
-
-
+            </li> -->
 
             <!-- Contact -->
             <li class="nav-item">
@@ -196,13 +200,13 @@ if (!isset($_SESSION['admin_logged_in'])) {
                 </div>
             </li>
 
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a href="orders.php" class="nav-link text-white py-3 px-4 d-flex align-items-center 
                    <?php echo basename($_SERVER['PHP_SELF']) == 'orders.php' ? 'active bg-primary' : ''; ?>">
                     <i class="fas fa-info-circle fa-fw me-3"></i>
                     <span>Orders</span>
                 </a>
-            </li>
+            </li> -->
 
             <!-- Testimonials -->
             <!-- <li class="nav-item">
@@ -221,6 +225,37 @@ if (!isset($_SESSION['admin_logged_in'])) {
                 </a>
             </li> -->
 
+            
+              <!-- Orders & Invoice -->
+            <li class="nav-item">
+                <a class="nav-link text-white py-3 px-4 d-flex align-items-center" data-bs-toggle="collapse"
+                    href="#orderMenu" role="button">
+                    <i class="fas fa-shopping-cart fa-fw me-3"></i>
+                    <span class="flex-grow-1">Orders</span>
+                    <i class="fas fa-chevron-down ms-auto"></i>
+                </a>
+                <div class="collapse <?php echo in_array(basename($_SERVER['PHP_SELF']), ['orders.php', 'invoice-generate.php']) ? 'show' : ''; ?>"
+                    id="orderMenu">
+                    <ul class="nav flex-column ps-5">
+                        <li class="nav-item">
+                            <a href="orders.php" class="nav-link text-muted py-2 d-flex align-items-center 
+                               <?php echo basename($_SERVER['PHP_SELF']) == 'orders.php' ? 'text-primary' : ''; ?>">
+                                <i class="fas fa-shopping-bag fa-sm me-2"></i>
+                                <span>All Orders</span>
+                            </a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a href="invoice-generate.php"
+                                class="nav-link text-muted py-2 d-flex align-items-center 
+                               <?php echo basename($_SERVER['PHP_SELF']) == 'invoice-generate.php' ? 'text-primary' : ''; ?>">
+                                <i class="fas fa-file-invoice fa-sm me-2"></i>
+                                <span>Generate Invoice</span>
+                            </a>
+                        </li> -->
+                    </ul>
+                </div>
+            </li>
+
             <li class="nav-item">
                 <a href="blog.php" class="nav-link text-white py-3 px-4 d-flex align-items-center 
                    <?php echo basename($_SERVER['PHP_SELF']) == 'blog.php' ? 'active bg-primary' : ''; ?>">
@@ -228,8 +263,6 @@ if (!isset($_SESSION['admin_logged_in'])) {
                     <span>Blog</span>
                 </a>
             </li>
-
-
 
             <!-- Gallery -->
             <!-- <li class="nav-item">
@@ -296,36 +329,6 @@ if (!isset($_SESSION['admin_logged_in'])) {
                     <span>Customers</span>
                 </a>
             </li> -->
-
-            <!-- Orders & Invoice -->
-            <li class="nav-item">
-                <a class="nav-link text-white py-3 px-4 d-flex align-items-center" data-bs-toggle="collapse"
-                    href="#orderMenu" role="button">
-                    <i class="fas fa-shopping-cart fa-fw me-3"></i>
-                    <span class="flex-grow-1">Orders</span>
-                    <i class="fas fa-chevron-down ms-auto"></i>
-                </a>
-                <div class="collapse <?php echo in_array(basename($_SERVER['PHP_SELF']), ['orders.php', 'invoice-generate.php']) ? 'show' : ''; ?>"
-                    id="orderMenu">
-                    <ul class="nav flex-column ps-5">
-                        <li class="nav-item">
-                            <a href="orders.php" class="nav-link text-muted py-2 d-flex align-items-center 
-                               <?php echo basename($_SERVER['PHP_SELF']) == 'orders.php' ? 'text-primary' : ''; ?>">
-                                <i class="fas fa-shopping-bag fa-sm me-2"></i>
-                                <span>All Orders</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="invoice-generate.php"
-                                class="nav-link text-muted py-2 d-flex align-items-center 
-                               <?php echo basename($_SERVER['PHP_SELF']) == 'invoice-generate.php' ? 'text-primary' : ''; ?>">
-                                <i class="fas fa-file-invoice fa-sm me-2"></i>
-                                <span>Generate Invoice</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
 
             <!-- Logout -->
             <li class="nav-item mt-auto border-top border-secondary">
