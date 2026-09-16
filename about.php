@@ -1,54 +1,9 @@
 <?php 
+include ('config/connect.php');
 $pageTitle = "About AristoNut";
 include('inc/header.php');
 include ('inc/breadcrumb.php');
 ?>
-
-<!-- Banner / Swiper Hero Section -->
-<!-- <section class="swiper-banner-section my-4" data-aos="fade-down" data-aos-duration="1000">
-  <div class="swiper mySwiper">
-    <div class="swiper-wrapper">
-      <div class="swiper-slide"
-        style="background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0,0,0,0.1)), url('assets/images/1.png');">
-        <div class="banner-content">
-          <h2>Mithila Ki Parampara</h2>
-          <p>Directly from the heart of Bihar to the global stage.</p>
-        </div>
-      </div>
-      <div class="swiper-slide"
-        style="background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url('assets/images/2.png');">
-        <div class="banner-content">
-          <h2>100% Roasted, Zero Guilt</h2>
-          <p>Say goodbye to oily snacks, switch to premium nutrient-rich Makhana.</p>
-        </div>
-      </div>
-      <div class="swiper-slide"
-        style="background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0,0,0,0.1)), url('assets/images/3.png');">
-        <div class="banner-content">
-          <h2>Global Standards & Quality</h2>
-          <p>Serving Retailers, Wholesalers & Global Importers worldwide.</p>
-        </div>
-      </div>
-      <div class="swiper-slide"
-        style="background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0,0,0,0.1)), url('assets/images/4.png');">
-        <div class="banner-content">
-          <h2>Global Standards & Quality</h2>
-          <p>Serving Retailers, Wholesalers & Global Importers worldwide.</p>
-        </div>
-      </div>
-      <div class="swiper-slide"
-        style="background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0,0,0,0.1)), url('assets/images/5.png');">
-        <div class="banner-content">
-          <h2>Global Standards & Quality</h2>
-          <p>Serving Retailers, Wholesalers & Global Importers worldwide.</p>
-        </div>
-      </div>
-    </div>
-    <div class="swiper-pagination"></div>
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
-  </div>
-</section> -->
 
 <!-- About Brand Story Section -->
 <section class="container py-5">
@@ -202,6 +157,58 @@ include ('inc/breadcrumb.php');
 
 <!-- Vanilla JS for Scroll Reveal Animation (No AOS Needed) -->
 
+<!-- ================= AVAILABLE ON PLATFORMS SECTION ================= -->
+<section class="available-platforms-sec">
+    <div class="container">
+        <div class="platform-header">
+            <span class="platform-subtitle">Nationwide Availability</span>
+            <h2 class="platform-title">Shop Your Way</h2>
+            <p class="platform-desc">We are committed to delivering health everywhere. Find AristoNut's premium makhana range on India's most trusted marketplaces.</p>
+        </div>
+    </div>
+
+    <!-- The Infinite Slider -->
+    <div class="marquee-wrapper">
+        <div class="marquee-track">
+            <?php
+            // Fetch brands from dynamic table
+            // Note: Update column names ('image', 'brand_name') according to your actual DB structure
+            $brands_query = "SELECT * FROM `brands` ORDER BY `id` DESC";
+            $brands_result = $conn->query($brands_query);
+            
+            $brands_html = ""; // Variable to store HTML so we can duplicate it for seamless scrolling
+
+            if ($brands_result && $brands_result->num_rows > 0) {
+                while ($brand = $brands_result->fetch_assoc()) {
+                    // Update 'image' field below based on your actual table column name
+                    $brand_img = !empty($brand['logo_path']) ? $site . 'admin/' . htmlspecialchars($brand['logo_path']) : $site . 'assets/images/default-brand.png';
+                    
+                    // Fallback for brand name if missing
+                    $brand_name = htmlspecialchars($brand['title'] ?? 'Partner Brand');
+
+                    $brands_html .= '
+                    <div class="brand-logo-box">
+                        <img src="' . $brand_img . '" alt="' . $brand_name . '" title="' . $brand_name . '">
+                    </div>';
+                }
+            } else {
+                // Temporary dummy layout if database is empty
+                $brands_html .= '
+                    <div class="brand-logo-box"><h4 class="text-muted fw-bold">Amazon</h4></div>
+                    <div class="brand-logo-box"><h4 class="text-muted fw-bold">Flipkart</h4></div>
+                    <div class="brand-logo-box"><h4 class="text-muted fw-bold">JioMart</h4></div>
+                    <div class="brand-logo-box"><h4 class="text-muted fw-bold">Blinkit</h4></div>
+                    <div class="brand-logo-box"><h4 class="text-muted fw-bold">Zepto</h4></div>';
+            }
+
+            // Print Original Set
+            echo $brands_html;
+            // Print Duplicated Set (This creates the infinite seamless loop effect)
+            echo $brands_html;
+            ?>
+        </div>
+    </div>
+</section>
 
 <!-- International B2B Partners Section -->
 <section class="py-5" style="background-color: #fafafa;">

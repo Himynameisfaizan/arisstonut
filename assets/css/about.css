@@ -1,0 +1,146 @@
+:root {
+  --brand-bg: #fcfaf8;
+  --brand-accent: #9c5521;
+  --brand-text: #2c1e16;
+  --brand-muted: #6b5b53;
+}
+
+.available-platforms-sec {
+  background-color: var(--brand-bg);
+  padding: 20px 0 40px 0;
+  border-top: 1px dashed rgba(156, 85, 33, 0.15);
+  border-bottom: 1px dashed rgba(156, 85, 33, 0.15);
+  overflow: hidden;
+  position: relative;
+}
+
+.platform-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.platform-subtitle {
+  font-family: "Inter", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--brand-accent);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.platform-title {
+  font-family: "Poppins", sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--brand-text);
+  margin-bottom: 15px;
+}
+
+.platform-desc {
+  font-family: "Inter", sans-serif;
+  color: var(--brand-muted);
+  font-size: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Infinite Marquee Wrapper */
+.marquee-wrapper {
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  padding: 20px 0;
+}
+
+/* Premium Fading Edges */
+.marquee-wrapper::before,
+.marquee-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 120px;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+.marquee-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, var(--brand-bg) 0%, transparent 100%);
+}
+.marquee-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, var(--brand-bg) 0%, transparent 100%);
+}
+
+/* The Moving Track */
+.marquee-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  /* Animation duration adjust kar sakte ho speed ke liye */
+  animation: scrollMarquee 25s linear infinite;
+}
+
+/* Pause animation on hover for better UX */
+.marquee-wrapper:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Individual Logo Container */
+.brand-logo-box {
+  padding: 0 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-logo-box img {
+  max-height: 80px;
+  max-width: 180px;
+  object-fit: contain;
+  /* Premium Grayscale Effect */
+  filter: grayscale(50%) opacity(0.8);
+  transition: all 0.4s ease;
+  cursor: pointer;
+}
+
+.brand-logo-box img:hover {
+  /* Full Color on Hover */
+  filter: grayscale(0%) opacity(1);
+  transform: scale(1.1);
+}
+
+@keyframes scrollMarquee {
+  0% {
+    transform: translateX(0);
+  }
+  /* Translate exactly 50% so the duplicated half loops perfectly */
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+  .available-platforms-sec {
+    padding: 60px 0;
+  }
+  .platform-title {
+    font-size: 1.8rem;
+  }
+  .brand-logo-box {
+    padding: 0 30px;
+  }
+  .brand-logo-box img {
+    max-height: 45px;
+    max-width: 130px;
+  }
+  .marquee-wrapper::before,
+  .marquee-wrapper::after {
+    width: 60px;
+  }
+}

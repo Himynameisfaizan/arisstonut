@@ -12,7 +12,7 @@ if (isset($_GET['slug']) && !empty(trim($_GET['slug']))) {
     $blog_slug = $conn->real_escape_string(trim($_GET['slug']));
 
     // Fetch the specific blog matching the unique slug parameter
-    $stmt = $conn->prepare("SELECT blog_id, title, author, image, description, meta_title, meta_desc, meta_keywords, created_at FROM blogs WHERE slug = ? AND status = 1 LIMIT 1");
+    $stmt = $conn->prepare("SELECT blog_id, title, author, image, description, meta_title, meta_desc, meta_key, created_at FROM blogs WHERE slug = ? AND status = 1 LIMIT 1");
     $stmt->bind_param("s", $blog_slug);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -29,7 +29,7 @@ if (isset($_GET['slug']) && !empty(trim($_GET['slug']))) {
         // SEO Configurations Meta Properties
         $seo_title = !empty($blog['meta_title']) ? htmlspecialchars($blog['meta_title']) : $b_title . " - AristoNut Blog";
         $seo_desc = !empty($blog['meta_desc']) ? htmlspecialchars($blog['meta_desc']) : substr(strip_tags($b_content), 0, 160);
-        $seo_key = !empty($blog['meta_keywords']) ? htmlspecialchars($blog['meta_keywords']) : "makhana blogs, makhana benefits, health recipes";
+        $seo_key = !empty($blog['meta_key']) ? htmlspecialchars($blog['meta_key']) : "makhana blogs, makhana benefits, health recipes";
 
         // Image asset path validation logic
         $b_img = !empty($blog['image']) ? $site . 'admin/assets/img/uploads/blogs/' . htmlspecialchars($blog['image']) : $site . 'assets/images/hero.webp';
@@ -49,7 +49,11 @@ $sidebar_query = "SELECT title, slug, image, created_at FROM blogs WHERE status 
 $sidebar_result = $conn->query($sidebar_query);
 ?>
 
-<?php include('inc/header.php'); ?>
+<?php 
+$pageTitle = $blog['title'];
+include('inc/header.php');
+include ('inc/breadcrumb.php');
+?>
 
 <main class="container blog-detail-container mb-5 pb-5">
 
@@ -65,7 +69,7 @@ $sidebar_result = $conn->query($sidebar_query);
 
         <div class="col-lg-8">
             <article>
-                <h1 class="article-title mb-3"><?php echo $b_title; ?></h1>
+                <h2 class="article-title mb-3"><?php echo $b_title; ?></h2>
 
                 <div class="meta-strip mb-4 pb-3 border-bottom">
                     <span><i class="bi bi-person-fill text-brown me-1"></i> By <strong><?php echo $b_author; ?></strong></span>

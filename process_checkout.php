@@ -147,23 +147,70 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $mail->isHTML(true);
                 $mail->Subject = "Order Confirmed - AristoNut (#" . $order_number . ")";
                 
+                // Calculate Estimated Delivery Date (Current Date + 5 Days)
+                $estimated_date = date('l, d M Y', strtotime('+5 days'));
+
+                // Premium HTML Email Template (Digital Invoice)
                 $mail->Body = "
-                <div style='font-family: Arial, sans-serif; background-color: #f9f6f0; padding: 30px;'>
-                    <div style='max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 5px solid #9c5521;'>
-                        <h2 style='color: #2c1e16; text-align: center; margin-bottom: 20px;'>Thank You for Your Order!</h2>
-                        <p style='color: #6b5b53; font-size: 16px;'>Hi <strong>{$f_name}</strong>,</p>
-                        <p style='color: #6b5b53; font-size: 16px;'>We're thrilled to let you know that your order <strong>#{$order_number}</strong> has been successfully placed. Your premium makhana will be processed shortly.</p>
+                <div style='font-family: Arial, sans-serif; background-color: #f9f6f0; padding: 30px 10px;'>
+                    <div style='max-width: 650px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05);'>
                         
-                        <div style='background: #fbf8f5; border: 1px dashed #d2b48c; border-radius: 8px; padding: 20px; margin: 25px 0;'>
-                            <h3 style='color: #9c5521; margin-top: 0;'>Order Summary</h3>
-                            <pre style='font-family: Arial, sans-serif; font-size: 14px; color: #4a3326; white-space: pre-wrap;'>" . $product_list . "</pre>
-                            <hr style='border: none; border-top: 1px solid #eaddcf; margin: 15px 0;'>
-                            <h3 style='color: #2c1e16; text-align: right; margin: 0;'>Total Paid: ₹" . number_format($total, 2) . "</h3>
+                        <!-- Header -->
+                        <div style='background: #9c5521; padding: 30px; text-align: center;'>
+                            <h1 style='color: #ffffff; margin: 0; font-size: 24px; letter-spacing: 1px;'>Order Successfully Placed!</h1>
+                            <p style='color: #f9f6f0; margin: 10px 0 0 0; font-size: 15px;'>Your premium makhana is on its way.</p>
                         </div>
-                        
-                        <p style='color: #6b5b53; text-align: center; font-size: 14px;'>Track your order easily on our website using your email address or phone number.</p>
-                        <div style='text-align: center; margin-top: 20px;'>
-                            <a href='{$site}track-order.php' style='background: #9c5521; color: #ffffff; padding: 12px 25px; text-decoration: none; border-radius: 25px; font-weight: bold;'>Track My Order</a>
+
+                        <div style='padding: 30px;'>
+                            <p style='color: #4a3326; font-size: 16px;'>Hi <strong>{$f_name}</strong>,</p>
+                            <p style='color: #6b5b53; font-size: 15px; line-height: 1.6;'>Thank you for choosing AristoNut! We have received your order <strong>#{$order_number}</strong>. We are currently preparing it for dispatch.</p>
+                            
+                            <!-- Delivery Estimation Box -->
+                            <div style='background: #fbf8f5; border-left: 4px solid #27ae60; padding: 15px 20px; margin: 25px 0; border-radius: 4px;'>
+                                <p style='margin: 0; color: #2c1e16; font-size: 14px;'><strong>Expected Delivery Date:</strong></p>
+                                <h3 style='margin: 5px 0 0 0; color: #27ae60;'>{$estimated_date}</h3>
+                                <p style='margin: 5px 0 0 0; color: #6b5b53; font-size: 12px;'>*This is an estimated date. Our admin will update exact tracking details shortly.</p>
+                            </div>
+
+                            <h3 style='color: #9c5521; border-bottom: 2px dashed #eaddcf; padding-bottom: 10px; margin-top: 30px;'>Invoice Summary</h3>
+                            
+                            <!-- Digital Bill Table -->
+                            <table style='width: 100%; border-collapse: collapse; margin-top: 15px;'>
+                                <thead style='background-color: #f9f6f0;'>
+                                    <tr>
+                                        <th style='padding: 12px; text-align: left; color: #2c1e16; font-size: 14px; border-bottom: 1px solid #eaddcf;'>Item Description</th>
+                                        <th style='padding: 12px; text-align: right; color: #2c1e16; font-size: 14px; border-bottom: 1px solid #eaddcf;'>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Items will be injected here. We convert line breaks to table rows -->
+                                    <tr>
+                                        <td colspan='2' style='padding: 15px 12px; color: #6b5b53; font-size: 14px; line-height: 1.8; border-bottom: 1px solid #eee;'>
+                                            " . nl2br($product_list) . "
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td style='padding: 15px 12px; text-align: right; font-weight: bold; color: #2c1e16;'>Shipping:</td>
+                                        <td style='padding: 15px 12px; text-align: right; font-weight: bold; color: #27ae60;'>FREE</td>
+                                    </tr>
+                                    <tr style='background-color: #fbf8f5;'>
+                                        <td style='padding: 15px 12px; text-align: right; font-weight: bold; color: #9c5521; font-size: 18px;'>Grand Total:</td>
+                                        <td style='padding: 15px 12px; text-align: right; font-weight: bold; color: #9c5521; font-size: 18px;'>₹" . number_format($total, 2) . "</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                            <div style='margin-top: 35px; text-align: center;'>
+                                <a href='{$site}track-order.php' style='background: #2c1e16; color: #ffffff; padding: 14px 30px; text-decoration: none; border-radius: 50px; font-weight: bold; display: inline-block;'>Track Your Order Live</a>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div style='background: #fbf8f5; padding: 20px; text-align: center; border-top: 1px solid #eaddcf;'>
+                            <h4 style='color: #9c5521; margin: 0 0 5px 0; font-style: italic;'>Nourishing Lives with Every Crunch!</h4>
+                            <p style='color: #888; font-size: 12px; margin: 0;'>AristoNut Premium Quality Snacking<br><a href='{$site}' style='color: #9c5521;'>www.aristonut.com</a></p>
                         </div>
                     </div>
                 </div>";

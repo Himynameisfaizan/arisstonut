@@ -37,6 +37,7 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
 
     <!-- CSS Files -->
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/cart.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/about.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/category.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/contact.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/privacy.css?v=<?php echo time(); ?>">
