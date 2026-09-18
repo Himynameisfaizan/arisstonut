@@ -19,7 +19,7 @@ if ($result && mysqli_num_rows($result) > 0) {
     $product = mysqli_fetch_assoc($result);
     $db_primary_id = $product['id']; // Main auto-increment ID
     
-    // Naya Code: Fetch existing variations
+    // Fetch existing variations
     $var_query = "SELECT * FROM product_variations WHERE product_id = '$db_primary_id'";
     $variations_result = mysqli_query($conn, $var_query);
 } else {
@@ -83,7 +83,6 @@ $sub_categories = mysqli_query($conn, $sub_cate_query);
                                     <a class="bell_notification_clicker nav-link-notify" href="#"> 
                                         <img src="assets/img/icon/bell.svg" alt>
                                     </a>
-                                    <!-- Notification dropdown - keep as is -->
                                 </li>
                                 <li>
                                     <a class="CHATBOX_open nav-link-notify" href="#"> 
@@ -135,15 +134,24 @@ $sub_categories = mysqli_query($conn, $sub_cate_query);
                                             <div class="col-md-6 mb-3">
                                                 <label class="form-label" for="pro_name">Product Name</label>
                                                 <input type="text" class="form-control" name="pro_name"
-                                                    id="pro_name" value="<?= $product['pro_name'] ?>"
+                                                    id="pro_name" value="<?= htmlspecialchars($product['pro_name']) ?>"
                                                     placeholder="Product Name" required />
+                                            </div>
+
+                                            <!-- BRAND NEW: Slug URL Field with Auto-Generate -->
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label" for="slug_url">Product Slug URL</label>
+                                                <input type="text" class="form-control text-lowercase" name="slug_url"
+                                                    id="slug_url" value="<?= htmlspecialchars($product['slug_url'] ?? '') ?>"
+                                                    placeholder="product-slug-url" required />
+                                                <small class="text-muted"><i class="ti-info-alt"></i> Auto-generates from Product Name. Do not use special characters or spaces.</small>
                                             </div>
 
                                             <!-- Brand Name -->
                                             <div class="col-md-6 mb-3">
                                                 <label class="form-label" for="brand_name">Brand Name</label>
                                                 <input type="text" class="form-control" name="brand_name"
-                                                    id="brand_name" value="<?= $product['brand_name'] ?? '' ?>"
+                                                    id="brand_name" value="<?= htmlspecialchars($product['brand_name'] ?? '') ?>"
                                                     placeholder="Brand Name" />
                                             </div>
 
@@ -162,7 +170,7 @@ $sub_categories = mysqli_query($conn, $sub_cate_query);
                                                 </select>
                                             </div>
 
-                                            <!-- Sub Category - FIXED AND ADDED -->
+                                            <!-- Sub Category -->
                                             <div class="col-md-6 mb-3">
                                                 <label class="form-label" for="pro_sub_cate">Sub Category</label>
                                                 <select class="form-control" name="pro_sub_cate" id="subcate_id" required>
@@ -191,28 +199,27 @@ $sub_categories = mysqli_query($conn, $sub_cate_query);
                                                     placeholder="Stock" required />
                                             </div>
 
-                                            <!-- Product Image(s) -->
-                                         <!-- Product Image -->
-<div class="col-md-6 mb-3">
-    <label class="form-label" for="pro_img">Product Image</label>
-    <input type="file" class="form-control" name="pro_img" id="pro_img" accept="image/*" />
-    
-    <?php if(!empty($product['pro_img'])): ?>
-    <div class="mt-2">
-        <small>Current Image:</small>
-        <div class="mt-2">
-            <img src="assets/img/uploads/<?= trim($product['pro_img']) ?>"
-                style="height: 200px; width: 200px; object-fit: cover; border-radius: 8px; border: 2px solid #eee;"
-                alt="Product Image"
-                onerror="this.src='assets/img/no-image.png'">
-        </div>
-    </div>
-    <?php else: ?>
-    <div class="mt-2">
-        <small>No image uploaded</small>
-    </div>
-    <?php endif; ?>
-</div>
+                                            <!-- Product Image -->
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label" for="pro_img">Product Image</label>
+                                                <input type="file" class="form-control" name="pro_img" id="pro_img" accept="image/*" />
+                                                
+                                                <?php if(!empty($product['pro_img'])): ?>
+                                                <div class="mt-2">
+                                                    <small>Current Image:</small>
+                                                    <div class="mt-2">
+                                                        <img src="assets/img/uploads/<?= trim($product['pro_img']) ?>"
+                                                            style="height: 200px; width: 200px; object-fit: cover; border-radius: 8px; border: 2px solid #eee;"
+                                                            alt="Product Image"
+                                                            onerror="this.src='assets/img/no-image.png'">
+                                                    </div>
+                                                </div>
+                                                <?php else: ?>
+                                                <div class="mt-2">
+                                                    <small>No image uploaded</small>
+                                                </div>
+                                                <?php endif; ?>
+                                            </div>
 
                                             <!-- New Arrival -->
                                             <div class="col-md-6 mb-3">
@@ -246,155 +253,149 @@ $sub_categories = mysqli_query($conn, $sub_cate_query);
                                                     required><?= $product['description'] ?></textarea>
                                             </div>
 
-                                            <!-- MRP -->
-                                           <!-- Custom CSS for clean UI & Contrast -->
-<style>
-    .variation-card {
-        background: #ffffff;
-        border: 1px solid #e1e5eb;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-    .variation-header {
-        background: #f8f9fa;
-        border-bottom: 2px solid #dee2e6;
-        padding: 15px 20px;
-        border-radius: 8px 8px 0 0;
-    }
-    .table-variations thead th {
-        background-color: #343a40 !important; /* Dark background fixing visibility issue */
-        color: #ffffff !important; /* Pure white text */
-        font-weight: 500;
-        text-align: center;
-        border: none;
-        white-space: nowrap;
-    }
-    .table-variations td {
-        vertical-align: middle;
-    }
-</style>
+                                            <!-- Custom CSS for Variations UI -->
+                                            <style>
+                                                .variation-card {
+                                                    background: #ffffff;
+                                                    border: 1px solid #e1e5eb;
+                                                    border-radius: 8px;
+                                                    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+                                                }
+                                                .variation-header {
+                                                    background: #f8f9fa;
+                                                    border-bottom: 2px solid #dee2e6;
+                                                    padding: 15px 20px;
+                                                    border-radius: 8px 8px 0 0;
+                                                }
+                                                .table-variations thead th {
+                                                    background-color: #343a40 !important;
+                                                    color: #ffffff !important;
+                                                    font-weight: 500;
+                                                    text-align: center;
+                                                    border: none;
+                                                    white-space: nowrap;
+                                                }
+                                                .table-variations td {
+                                                    vertical-align: middle;
+                                                }
+                                            </style>
 
-<div class="col-md-12 mb-4 mt-3">
-    <div class="variation-card">
-        <div class="variation-header">
-            <h5 class="m-0 text-dark fw-bold"><i class="ti-layers text-primary"></i> Product Variations (Weight, Price & Images)</h5>
-        </div>
-        <div class="p-3">
-            <div class="table-responsive">
-                <table class="table table-bordered table-variations" id="variation_table">
-                    <thead>
-                        <tr>
-                            <th>Weight/Size <span class="text-danger">*</span></th>
-                            <th>Single Price (₹) <span class="text-danger">*</span></th>
-                            <th>4+ Price (₹)</th>
-                            <th>5+ Price (₹)</th>
-                            <th>6+ Price (₹)</th>
-                            <th>Stock <span class="text-danger">*</span></th>
-                            <th>Image</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="variation_body">
-                        <?php
-                        // Agar pehle se variations exist karte hain, to loop chalayenge
-                        if (isset($variations_result) && mysqli_num_rows($variations_result) > 0) {
-                            while ($var = mysqli_fetch_assoc($variations_result)) {
-                                ?>
-                                <tr>
-                                    <!-- Hidden ID taaki backend update samajh sake -->
-                                    <input type="hidden" name="var_id[]" value="<?= $var['id'] ?>">
-                                    
-                                    <td><input type="text" name="var_weight[]" class="form-control" value="<?= htmlspecialchars($var['weight_size']) ?>" required></td>
-                                    <td><input type="number" step="0.01" name="var_price[]" class="form-control" value="<?= $var['single_price'] ?>" required></td>
-                                    <td><input type="number" step="0.01" name="var_price_4[]" class="form-control" value="<?= $var['price_4_plus'] ?>"></td>
-                                    <td><input type="number" step="0.01" name="var_price_5[]" class="form-control" value="<?= $var['price_5_plus'] ?>"></td>
-                                    <td><input type="number" step="0.01" name="var_price_6[]" class="form-control" value="<?= $var['price_6_plus'] ?>"></td>
-                                    <td><input type="number" name="var_stock[]" class="form-control" value="<?= $var['stock'] ?>" required></td>
-                                    <td class="text-center">
-                                        <input type="file" name="var_img[]" class="form-control mb-1" accept="image/*">
-                                        <!-- Hidden input purani image store karne ke liye -->
-                                        <input type="hidden" name="old_var_img[]" value="<?= htmlspecialchars($var['image_path']) ?>">
-                                        
-                                        <?php if(!empty($var['image_path'])): ?>
-                                            <div class="mt-1">
-                                                <img src="assets/img/uploads/<?= $var['image_path'] ?>" width="40" height="40" style="object-fit:cover; border-radius:5px; border:1px solid #ddd;">
-                                            </div>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-danger btn-sm remove-row fw-bold"><i class="ti-minus"></i></button>
-                                    </td>
-                                </tr>
-                                <?php
-                            }
-                        } else {
-                            // Agar purana product hai aur koi variation nahi hai
-                            ?>
-                            <tr>
-                                <input type="hidden" name="var_id[]" value="0"> <!-- 0 means new insert -->
-                                <td><input type="text" name="var_weight[]" class="form-control" placeholder="e.g. 100g" required></td>
-                                <td><input type="number" step="0.01" name="var_price[]" class="form-control" required></td>
-                                <td><input type="number" step="0.01" name="var_price_4[]" class="form-control"></td>
-                                <td><input type="number" step="0.01" name="var_price_5[]" class="form-control"></td>
-                                <td><input type="number" step="0.01" name="var_price_6[]" class="form-control"></td>
-                                <td><input type="number" name="var_stock[]" class="form-control" required></td>
-                                <td>
-                                    <input type="file" name="var_img[]" class="form-control" accept="image/*">
-                                    <input type="hidden" name="old_var_img[]" value="">
-                                </td>
-                                <td class="text-center"><button type="button" class="btn btn-danger btn-sm remove-row fw-bold"><i class="ti-minus"></i></button></td>
-                            </tr>
-                            <?php
-                        }
-                        ?>
-                    </tbody>
-                </table>
-                <div class="mt-3 text-end">
-                    <button type="button" class="btn btn-success add-row fw-bold"><i class="ti-plus"></i> Add New Variation</button>
-                </div>
-            </div>
-            <small class="text-muted mt-2 d-block"><i class="ti-info-alt text-primary"></i> Note: Leave 4+, 5+, 6+ price empty if you don't want to give bulk discount for a specific weight.</small>
-        </div>
-    </div>
-</div>
-
-                                        <!-- SEO Section -->
-                                        <div class="row mb-3">
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label" for="meta_title">Meta Title</label>
-                                                <input type="text" class="form-control" name="meta_title"
-                                                    id="meta_title" value="<?= $product['meta_title'] ?>"
-                                                    placeholder="Meta Title" />
+                                            <div class="col-md-12 mb-4 mt-3">
+                                                <div class="variation-card">
+                                                    <div class="variation-header">
+                                                        <h5 class="m-0 text-dark fw-bold"><i class="ti-layers text-primary"></i> Product Variations (Weight, Price & Images)</h5>
+                                                    </div>
+                                                    <div class="p-3">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-bordered table-variations" id="variation_table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Weight/Size <span class="text-danger">*</span></th>
+                                                                        <th>Single Price (₹) <span class="text-danger">*</span></th>
+                                                                        <th>4+ Price (₹)</th>
+                                                                        <th>5+ Price (₹)</th>
+                                                                        <th>6+ Price (₹)</th>
+                                                                        <th>Stock <span class="text-danger">*</span></th>
+                                                                        <th>Image</th>
+                                                                        <th>Action</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="variation_body">
+                                                                    <?php
+                                                                    if (isset($variations_result) && mysqli_num_rows($variations_result) > 0) {
+                                                                        while ($var = mysqli_fetch_assoc($variations_result)) {
+                                                                            ?>
+                                                                            <tr>
+                                                                                <input type="hidden" name="var_id[]" value="<?= $var['id'] ?>">
+                                                                                <td><input type="text" name="var_weight[]" class="form-control" value="<?= htmlspecialchars($var['weight_size']) ?>" required></td>
+                                                                                <td><input type="number" step="0.01" name="var_price[]" class="form-control" value="<?= $var['single_price'] ?>" required></td>
+                                                                                <td><input type="number" step="0.01" name="var_price_4[]" class="form-control" value="<?= $var['price_4_plus'] ?>"></td>
+                                                                                <td><input type="number" step="0.01" name="var_price_5[]" class="form-control" value="<?= $var['price_5_plus'] ?>"></td>
+                                                                                <td><input type="number" step="0.01" name="var_price_6[]" class="form-control" value="<?= $var['price_6_plus'] ?>"></td>
+                                                                                <td><input type="number" name="var_stock[]" class="form-control" value="<?= $var['stock'] ?>" required></td>
+                                                                                <td class="text-center">
+                                                                                    <input type="file" name="var_img[]" class="form-control mb-1" accept="image/*">
+                                                                                    <input type="hidden" name="old_var_img[]" value="<?= htmlspecialchars($var['image_path']) ?>">
+                                                                                    <?php if(!empty($var['image_path'])): ?>
+                                                                                        <div class="mt-1">
+                                                                                            <img src="assets/img/uploads/<?= $var['image_path'] ?>" width="40" height="40" style="object-fit:cover; border-radius:5px; border:1px solid #ddd;">
+                                                                                        </div>
+                                                                                    <?php endif; ?>
+                                                                                </td>
+                                                                                <td class="text-center">
+                                                                                    <button type="button" class="btn btn-danger btn-sm remove-row fw-bold"><i class="ti-minus"></i></button>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <?php
+                                                                        }
+                                                                    } else {
+                                                                        ?>
+                                                                        <tr>
+                                                                            <input type="hidden" name="var_id[]" value="0">
+                                                                            <td><input type="text" name="var_weight[]" class="form-control" placeholder="e.g. 100g" required></td>
+                                                                            <td><input type="number" step="0.01" name="var_price[]" class="form-control" required></td>
+                                                                            <td><input type="number" step="0.01" name="var_price_4[]" class="form-control"></td>
+                                                                            <td><input type="number" step="0.01" name="var_price_5[]" class="form-control"></td>
+                                                                            <td><input type="number" step="0.01" name="var_price_6[]" class="form-control"></td>
+                                                                            <td><input type="number" name="var_stock[]" class="form-control" required></td>
+                                                                            <td>
+                                                                                <input type="file" name="var_img[]" class="form-control" accept="image/*">
+                                                                                <input type="hidden" name="old_var_img[]" value="">
+                                                                            </td>
+                                                                            <td class="text-center"><button type="button" class="btn btn-danger btn-sm remove-row fw-bold"><i class="ti-minus"></i></button></td>
+                                                                        </tr>
+                                                                        <?php
+                                                                    }
+                                                                    ?>
+                                                                </tbody>
+                                                            </table>
+                                                            <div class="mt-3 text-end">
+                                                                <button type="button" class="btn btn-success add-row fw-bold"><i class="ti-plus"></i> Add New Variation</button>
+                                                            </div>
+                                                        </div>
+                                                        <small class="text-muted mt-2 d-block"><i class="ti-info-alt text-primary"></i> Note: Leave 4+, 5+, 6+ price empty if you don't want to give bulk discount for a specific weight.</small>
+                                                    </div>
+                                                </div>
                                             </div>
 
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label" for="meta_key">Meta Keyword</label>
-                                                <input type="text" class="form-control" name="meta_key"
-                                                    id="meta_key" value="<?= $product['meta_key'] ?>"
-                                                    placeholder="Meta Keyword" />
+                                            <!-- SEO Section -->
+                                            <div class="row mb-3">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label" for="meta_title">Meta Title</label>
+                                                    <input type="text" class="form-control" name="meta_title"
+                                                        id="meta_title" value="<?= $product['meta_title'] ?>"
+                                                        placeholder="Meta Title" />
+                                                </div>
+
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label" for="meta_key">Meta Keyword</label>
+                                                    <input type="text" class="form-control" name="meta_key"
+                                                        id="meta_key" value="<?= $product['meta_key'] ?>"
+                                                        placeholder="Meta Keyword" />
+                                                </div>
+
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label" for="meta_desc">Meta Description</label>
+                                                    <input type="text" class="form-control" name="meta_desc"
+                                                        id="meta_desc" value="<?= $product['meta_desc'] ?>"
+                                                        placeholder="Meta Description" />
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <label class="form-label" for="status">Status</label>
+                                                    <select id="status" name="status" class="form-control" required>
+                                                        <option value="1" <?= $product['status'] == 1 ? 'selected' : '' ?>>
+                                                            Active</option>
+                                                        <option value="0" <?= $product['status'] == 0 ? 'selected' : '' ?>>
+                                                            Deactive</option>
+                                                    </select>
+                                                </div>
                                             </div>
 
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label" for="meta_desc">Meta Description</label>
-                                                <input type="text" class="form-control" name="meta_desc"
-                                                    id="meta_desc" value="<?= $product['meta_desc'] ?>"
-                                                    placeholder="Meta Description" />
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <label class="form-label" for="status">Status</label>
-                                                <select id="status" name="status" class="form-control" required>
-                                                    <option value="1" <?= $product['status'] == 1 ? 'selected' : '' ?>>
-                                                        Active</option>
-                                                    <option value="0" <?= $product['status'] == 0 ? 'selected' : '' ?>>
-                                                        Deactive</option>
-                                                </select>
-                                            </div>
+                                            <button type="submit" name="update-product" class="btn btn-primary">
+                                                Update Product
+                                            </button>
                                         </div>
-
-                                        <button type="submit" name="update-product" class="btn btn-primary">
-                                            Update Product
-                                        </button>
                                     </form>
                                 </div>
                             </div>
@@ -413,7 +414,7 @@ $sub_categories = mysqli_query($conn, $sub_cate_query);
             CKEDITOR.replace('short_desc');
         </script>
 
-        <!-- AJAX function for selecting category then automatically show sub category -->
+        <!-- Category & Sub Category Fetch -->
         <script type="text/javascript">
             function get_subcategory(cate_id) {
                 if (cate_id === '') {
@@ -435,33 +436,45 @@ $sub_categories = mysqli_query($conn, $sub_cate_query);
             }
         </script>
 
+        <!-- Variation Rows JS -->
         <script>
-    $(document).ready(function() {
-        // Add new variation row dynamically
-        $(document).on('click', '.add-row', function() {
-            var html = `<tr>
-                <input type="hidden" name="var_id[]" value="0"> <!-- New entry logic -->
-                <td><input type="text" name="var_weight[]" class="form-control" placeholder="e.g. 200g" required></td>
-                <td><input type="number" step="0.01" name="var_price[]" class="form-control" required></td>
-                <td><input type="number" step="0.01" name="var_price_4[]" class="form-control"></td>
-                <td><input type="number" step="0.01" name="var_price_5[]" class="form-control"></td>
-                <td><input type="number" step="0.01" name="var_price_6[]" class="form-control"></td>
-                <td><input type="number" name="var_stock[]" class="form-control" required></td>
-                <td class="text-center">
-                    <input type="file" name="var_img[]" class="form-control mb-1" accept="image/*">
-                    <input type="hidden" name="old_var_img[]" value="">
-                </td>
-                <td class="text-center"><button type="button" class="btn btn-danger btn-sm remove-row fw-bold"><i class="ti-minus"></i></button></td>
-            </tr>`;
-            $('#variation_body').append(html);
-        });
+            $(document).ready(function() {
+                $(document).on('click', '.add-row', function() {
+                    var html = `<tr>
+                        <input type="hidden" name="var_id[]" value="0">
+                        <td><input type="text" name="var_weight[]" class="form-control" placeholder="e.g. 200g" required></td>
+                        <td><input type="number" step="0.01" name="var_price[]" class="form-control" required></td>
+                        <td><input type="number" step="0.01" name="var_price_4[]" class="form-control"></td>
+                        <td><input type="number" step="0.01" name="var_price_5[]" class="form-control"></td>
+                        <td><input type="number" step="0.01" name="var_price_6[]" class="form-control"></td>
+                        <td><input type="number" name="var_stock[]" class="form-control" required></td>
+                        <td class="text-center">
+                            <input type="file" name="var_img[]" class="form-control mb-1" accept="image/*">
+                            <input type="hidden" name="old_var_img[]" value="">
+                        </td>
+                        <td class="text-center"><button type="button" class="btn btn-danger btn-sm remove-row fw-bold"><i class="ti-minus"></i></button></td>
+                    </tr>`;
+                    $('#variation_body').append(html);
+                });
 
-        // Remove variation row from UI
-        $(document).on('click', '.remove-row', function() {
-            $(this).closest('tr').remove();
-        });
-    });
-</script>
+                $(document).on('click', '.remove-row', function() {$(this).closest('tr').remove();
+                });
+            });
+        </script>
+
+        <!-- 🔥 SLUG AUTO-GENERATOR FIX 🔥 -->
+        <script>
+            document.getElementById("pro_name").addEventListener("keyup", function() {
+                let name = this.value;
+                let slug = name.toLowerCase()
+                               .replace(/\+/g, '-plus-')     // Handle the '+' sign gracefully
+                               .replace(/&/g, '-and-')       // Handle '&' sign
+                               .replace(/[^a-z0-9]+/g, '-')  // Remove all other special characters & spaces
+                               .replace(/(^-|-$)+/g, '');    // Clean trailing hyphens
+                
+                document.getElementById("slug_url").value = slug;
+            });
+        </script>
 
     </section>
 </body>
