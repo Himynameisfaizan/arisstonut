@@ -2,9 +2,8 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-include('config/connect.php'); // Database & Global $site Config Layer
+include('config/connect.php'); 
 
-// URL Parameter Validation
 if (isset($_GET['slug']) && !empty($_GET['slug'])) {
     $slug = $conn->real_escape_string($_GET['slug']);
 
@@ -36,6 +35,15 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
             }
         }
         $variations_json = json_encode($variations);
+
+        // --- NEW: Fetch Gallery Images ---
+        $gallery_images = [];
+        $gal_query = $conn->query("SELECT * FROM product_images WHERE product_id = '$p_id' ORDER BY id ASC");
+        if ($gal_query && $gal_query->num_rows > 0) {
+            while ($g_row = $gal_query->fetch_assoc()) {
+                $gallery_images[] = $g_row;
+            }
+        }
 
         // --- Fetch Related Products ---
         $related_query = $conn->query("SELECT id, pro_name, selling_price, qty, pro_img, slug_url FROM products WHERE pro_cate = '$p_cate' AND id != '$p_id' AND status = 1 ORDER BY id DESC LIMIT 4");
@@ -124,6 +132,19 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
                             <?php endforeach; ?>
                         </div>
                     <?php endif; ?>
+
+                    <!-- NEW: Gallery Images Thumbnails -->
+                        <?php if (!empty($gallery_images)): ?>
+                            <?php foreach ($gallery_images as $g_img): ?>
+                                <!-- Note: Apne DB column ka naam image_path ya image_name jo bhi ho, yahan replace kar lena -->
+                                <?php $g_thumb = $site . 'admin/assets/img/uploads/' . htmlspecialchars($g_img['image_path']); ?>
+                                <img src="<?php echo $g_thumb; ?>"
+                                    class="gal-thumb" 
+                                    style="cursor: pointer; width: 60px; height: 60px; object-fit: cover; border-radius: 8px; margin: 5px; border: 1px solid #ddd;"
+                                    onclick="document.getElementById('magnify-target-img').src=this.src"
+                                    alt="Gallery Image">
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                 </div>
             </div>
 
@@ -319,10 +340,10 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
                                 </div>
 
                                 <a href="<?php echo $site; ?>product/<?php echo $rp_slug; ?>" class="v-title" title="<?php echo $rp_name; ?>"><?php echo $rp_name; ?></a>
-                                <div class="v-weight">Net Wt: <?php echo $rp_weight; ?></div>
+                                <!-- <div class="v-weight">Net Wt: <?php echo $rp_weight; ?></div> -->
 
                                 <div class="v-bottom-section">
-                                    <div class="v-price">₹<?php echo $rp_price; ?></div>
+                                    <!-- <div class="v-price">₹<?php echo $rp_price; ?></div> -->
                                     <div class="v-action-buttons">
                                         <button class="v-btn-cart-sm" onclick="addToCart(<?php echo $rp_id; ?>)">Cart</button>
                                         <button class="v-btn-buy-sm" onclick="buyNow(<?php echo $rp_id; ?>)">Buy Now</button>
