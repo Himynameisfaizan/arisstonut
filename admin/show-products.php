@@ -168,7 +168,7 @@ if (mysqli_num_rows($result) > 0) {
 
         $image = $row['pro_img'];
         $images = explode(",", $image);
-        $first_image = !empty($images[0]) ? $images[0] : 'admin/assets/img/uploads/1783918855_1.png';
+        $first_image = !empty($images[0]) ? $images[0] : 'assets/img/uploads/1783918855_1.png';
 
         // 1. Fetch Category Name dynamically instead of raw cate_id
         $cate_name_display = "N/A";
@@ -201,7 +201,7 @@ if (mysqli_num_rows($result) > 0) {
                 <img src="assets/img/uploads/<?= htmlspecialchars($first_image) ?>"
                     alt="<?= htmlspecialchars($row['pro_name']) ?>"
                     style="width: 60px; height: 60px; object-fit: contain;" class="img-thumbnail"
-                    onerror="this.src='admin/assets/img/uploads/1783918855_1.png'">
+                    onerror="this.src='assets/img/uploads/1783918855_1.png'">
             </td>
             <td>
                 <a href="multiple_img.php?id=<?= $row['pro_id'] ?>" class="btn btn-outline-primary btn-sm">

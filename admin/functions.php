@@ -166,55 +166,19 @@ function get_Category()
         <td>" . $result['added_on'] . "</td>
         </tr>";
     }
-}
+}       
 
-// if(isset($_POST["add-product"])){
-//     $pro_id = mt_rand(11111, 99999);
-//     $pro_name = $_POST['pro_name'];
-//     $pro_cate = $_POST['pro_cate'];
-//     $pro_sub_cate = $_POST['pro_sub_cate'];
-//     $description = $_POST['pro_desc'];
-//     $new_arrival = $_POST['new_arrival'];
-//     $mrp = $_POST['mrp'];
-//     $selling_price = $_POST['selling_price'];
-//     $stock = $_POST['stock'];
-//     $status = $_POST['status'];
-
-//     $filename = $_FILES['pro_img']['name'];
-//     $tmepname = $_FILES['pro_img']['tmp_name'];
-//     $destination = 'assests/img/uploads/'.$filename;
-//     move_uploaded_file($tmepname,$destination);
-
-//     $meta_title = $_POST["meta_title"];
-//     $meta_key = $_POST["meta_key"];
-//     $meta_desc = $_POST["meta_desc"];
-//     $added_on = date('M d, Y');
-//     $slug_url = SlugUrl($pro_name); 
-
-
-//     $sql ="INSERT INTO `products`(`pro_id`, `pro_name`, `pro_cate`, `pro_sub_cate`, `short_desc`, `description`,`new_arrival`, `mrp`, `selling_price`, `stock`, `pro_img`, `status`,`slug_url`, `meta_title`, `meta_desc`, `meta_key`, `added_on`) VALUES ('$pro_id','$pro_name','$pro_cate','$pro_sub_cate','$description','$new_arrival','$mrp','$selling_price','$stock','$status','$slug_url','$filename','$meta_title','$meta_key','$meta_desc','$added_on','$added_on')";
-
-//     $check = mysqli_query($conn, $sql);
-//     if($check){
-//         
-
-
-    if (isset($_POST["add-product"])) {
-    $pro_id = mt_rand(11111, 99999);
-    $pro_name       = mysqli_real_escape_string($conn, $_POST['pro_name']);
-    $brand_name     = mysqli_real_escape_string($conn, $_POST['brand_name']);
-    $pro_cate       = mysqli_real_escape_string($conn, $_POST['pro_cate']);
-    $pro_sub_cate   = mysqli_real_escape_string($conn, $_POST['pro_sub_cate']);
-    $short_desc     = mysqli_real_escape_string($conn, $_POST['short_desc']);
-    $description    = mysqli_real_escape_string($conn, $_POST['pro_desc']);
-    $new_arrival    = mysqli_real_escape_string($conn, $_POST['new_arrival']);
-    $trending       = mysqli_real_escape_string($conn, $_POST['trending']);
-    $status         = mysqli_real_escape_string($conn, $_POST['status']);
+  if (isset($_POST["add-product"])) {
+    $pro_id = mt_rand(11111, 99999);$pro_name       = mysqli_real_escape_string($conn,$_POST['pro_name']);
+    $brand_name     = mysqli_real_escape_string($conn, $_POST['brand_name']);$pro_cate       = mysqli_real_escape_string($conn,$_POST['pro_cate']);
+    $pro_sub_cate   = mysqli_real_escape_string($conn, $_POST['pro_sub_cate']);$short_desc     = mysqli_real_escape_string($conn,$_POST['short_desc']);
+    $description    = mysqli_real_escape_string($conn, $_POST['pro_desc']);$new_arrival    = mysqli_real_escape_string($conn,$_POST['new_arrival']);
+    $trending       = mysqli_real_escape_string($conn, $_POST['trending']);$status         = mysqli_real_escape_string($conn,$_POST['status']);
     
     // Main product pricing mapping to first variation logic fallback
     $mrp = "0"; 
-    $selling_price = isset($_POST['var_price'][0]) ? mysqli_real_escape_string($conn, $_POST['var_price'][0]) : "0"; 
-    $stock = isset($_POST['var_stock'][0]) ? mysqli_real_escape_string($conn, $_POST['var_stock'][0]) : "0"; 
+    $selling_price = isset($_POST['var_price'][0]) ? mysqli_real_escape_string($conn,$_POST['var_price'][0]) : "0"; 
+    $stock = isset($_POST['var_stock'][0]) ? mysqli_real_escape_string($conn,$_POST['var_stock'][0]) : "0"; 
 
     // Handle Main Product Featured Images
     $folder = 'assets/img/uploads/';
@@ -225,27 +189,30 @@ function get_Category()
     $main_filename = "";
     if(isset($_FILES['pro_img']['tmp_name']) && !empty($_FILES['pro_img']['tmp_name'][0])) {
         // Just taking the first image for the main table thumbnail
-        $main_filename = time() . '_' . $_FILES['pro_img']['name'][0];
-        move_uploaded_file($_FILES['pro_img']['tmp_name'][0], $folder . $main_filename);
+        $main_filename = time() . '_' .$_FILES['pro_img']['name'][0];
+        move_uploaded_file($_FILES['pro_img']['tmp_name'][0], $folder .$main_filename);
     }
 
-    $meta_title = mysqli_real_escape_string($conn, $_POST['meta_title']);
-    $meta_key   = mysqli_real_escape_string($conn, $_POST["meta_key"]);
-    $meta_desc  = mysqli_real_escape_string($conn, $_POST["meta_desc"]);
+    $meta_title = mysqli_real_escape_string($conn, $_POST['meta_title']);$meta_key   = mysqli_real_escape_string($conn,$_POST["meta_key"]);
+    $meta_desc  = mysqli_real_escape_string($conn,$_POST["meta_desc"]);
     $added_on   = date('M d, Y');
-    $slug_url   = strtolower(str_replace(" ", "-", $pro_name));
+    
+    // 🔥 PHP 8+ Slug URL Fix
+    $raw_slug = !empty($_POST['slug_url']) ? trim($_POST['slug_url']) :$pro_name;
+    // Basic sanitization backup for missing JavaScript scenario
+    $slug_url = strtolower(preg_replace('/[^a-zA-Z0-9\-]/', '', str_replace(array('+', ' '), array('-plus-', '-'),$raw_slug)));
 
     // Insert main product
     $sql = "INSERT INTO `products`(`pro_id`, `pro_name`, `brand_name`, `pro_cate`, `pro_sub_cate`, `short_desc`, `description`, `new_arrival`, `trending`, `mrp`, `selling_price`, `stock`, `pro_img`, `status`, `slug_url`, `meta_title`, `meta_desc`, `meta_key`, `added_on`) 
             VALUES ('$pro_id', '$pro_name', '$brand_name','$pro_cate', '$pro_sub_cate', '$short_desc', '$description', '$new_arrival', '$trending', '$mrp', '$selling_price', '$stock', '$main_filename', '$status', '$slug_url', '$meta_title', '$meta_desc', '$meta_key', '$added_on')";
 
-    $check = mysqli_query($conn, $sql);
+    $check = mysqli_query($conn,$sql);
     
     if ($check) {
         // ID extraction for relational insertion
         $main_product_id = mysqli_insert_id($conn); 
 
-        // Handle the Dynamic Variations Logic Architecture Loop
+        // 1. Handle the Dynamic Variations
         if(isset($_POST['var_weight']) && is_array($_POST['var_weight'])) {
             $count = count($_POST['var_weight']);
             
@@ -262,28 +229,42 @@ function get_Category()
 
                 // Handle Variation Specific Image
                 $var_image_name = '';
-                if(isset($_FILES['var_img']['name'][$i]) && !empty($_FILES['var_img']['name'][$i])) {
-                    $var_image_name = time() . '_var_' . $_FILES['var_img']['name'][$i];
-                    move_uploaded_file($_FILES['var_img']['tmp_name'][$i], $folder . $var_image_name);
+                if(isset($_FILES['var_img']['name'][$i]) && !empty($_FILES['var_img']['name'][$i])) {$var_image_name = time() . '_var_' . $_FILES['var_img']['name'][$i];
+                    move_uploaded_file($_FILES['var_img']['tmp_name'][$i], $folder .$var_image_name);
                 }
 
-                // Database insert query for Variations
                 $var_sql = "INSERT INTO `product_variations` 
                             (`product_id`, `weight_size`, `single_price`, `price_4_plus`, `price_5_plus`, `price_6_plus`, `stock`, `image_path`) 
-                            VALUES ('$main_product_id', '$weight', '$price', $price4, $price5, $price6, '$var_stock', '$var_image_name')";
+                            VALUES ('$main_product_id', '$weight', '$price',$price4, $price5,$price6, '$var_stock', '$var_image_name')";
                 
-                mysqli_query($conn, $var_sql);
+                mysqli_query($conn,$var_sql);
+            }
+        }
+
+        // 2. 🔥 NEW: Process Multiple Gallery Images Upload 🔥
+        if (isset($_FILES['gallery_images']['name']) && !empty($_FILES['gallery_images']['name'][0])) {
+            $gal_count = count($_FILES['gallery_images']['name']);
+            for ($g = 0; $g < $gal_count; $g++) {
+                $g_img_name =$_FILES['gallery_images']['name'][$g];$g_tmp_name = $_FILES['gallery_images']['tmp_name'][$g];
+                
+                if (!empty($g_img_name)) {$g_new_name = time() . "_gal_" . $g . "_" . $g_img_name;
+                    $g_dest = $folder .$g_new_name;
+                    
+                    if (move_uploaded_file($g_tmp_name, $g_dest)) {$gal_sql = "INSERT INTO `product_images` (`product_id`, `image_path`) VALUES ('$main_product_id', '$g_new_name')";
+                        mysqli_query($conn,$gal_sql);
+                    }
+                }
             }
         }
 
         echo "<script type='text/javascript'>
-                alert('Product & Variations Inserted Successfully!');
+                alert('Product, Variations, & Gallery Images Inserted Successfully!');
                 window.location.href = 'add-products.php';
               </script>";
     } else {
         echo "Error: " . mysqli_error($conn);
     }
-}
+ }
 
     function get_Sub_Category()
     {

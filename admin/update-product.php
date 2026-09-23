@@ -9,35 +9,24 @@ if (isset($_POST['update-product'])) {
     // 1. Get Product ID & Find Main Auto-Increment Primary Key
     $pro_id = intval($_POST['pro_id']);
     
-    $get_main_stmt = $conn->prepare("SELECT id, pro_img FROM products WHERE pro_id = ? LIMIT 1");
-    $get_main_stmt->bind_param("i", $pro_id);
-    $get_main_stmt->execute();
-    $main_result = $get_main_stmt->get_result();
+    $get_main_stmt =$conn->prepare("SELECT id, pro_img FROM products WHERE pro_id = ? LIMIT 1");
+    $get_main_stmt->bind_param("i", $pro_id);$get_main_stmt->execute();
+    $main_result =$get_main_stmt->get_result();
     
     if (!$main_result || $main_result->num_rows === 0) {
         die("Product record not found.");
     }
     
-    $product_record = $main_result->fetch_assoc();
-    $main_product_id = intval($product_record['id']);
-    $existing_main_img = $product_record['pro_img'];
-    $get_main_stmt->close();
+    $product_record = $main_result->fetch_assoc();$main_product_id = intval($product_record['id']);$existing_main_img = $product_record['pro_img'];$get_main_stmt->close();
 
     // 2. Sanitize Standard Form Data
-    $pro_name       = mysqli_real_escape_string($conn, $_POST['pro_name']);
-    $brand_name     = mysqli_real_escape_string($conn, $_POST['brand_name'] ?? '');
-    $pro_cate       = intval($_POST['pro_cate']);
-    $pro_sub_cate   = intval($_POST['pro_sub_cate'] ?? 0);
-    $short_desc     = mysqli_real_escape_string($conn, $_POST['short_desc']);
-    $description    = mysqli_real_escape_string($conn, $_POST['pro_desc']);
-    $new_arrival    = intval($_POST['new_arrival']);
-    $trending       = intval($_POST['trending'] ?? 0);
-    $stock          = intval($_POST['stock']);
-    $status         = intval($_POST['status']);
-    $meta_title     = mysqli_real_escape_string($conn, $_POST['meta_title']);
-    $meta_desc      = mysqli_real_escape_string($conn, $_POST['meta_desc']);
-    $meta_key       = mysqli_real_escape_string($conn, $_POST['meta_key']);
-    $slug_url       = strtolower(str_replace(" ", "-", $pro_name));
+    $pro_name       = mysqli_real_escape_string($conn,$_POST['pro_name']);
+    $brand_name     = mysqli_real_escape_string($conn, $_POST['brand_name'] ?? '');$pro_cate       = intval($_POST['pro_cate']);$pro_sub_cate   = intval($_POST['pro_sub_cate'] ?? 0);$short_desc     = mysqli_real_escape_string($conn,$_POST['short_desc']);
+    $description    = mysqli_real_escape_string($conn, $_POST['pro_desc']);$new_arrival    = intval($_POST['new_arrival']);$trending       = intval($_POST['trending'] ?? 0);$stock          = intval($_POST['stock']);$status         = intval($_POST['status']);$meta_title     = mysqli_real_escape_string($conn,$_POST['meta_title']);
+    $meta_desc      = mysqli_real_escape_string($conn, $_POST['meta_desc']);$meta_key       = mysqli_real_escape_string($conn,$_POST['meta_key']);
+    
+    // Slug is coming directly from the form now due to our previous JS fix
+    $slug_url       = mysqli_real_escape_string($conn,$_POST['slug_url']);
 
     // Base fallback price from first variation row
     $first_var_price = isset($_POST['var_price'][0]) ? floatval($_POST['var_price'][0]) : 0.00;
@@ -48,21 +37,17 @@ if (isset($_POST['update-product'])) {
         mkdir($target_dir, 0755, true);
     }
 
-    $pro_img = $existing_main_img;
-    if (isset($_FILES['pro_img']) && $_FILES['pro_img']['error'] === UPLOAD_ERR_OK && !empty($_FILES['pro_img']['name'])) {
-        $filename = $_FILES['pro_img']['name'];
-        $tempname = $_FILES['pro_img']['tmp_name'];
-        $file_extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-        $allowed_extensions = array('jpg', 'jpeg', 'png', 'gif', 'webp');
+    $pro_img =$existing_main_img;
+    if (isset($_FILES['pro_img']) &&$_FILES['pro_img']['error'] === UPLOAD_ERR_OK && !empty($_FILES['pro_img']['name'])) {$filename = $_FILES['pro_img']['name'];$tempname = $_FILES['pro_img']['tmp_name'];$file_extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));$allowed_extensions = array('jpg', 'jpeg', 'png', 'gif', 'webp');
         
-        if (in_array($file_extension, $allowed_extensions)) {
+        if (in_array($file_extension,$allowed_extensions)) {
             $uniqueFilename = time() . "_" . rand(1000, 9999) . "." . $file_extension;
-            if (move_uploaded_file($tempname, $target_dir . $uniqueFilename)) {
-                $pro_img = $uniqueFilename;
+            if (move_uploaded_file($tempname, $target_dir .$uniqueFilename)) {
+                $pro_img =$uniqueFilename;
                 
                 // Delete old image if present
-                if (!empty($existing_main_img) && file_exists($target_dir . $existing_main_img)) {
-                    unlink($target_dir . $existing_main_img);
+                if (!empty($existing_main_img) && file_exists($target_dir .$existing_main_img)) {
+                    unlink($target_dir .$existing_main_img);
                 }
             }
         }
@@ -88,7 +73,33 @@ if (isset($_POST['update-product'])) {
         `meta_key` = '$meta_key'
         WHERE `id` = '$main_product_id'";
         
-    mysqli_query($conn, $update_main);
+    mysqli_query($conn,$update_main);
+
+    // ==========================================
+    // NEW: MULTIPLE GALLERY IMAGES UPLOAD LOGIC
+    // ==========================================
+    if (isset($_FILES['gallery_images']['name']) &&$_FILES['gallery_images']['name'][0] != "") {
+        $file_count = count($_FILES['gallery_images']['name']);
+        
+        for ($i = 0; $i < $file_count; $i++) {
+            $g_filename =$_FILES['gallery_images']['name'][$i];$g_tempname = $_FILES['gallery_images']['tmp_name'][$i];
+            
+            // Only process if no error
+            if ($_FILES['gallery_images']['error'][$i] === UPLOAD_ERR_OK && !empty($g_filename)) {$g_ext = strtolower(pathinfo($g_filename, PATHINFO_EXTENSION));$allowed_extensions = array('jpg', 'jpeg', 'png', 'gif', 'webp');
+                
+                if (in_array($g_ext,$allowed_extensions)) {
+                    // Create unique name
+                    $unique_g_name = time() . "_gal_" . rand(100, 999) . "_" . $i . "." . $g_ext;
+                    
+                    if (move_uploaded_file($g_tempname, $target_dir .$unique_g_name)) {
+                        // Ensure your table column name is 'image_path' and 'product_id'
+                        $gal_ins = "INSERT INTO `product_images` (`product_id`, `image_path`) VALUES ('$main_product_id', '$unique_g_name')";
+                        mysqli_query($conn,$gal_ins);
+                    }
+                }
+            }
+        }
+    }
 
     // 5. Dynamic Variations Processing (Insert/Update/Delete)
     $active_var_ids = [];
@@ -96,12 +107,9 @@ if (isset($_POST['update-product'])) {
     if (isset($_POST['var_weight']) && is_array($_POST['var_weight'])) {
         $total_vars = count($_POST['var_weight']);
 
-        for ($i = 0; $i < $total_vars; $i++) {
-            $var_id     = isset($_POST['var_id'][$i]) ? intval($_POST['var_id'][$i]) : 0;
+        for ($i = 0; $i <$total_vars; $i++) {$var_id     = isset($_POST['var_id'][$i]) ? intval($_POST['var_id'][$i]) : 0;
             $weight     = mysqli_real_escape_string($conn, $_POST['var_weight'][$i]);
-            $price      = floatval($_POST['var_price'][$i]);
-            
-            $price4     = (!empty($_POST['var_price_4'][$i]) && floatval($_POST['var_price_4'][$i]) > 0) ? floatval($_POST['var_price_4'][$i]) : "NULL";
+            $price      = floatval($_POST['var_price'][$i]);$price4     = (!empty($_POST['var_price_4'][$i]) && floatval($_POST['var_price_4'][$i]) > 0) ? floatval($_POST['var_price_4'][$i]) : "NULL";
             $price5     = (!empty($_POST['var_price_5'][$i]) && floatval($_POST['var_price_5'][$i]) > 0) ? floatval($_POST['var_price_5'][$i]) : "NULL";
             $price6     = (!empty($_POST['var_price_6'][$i]) && floatval($_POST['var_price_6'][$i]) > 0) ? floatval($_POST['var_price_6'][$i]) : "NULL";
             
@@ -110,24 +118,22 @@ if (isset($_POST['update-product'])) {
 
             // Handle per-variation new image upload
             if (isset($_FILES['var_img']['name'][$i]) && !empty($_FILES['var_img']['name'][$i])) {
-                $v_filename = $_FILES['var_img']['name'][$i];
-                $v_tempname = $_FILES['var_img']['tmp_name'][$i];
+                $v_filename =$_FILES['var_img']['name'][$i];$v_tempname = $_FILES['var_img']['tmp_name'][$i];
                 $v_ext = strtolower(pathinfo($v_filename, PATHINFO_EXTENSION));
                 
                 if (in_array($v_ext, array('jpg', 'jpeg', 'png', 'gif', 'webp'))) {
                     $unique_var_name = time() . "_var_" . rand(100, 999) . "." . $v_ext;
-                    if (move_uploaded_file($v_tempname, $target_dir . $unique_var_name)) {
-                        $var_image = $unique_var_name;
+                    if (move_uploaded_file($v_tempname, $target_dir .$unique_var_name)) {
+                        $var_image =$unique_var_name;
                     }
                 }
             }
 
-            if ($var_id === 0) {
-                // INSERT new variation
+            if ($var_id === 0) {                 
                 $var_ins = "INSERT INTO `product_variations` 
                     (`product_id`, `weight_size`, `single_price`, `price_4_plus`, `price_5_plus`, `price_6_plus`, `stock`, `image_path`) 
-                    VALUES ('$main_product_id', '$weight', '$price', $price4, $price5, $price6, '$var_stock', '$var_image')";
-                mysqli_query($conn, $var_ins);
+                    VALUES ('$main_product_id', '$weight', '$price',$price4, $price5,$price6, '$var_stock', '$var_image')";
+                mysqli_query($conn,$var_ins);
                 $active_var_ids[] = mysqli_insert_id($conn);
             } else {
                 // UPDATE existing variation
@@ -140,24 +146,25 @@ if (isset($_POST['update-product'])) {
                     `stock` = '$var_stock',
                     `image_path` = '$var_image'
                     WHERE `id` = '$var_id' AND `product_id` = '$main_product_id'";
-                mysqli_query($conn, $var_upd);
-                $active_var_ids[] = $var_id;
+                mysqli_query($conn,$var_upd);
+                $active_var_ids[] =$var_id;
             }
         }
     }
 
     // 6. Delete Removed Variations
     if (!empty($active_var_ids)) {
-        $keep_ids = implode(',', array_map('intval', $active_var_ids));
+        $keep_ids = implode(',', array_map('intval',$active_var_ids));
         mysqli_query($conn, "DELETE FROM `product_variations` WHERE `product_id` = '$main_product_id' AND `id` NOT IN ($keep_ids)");
     } else {
         mysqli_query($conn, "DELETE FROM `product_variations` WHERE `product_id` = '$main_product_id'");
     }
 
     echo "<script type='text/javascript'>
-            alert('Product and Variations Updated Successfully!');
+            alert('Product, Gallery, and Variations Updated Successfully!');
             window.location.href = 'show-products.php';
           </script>";
     exit;
 }
+
 ?>

@@ -211,7 +211,7 @@ $sub_categories = mysqli_query($conn, $sub_cate_query);
                                                         <img src="assets/img/uploads/<?= trim($product['pro_img']) ?>"
                                                             style="height: 200px; width: 200px; object-fit: cover; border-radius: 8px; border: 2px solid #eee;"
                                                             alt="Product Image"
-                                                            onerror="this.src='assets/img/no-image.png'">
+                                                            onerror="this.src='assets/img/uploads/1783918855_1.png'">
                                                     </div>
                                                 </div>
                                                 <?php else: ?>
@@ -219,6 +219,40 @@ $sub_categories = mysqli_query($conn, $sub_cate_query);
                                                     <small>No image uploaded</small>
                                                 </div>
                                                 <?php endif; ?>
+                                            </div>
+                                            
+                                            <div class="col-md-12 mb-3 mt-3 p-3" style="background: #f8f9fa; border: 1px dashed #ccc; border-radius: 8px;">
+                                                <label class="form-label fw-bold" for="gallery_images">Product Gallery Images (Multiple)</label>
+                                                <input type="file" class="form-control" name="gallery_images[]" id="gallery_images" accept="image/*" multiple />
+                                                <small class="text-muted"><i class="ti-info-alt"></i> You can select multiple images by holding CTRL.</small>
+                                                
+                                                <!-- Display Existing Gallery Images -->
+                                                <div class="d-flex flex-wrap gap-3 mt-3">
+                                                    <?php
+                                                    $gal_query = mysqli_query($conn, "SELECT * FROM product_images WHERE product_id = '$db_primary_id'");
+                                                    if($gal_query && mysqli_num_rows($gal_query) > 0) {
+                                                        while($g_row = mysqli_fetch_assoc($gal_query)) {
+                                                            // Make sure to use your actual column name (e.g., image_path or image_name)
+                                                            $g_image = htmlspecialchars($g_row['image_path']); 
+                                                            $g_id = $g_row['id'];
+                                                            ?>
+                                                            <div class="position-relative shadow-sm rounded" style="width: 100px; height: 100px;">
+                                                                <img src="assets/img/uploads/<?= $g_image ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;">
+                                                                <!-- Delete Image Button -->
+                                                                <a href="delete_gallery.php?img_id=<?= $g_id ?>&pro_id=<?= $db_primary_id ?>" 
+                                                                   class="btn btn-danger btn-sm position-absolute" 
+                                                                   style="top: -5px; right: -5px; border-radius: 50%; width: 25px; height: 25px; padding: 0; display: flex; align-items: center; justify-content: center;"
+                                                                   onclick="return confirm('Delete this gallery image?');">
+                                                                    <i class="ti-close"></i>
+                                                                </a>
+                                                            </div>
+                                                            <?php
+                                                        }
+                                                    } else {
+                                                        echo "<span class='text-muted small'>No gallery images added yet.</span>";
+                                                    }
+                                                    ?>
+                                                </div>
                                             </div>
 
                                             <!-- New Arrival -->

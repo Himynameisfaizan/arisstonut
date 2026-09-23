@@ -2,8 +2,9 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-include('config/connect.php'); 
+include('config/connect.php'); // Database & Global $site Config Layer
 
+// URL Parameter Validation
 if (isset($_GET['slug']) && !empty($_GET['slug'])) {
     $slug = $conn->real_escape_string($_GET['slug']);
 
@@ -48,7 +49,7 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
         // --- Fetch Related Products ---
         $related_query = $conn->query("SELECT id, pro_name, selling_price, qty, pro_img, slug_url FROM products WHERE pro_cate = '$p_cate' AND id != '$p_id' AND status = 1 ORDER BY id DESC LIMIT 4");
 
-        // --- Fetch Reviews & Ratings (NEW) ---
+        // --- Fetch Reviews & Ratings ---
         $rev_query = $conn->query("SELECT * FROM product_reviews WHERE product_id = '$p_id' AND status = 1 ORDER BY id DESC");
         $total_reviews = $rev_query ? $rev_query->num_rows : 0;
         
@@ -87,6 +88,50 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
     ?>
     
     <style>
+        /* 🔥 PREMIUM THUMBNAIL GRID CSS 🔥 */
+        .main-img-box {
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 400px;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.02);
+            margin-bottom: 20px;
+        }
+        .main-img-box img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            mix-blend-mode: multiply;
+        }
+        .thumb-gallery {
+            display: flex;
+            flex-wrap: wrap; /* Allows wrapping to new lines like a grid */
+            gap: 12px;
+            justify-content: center;
+        }
+        .thumb-item {
+            width: 75px;
+            height: 75px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #F9F6F0;
+            padding: 5px;
+        }
+        .thumb-item:hover,
+        .thumb-item.active-thumb {
+            border-color: #9C5521;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(156,85,33,0.2);
+            background: #FFFFFF;
+        }
+
         /* Premium Reviews UI */
         .reviews-wrapper { background: #FFFFFF; border-radius: 24px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); margin-top: 50px; border: 1px solid rgba(0,0,0,0.02); }
         .review-card { background: #FCFAF8; border-radius: 16px; padding: 25px; margin-bottom: 20px; border: 1px dashed rgba(156, 85, 33, 0.2); }
@@ -103,6 +148,8 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
         
         @media (max-width: 768px) {
             .reviews-wrapper { padding: 25px; }
+            .main-img-box { height: 300px; }
+            .thumb-item { width: 60px; height: 60px; }
         }
     </style>
 </head>
@@ -117,34 +164,40 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
             <!-- ================= LEFT: STICKY IMAGE GALLERY ================= -->
             <div class="col-lg-5">
                 <div class="sticky-gallery">
+                    
+                    <!-- Main Center Image -->
                     <div class="main-img-box" id="magnify-container-node">
                         <img src="<?php echo $p_img; ?>" alt="<?php echo $p_name; ?>" id="magnify-target-img">
                     </div>
 
-                    <?php if (!empty($variations)): ?>
-                        <div class="thumb-gallery" id="variation-thumbnails">
+                    <!-- Unified Thumbnail Grid -->
+                    <div class="thumb-gallery" id="all-thumbnails">
+                        
+                        <!-- 1. Variation Images -->
+                        <?php if (!empty($variations)): ?>
                             <?php foreach ($variations as $index => $var): ?>
                                 <?php $thumb_img = !empty($var['image_path']) ? $site . 'admin/assets/img/uploads/' . $var['image_path'] : $p_img; ?>
                                 <img src="<?php echo $thumb_img; ?>"
-                                    class="var-thumb <?php echo $index === 0 ? 'active-thumb' : ''; ?>"
-                                    data-index="<?php echo $index; ?>" alt="<?php echo $var['weight_size']; ?>"
-                                    title="<?php echo $var['weight_size']; ?>">
-                            <?php endforeach; ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <!-- NEW: Gallery Images Thumbnails -->
-                        <?php if (!empty($gallery_images)): ?>
-                            <?php foreach ($gallery_images as $g_img): ?>
-                                <!-- Note: Apne DB column ka naam image_path ya image_name jo bhi ho, yahan replace kar lena -->
-                                <?php $g_thumb = $site . 'admin/assets/img/uploads/' . htmlspecialchars($g_img['image_path']); ?>
-                                <img src="<?php echo $g_thumb; ?>"
-                                    class="gal-thumb" 
-                                    style="cursor: pointer; width: 60px; height: 60px; object-fit: cover; border-radius: 8px; margin: 5px; border: 1px solid #ddd;"
-                                    onclick="document.getElementById('magnify-target-img').src=this.src"
-                                    alt="Gallery Image">
+                                    class="var-thumb thumb-item <?php echo $index === 0 ? 'active-thumb' : ''; ?>"
+                                    data-index="<?php echo $index; ?>" 
+                                    alt="<?php echo htmlspecialchars($var['weight_size']); ?>"
+                                    title="Pack: <?php echo htmlspecialchars($var['weight_size']); ?>">
                             <?php endforeach; ?>
                         <?php endif; ?>
+
+                        <!-- 2. Extra Gallery Images -->
+                        <?php if (!empty($gallery_images)): ?>
+                            <?php foreach ($gallery_images as $g_img): ?>
+                                <?php $g_thumb = $site . 'admin/assets/img/uploads/' . htmlspecialchars($g_img['image_path']); ?>
+                                <img src="<?php echo $g_thumb; ?>"
+                                    class="gal-thumb thumb-item" 
+                                    alt="Gallery Image"
+                                    title="View Image"
+                                    onclick="changeMainImage(this)">
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+
+                    </div>
                 </div>
             </div>
 
@@ -281,7 +334,6 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
                         <form id="reviewForm">
                             <input type="hidden" name="product_id" value="<?php echo $p_id; ?>">
                             
-                            <!-- Interactive Stars -->
                             <div class="mb-3 text-center bg-light py-3 rounded-3">
                                 <label class="d-block fw-bold mb-2">Rate this product</label>
                                 <div class="star-rating-select">
@@ -340,10 +392,8 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
                                 </div>
 
                                 <a href="<?php echo $site; ?>product/<?php echo $rp_slug; ?>" class="v-title" title="<?php echo $rp_name; ?>"><?php echo $rp_name; ?></a>
-                                <!-- <div class="v-weight">Net Wt: <?php echo $rp_weight; ?></div> -->
 
                                 <div class="v-bottom-section">
-                                    <!-- <div class="v-price">₹<?php echo $rp_price; ?></div> -->
                                     <div class="v-action-buttons">
                                         <button class="v-btn-cart-sm" onclick="addToCart(<?php echo $rp_id; ?>)">Cart</button>
                                         <button class="v-btn-buy-sm" onclick="buyNow(<?php echo $rp_id; ?>)">Buy Now</button>
@@ -375,15 +425,31 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
             let currentVariation = variations.length > 0 ? variations[0] : null;
             let qty = 1;
 
-            // Thumbnail Click Event
+            // Thumbnail Click Event (Variations only)
             document.querySelectorAll('.var-thumb').forEach(thumb => {
                 thumb.addEventListener('click', function () {
                     const index = this.getAttribute('data-index');
                     const radio = document.querySelectorAll('.variation-radio')[index];
-                    radio.checked = true;
-                    radio.dispatchEvent(new Event('change'));
+                    if(radio) {
+                        radio.checked = true;
+                        radio.dispatchEvent(new Event('change'));
+                    }
                 });
             });
+
+            // 🔥 NEW: Extra Gallery Image Click Event
+            window.changeMainImage = function(element) {
+                // Update central image
+                targetImg.src = element.src;
+                
+                // Remove border/highlight from all thumbnails
+                document.querySelectorAll('.thumb-item').forEach(img => {
+                    img.classList.remove('active-thumb');
+                });
+                
+                // Highlight clicked thumbnail
+                element.classList.add('active-thumb');
+            };
 
             function updateUI() {
                 if (!currentVariation) return;
@@ -405,26 +471,21 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
                 if (qty > 1) document.getElementById('display-total-price').innerText = '(Total: ₹' + totalPrice.toFixed(2) + ')';
                 else document.getElementById('display-total-price').innerText = '';
 
-                const msgEl = document.getElementById('bulk-discount-msg');
-                if (discountMsg) { msgEl.innerText = discountMsg; msgEl.style.display = 'block'; }
-                else { msgEl.style.display = 'none'; }
-
-                const bpContainer = document.getElementById('bulk-pricing-table-container');
-                let hasBulk = false;
-                if (currentVariation.price_4_plus > 0) { document.getElementById('bp-4').innerText = '₹' + currentVariation.price_4_plus; hasBulk = true; } else { document.getElementById('bp-4').innerText = '-'; }
-                if (currentVariation.price_5_plus > 0) { document.getElementById('bp-5').innerText = '₹' + currentVariation.price_5_plus; hasBulk = true; } else { document.getElementById('bp-5').innerText = '-'; }
-                if (currentVariation.price_6_plus > 0) { document.getElementById('bp-6').innerText = '₹' + currentVariation.price_6_plus; hasBulk = true; } else { document.getElementById('bp-6').innerText = '-'; }
-
-                if (bpContainer) bpContainer.style.display = hasBulk ? 'block' : 'none';
-
+                // Change main image based on variation
                 if (currentVariation.image_path && currentVariation.image_path.trim() !== '') {
                     targetImg.src = baseImgUrl + currentVariation.image_path;
-                } else { targetImg.src = defaultImg; }
+                } else { 
+                    targetImg.src = defaultImg; 
+                }
 
+                // Update active state on thumbnails
+                document.querySelectorAll('.thumb-item').forEach(img => {
+                    img.classList.remove('active-thumb');
+                });
                 document.querySelectorAll('.var-thumb').forEach(thumb => {
                     if (thumb.getAttribute('data-index') == variations.indexOf(currentVariation)) {
                         thumb.classList.add('active-thumb');
-                    } else { thumb.classList.remove('active-thumb'); }
+                    }
                 });
 
                 const stockBadge = document.getElementById('stock-badge');
@@ -505,7 +566,7 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
         });
 
         // ==========================================
-        // NEW: INTERACTIVE REVIEWS LOGIC
+        // REVIEWS & RELATED PRODUCTS LOGIC
         // ==========================================
         
         // Star Rating Selection
@@ -516,8 +577,6 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
             star.addEventListener('click', function() {
                 const ratingVal = this.getAttribute('data-rating');
                 ratingInput.value = ratingVal;
-                
-                // Reset all
                 stars.forEach(s => s.classList.remove('active'));
                 this.classList.add('active');
             });
@@ -538,7 +597,6 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
                     if(res.status === 'success') {
                         showToast("Review Posted!", res.message, "success");
                         $('#reviewForm')[0].reset();
-                        // Reload page to show new review
                         setTimeout(() => { location.reload(); }, 1500);
                     } else {
                         showToast("Error", res.message, "error");
@@ -552,7 +610,6 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
             });
         });
 
-        // RELATED PRODUCTS FUNCTIONS
         window.addToCart = function(productId, variationId = 0, qty = 1) {
             $.ajax({
                 url: '<?php echo $site; ?>cart_action.php', 
@@ -563,9 +620,7 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
                     if (response.status === 'success') {
                         $('.cart-count').text(response.cart_count);
                         showToast("Added to Cart!", "Item successfully added to your basket.", "success");
-                    } else { 
-                        showToast("Action Failed", response.message, "error"); 
-                    }
+                    } else { showToast("Action Failed", response.message, "error"); }
                 }
             });
         }
@@ -577,11 +632,8 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
                 data: { action: 'buy_now', product_id: productId, variation_id: variationId, quantity: qty },
                 dataType: 'json',
                 success: function(response) {
-                    if(response.status === 'success') { 
-                        window.location.href = '<?php echo $site; ?>checkout.php?buy_now=true'; 
-                    } else { 
-                        showToast("Action Failed", response.message, "error"); 
-                    }
+                    if(response.status === 'success') { window.location.href = '<?php echo $site; ?>checkout.php?buy_now=true'; } 
+                    else { showToast("Action Failed", response.message, "error"); }
                 }
             });
         }
