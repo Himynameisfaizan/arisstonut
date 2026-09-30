@@ -80,6 +80,28 @@ include('config/connect.php');
                 <p>Any disputes or processing compliance failures tracking out from these parameters shall be handled under the judicial sovereignty courts centered around Darbhanga, Bihar. For instant clarifications, connect with our management pipeline directly via email at <strong>aristonut@gmail.com</strong>.</p>
             </div>
 
+            <div class="policy-section mt-5">
+    <h3 style="color: #2C1E16; border-bottom: 2px solid #EADDCC; padding-bottom: 10px;">3. Shipping & Delivery Charges Policy</h3>
+    <p class="text-muted" style="line-height: 1.8;">To provide you with the fastest and most secure delivery, AristoNut applies the following shipping logic to all orders across India:</p>
+    
+    <ul class="list-group list-group-flush mb-4" style="max-width: 800px;">
+        <li class="list-group-item" style="background: transparent;">
+            <strong><i class="bi bi-credit-card text-success"></i> Prepaid (Online) Orders:</strong> 
+            <ul>
+                <li>Orders valued at <strong>₹699 or above</strong> qualify for <span class="badge bg-success">100% FREE Shipping</span>.</li>
+                <li>Orders valued <strong>below ₹699</strong> will incur a flat shipping and handling fee of <strong>₹99</strong>.</li>
+            </ul>
+        </li>
+        <li class="list-group-item" style="background: transparent;">
+            <strong><i class="bi bi-cash-stack text-warning"></i> Cash on Delivery (COD) Orders:</strong>
+            <ul>
+                <li>All COD orders, regardless of the cart total amount, will incur a non-refundable cash-handling and shipping fee of <strong>₹99</strong>. This fee is charged by our logistics partners for cash collection services.</li>
+            </ul>
+        </li>
+    </ul>
+    <p class="text-muted small"><strong>Note:</strong> Delivery charges are non-refundable in the case of standard returns or cancellations after dispatch. AristoNut reserves the right to modify shipping rates during special promotional events.</p>
+</div>
+
         </div>
     </main>
 

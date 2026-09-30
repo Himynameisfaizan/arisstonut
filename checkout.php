@@ -145,30 +145,7 @@ include('inc/breadcrumb.php');
         font-size: 1.05rem;
     }
 
-    /* Billing Totals */
-    .bill-row {
-        display: flex;
-        justify-content: space-between;
-        font-family: 'Inter', sans-serif;
-        font-size: 0.95rem;
-        color: var(--chk-muted);
-        margin-bottom: 12px;
-    }
-
-    .bill-total {
-        font-family: 'Poppins', sans-serif;
-        font-size: 1.4rem;
-        font-weight: 800;
-        color: var(--chk-dark);
-        margin-top: 20px;
-        padding-top: 20px;
-        border-top: 1px solid rgba(0, 0, 0, 0.06);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    /* Payment Method Cards (Modern Select) */
+    /* Payment Method Cards */
     .payment-option {
         display: none;
     }
@@ -251,6 +228,7 @@ include('inc/breadcrumb.php');
         <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
         <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
         <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+        
         <div class="row g-5">
 
             <!-- ================= LEFT: SHIPPING DETAILS ================= -->
@@ -311,7 +289,6 @@ include('inc/breadcrumb.php');
                                 <option value="Rajasthan">Rajasthan</option>
                                 <option value="Uttar Pradesh">Uttar Pradesh</option>
                                 <option value="West Bengal">West Bengal</option>
-                                <!-- Add other states as needed -->
                             </select>
                         </div>
                     </div>
@@ -337,16 +314,16 @@ include('inc/breadcrumb.php');
                 <div class="checkout-box">
                     <h2 class="box-title"><i class="bi bi-wallet2"></i> Payment Method</h2>
 
-                    <input type="radio" name="payment_method" id="pay_cod" value="COD" class="payment-option" checked>
+                    <input type="radio" name="payment_method" id="pay_online" value="Online" class="payment-option payment-radio" checked required>
+                    <label for="pay_online" class="payment-card">
+                        <i class="bi bi-credit-card-2-front"></i>
+                        <span>Secure Online Payment (Card / UPI / NetBanking)</span>
+                    </label>
+
+                    <input type="radio" name="payment_method" id="pay_cod" value="COD" class="payment-option payment-radio" required>
                     <label for="pay_cod" class="payment-card">
                         <i class="bi bi-cash-stack"></i>
                         <span>Cash on Delivery (COD)</span>
-                    </label>
-
-                    <input type="radio" name="payment_method" id="pay_card" value="Credit Card" class="payment-option">
-                    <label for="pay_card" class="payment-card">
-                        <i class="bi bi-credit-card-2-front"></i>
-                        <span>Secure Online Payment (Card / UPI / NetBanking)</span>
                     </label>
                 </div>
             </div>
@@ -396,9 +373,12 @@ include('inc/breadcrumb.php');
 
                                 $subtotal = $unit_price * $qty;
                                 $total += $subtotal;
-                                $img_src = !empty($item_img) ? $site . 'admin/assets/img/uploads/' . htmlspecialchars($item_img) : $site . 'assets/images/hero.webp';
+                                
+                                // Explode Fix for Image
+                                $img_array = explode(',', $item_img);
+                                $clean_img = trim($img_array[0]);
+                                $img_src = !empty($clean_img) ? $site . 'admin/assets/img/uploads/' . htmlspecialchars($clean_img) : $site . 'assets/images/hero.webp';
                         ?>
-
                                 <div class="summary-item-row">
                                     <div class="summary-item-img">
                                         <img src="<?php echo $img_src; ?>" alt="">
@@ -414,24 +394,38 @@ include('inc/breadcrumb.php');
                         <?php
                             }
                         }
+                        $cart_subtotal = $total; 
                         ?>
                     </div>
 
-                    <!-- Billing Calculations -->
-                    <div>
-                        <div class="bill-row">
-                            <span>Cart Subtotal</span>
-                            <span class="fw-bold text-dark">₹<?php echo number_format($total, 2); ?></span>
-                        </div>
-                        <div class="bill-row">
-                            <span>Delivery Charges</span>
-                            <span class="text-success fw-bold">FREE</span>
-                        </div>
+                    <!-- Informational Banner for Shipping Rules -->
+                    <div class="alert mt-3" style="background-color: #F9F6F0; border-left: 4px solid #9C5521; font-size: 0.85rem; color: #4A3326;">
+                        <i class="bi bi-info-circle-fill" style="color: #9C5521;"></i> 
+                        <strong>Shipping Policy:</strong> Free Shipping on Online Payments above ₹699! A flat ₹99 fee applies to all COD orders and orders below ₹699.
+                    </div>
 
-                        <div class="bill-total">
-                            <span>Total Amount</span>
-                            <span style="color: var(--chk-accent);">₹<?php echo number_format($total, 2); ?></span>
-                        </div>
+                    <!-- Dynamic Billing Calculations -->
+                    <ul class="list-group mb-3 mt-4 border-0">
+                        <li class="list-group-item d-flex justify-content-between border-0 px-0 pb-1">
+                            <span class="text-muted">Cart Subtotal</span>
+                            <strong class="text-dark">₹<span id="summary-subtotal"><?php echo number_format($cart_subtotal, 2); ?></span></strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between border-0 px-0 pb-3 border-bottom">
+                            <span class="text-danger">Delivery Charge</span>
+                            <strong class="text-danger">+ ₹<span id="summary-shipping">0.00</span></strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between border-0 px-0 pt-3">
+                            <span class="fw-bold" style="color: #9C5521; font-size: 1.1rem;">Grand Total</span>
+                            <strong style="color: #9C5521; font-size: 1.4rem;">₹<span id="summary-grand-total"><?php echo number_format($cart_subtotal, 2); ?></span></strong>
+                        </li>
+                    </ul>
+
+                    <!-- Terms & Conditions Checkbox -->
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" id="tncCheck" required>
+                        <label class="form-check-label text-muted" style="font-size: 0.8rem;" for="tncCheck">
+                            I have read and agree to the website <a href="terms-conditions.php" target="_blank" style="color: #9C5521; text-decoration: underline; font-weight: 600;">Terms & Conditions</a> and Shipping Policy.
+                        </label>
                     </div>
 
                     <button type="submit" name="place_order" class="btn-pay">
@@ -455,11 +449,44 @@ include('inc/breadcrumb.php');
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+    
+    const cartSubtotal = parseFloat(<?php echo $cart_subtotal; ?>);
+    const shippingEl = document.getElementById('summary-shipping');
+    const grandTotalEl = document.getElementById('summary-grand-total');
+    const paymentRadios = document.querySelectorAll('.payment-radio');
+
+    function calculateShipping() {
+        let selectedPayment = document.querySelector('input[name="payment_method"]:checked').value;
+        let shippingFee = 0;
+
+        if (selectedPayment === 'COD') {
+            shippingFee = 99; // COD always 99
+        } else {
+            // Online Payment
+            if (cartSubtotal < 699) {
+                shippingFee = 99;
+            } else {
+                shippingFee = 0; // FREE
+            }
+        }
+
+        let grandTotal = cartSubtotal + shippingFee;
+
+        // Update HTML
+        shippingEl.innerText = shippingFee.toFixed(2);
+        grandTotalEl.innerText = grandTotal.toFixed(2);
+    }
+
+    calculateShipping();
+    paymentRadios.forEach(radio => {
+        radio.addEventListener('change', calculateShipping);
+    });
+
     document.getElementById('checkoutForm').addEventListener('submit', function(e) {
-        e.preventDefault(); // Stop standard submission
+        e.preventDefault(); 
 
         const form = this;
-        // Check form validation natively
         if (!form.checkValidity()) {
             form.reportValidity();
             return;
@@ -474,11 +501,9 @@ include('inc/breadcrumb.php');
         const customerPhone = document.querySelector('input[name="phone"]').value;
 
         if (paymentMethod === 'COD') {
-            // Submit directly if COD
             payBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Processing...';
             form.submit();
         } else {
-            // It's Online Payment -> Generate Order from Server
             payBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Initializing Payment...';
 
             $.ajax({
@@ -490,7 +515,6 @@ include('inc/breadcrumb.php');
                 dataType: 'json',
                 success: function(res) {
                     if (res.status === 'success') {
-
                         var options = {
                             "key": res.key,
                             "amount": res.amount,
@@ -500,7 +524,6 @@ include('inc/breadcrumb.php');
                             "image": "assets/images/logo.webp",
                             "order_id": res.order_id,
                             "handler": function(response) {
-                                // ON SUCCESS: Fill hidden fields & submit form to process_checkout.php
                                 document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
                                 document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
                                 document.getElementById('razorpay_signature').value = response.razorpay_signature;
@@ -512,9 +535,7 @@ include('inc/breadcrumb.php');
                                 "email": customerEmail,
                                 "contact": customerPhone
                             },
-                            "theme": {
-                                "color": "#9C5521"
-                            }, // Brand Color
+                            "theme": { "color": "#9C5521" },
                             "modal": {
                                 "ondismiss": function() {
                                     payBtn.innerHTML = 'Confirm & Pay <i class="bi bi-lock-fill"></i>';
@@ -535,8 +556,7 @@ include('inc/breadcrumb.php');
             });
         }
     });
+});
 </script>
-
 </body>
-
 </html>

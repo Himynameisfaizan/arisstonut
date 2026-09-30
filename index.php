@@ -676,7 +676,7 @@ include('inc/header.php');
                                 <h3 class="blog-title"><?php echo $btitle; ?></h3>
                                 
                                 <!-- 🔥 CSS LINE CLAMP FIX (Force exactly 3 lines) 🔥 -->
-                                <p class="blog-snippet" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 15px; height: 65px;">
+                                <p class="blog-snippet" style="display: -webkit-box; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 15px; height: 65px;">
                                     <?php echo $bdesc; ?>
                                 </p>
 
