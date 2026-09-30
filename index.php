@@ -139,6 +139,80 @@ include('inc/header.php');
     </div>
 </section>
 
+<!-- ================= NEW: TOP PRODUCT GRID (SIGNATURE COLLECTION) ================= -->
+<section class="homepage-tail-section" style="padding-top: 60px; padding-bottom: 20px; background-color: #fff;">
+    <div class="container">
+
+       <div class="tail-header">
+            <span class="tail-subtitle" style="color: #9C5521;">OUR SIGNATURE COLLECTION</span>
+            <h2 class="tail-title">Trending & New Arrivals</h2>
+            <p class="tail-desc">Handpicked premium makhana crafted to satisfy your daily cravings.</p>
+        </div>
+
+        <div class="row g-4">
+            <?php
+            // Fetching 4 products for the top grid
+            $top_query = "SELECT id, pro_name, selling_price, qty, pro_img, slug_url FROM products WHERE status = 1 ORDER BY id ASC LIMIT 4";
+            $top_result = $conn->query($top_query);
+
+            if ($top_result && $top_result->num_rows > 0) {
+                while ($prod = $top_result->fetch_assoc()) {
+                    $pid = $prod['id'];
+                    $pname = htmlspecialchars($prod['pro_name'] ?? '');
+                    $pprice = htmlspecialchars($prod['selling_price'] ?? '0');
+                    
+                    $raw_slug = !empty($prod['slug_url']) ? trim($prod['slug_url']) : $pid;
+                    $pslug = htmlspecialchars($raw_slug);
+
+                    // 🔥 EXPLODE FIX FOR MULTIPLE IMAGES 🔥
+                    $raw_img_string = $prod['pro_img'];
+                    $img_array = explode(',', $raw_img_string);
+                    $first_main_img = !empty($img_array[0]) ? trim($img_array[0]) : '';
+                    $pimg = !empty($first_main_img) ? $site . 'admin/assets/img/uploads/' . htmlspecialchars($first_main_img) : $site . 'assets/images/hero.webp';
+
+                    // Wishlist check
+                    $is_wished = (isset($_SESSION['wishlist']) && in_array($pid, $_SESSION['wishlist'])) ? 'bi-heart-fill text-danger' : 'bi-heart';
+                    ?>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                        <div class="video-prod-card">
+                            <div class="v-wish-btn" onclick="handleWishlist(<?php echo $pid; ?>, this)">
+                                <i class="bi <?php echo $is_wished; ?>"></i>
+                            </div>
+                            <a href="<?php echo $site; ?>product/<?php echo $pslug; ?>" class="v-img-box">
+                                <img src="<?php echo $pimg; ?>" alt="<?php echo $pname; ?>">
+                            </a>
+                            <div class="v-rating">
+                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                                <span class="text-muted ms-1">(4.9)</span>
+                            </div>
+                            <a href="<?php echo $site; ?>product/<?php echo $pslug; ?>" class="v-title" title="<?php echo $pname; ?>">
+                                <?php echo $pname; ?>
+                            </a>
+                            <div class="v-bottom-section">
+                                <div class="v-action-buttons">
+                                    <button class="v-btn-cart" onclick="addToCart(<?php echo $pid; ?>)">Cart</button>
+                                    <button class="v-btn-buy" onclick="buyNow(<?php echo $pid; ?>)">Buy Now</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php
+                }
+            } else {
+                echo "<div class='col-12 text-center'><p class='text-muted'>Products coming soon.</p></div>";
+            }
+            ?>
+        </div>
+        
+        <div class="text-center mt-5">
+            <a href="<?php echo $site; ?>product.php" class="btn btn-outline-dark rounded-pill px-5 py-2 shadow-sm"
+                style="font-weight: 600; font-size: 0.90rem; text-transform: uppercase; letter-spacing: 1px; color: #8B4513; border-color: #8B4513;">
+                View All Collection <i class="bi bi-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
 <section class="why-section">
     <div class="container">
         <!-- Section Header -->
@@ -163,7 +237,7 @@ include('inc/header.php');
                 </div>
             </div>
 
-            <!-- Point 2: Food Safety & Quality Focused (Enhanced as per user demand) -->
+            <!-- Point 2: Food Safety & Quality Focused -->
             <div class="col-lg-3 col-md-6">
                 <div class="feature-card delay-2">
                     <div class="verified-badge"><i class="bi bi-shield-check"></i> 100% Pure</div>
@@ -299,9 +373,7 @@ include('inc/header.php');
             ?>
         </div>
 
-        <!-- 🔥 NEW: VIEW ALL CATEGORIES BUTTON 🔥 -->
         <div class="view-all-wrapper">
-            <!-- Maine yaha 'product.php' link diya hai. Agar tumhara category page alag hai, toh isse update kar lena -->
             <a href="<?php echo $site; ?>product.php" class="btn-view-all">
                 Explore All Categories <i class="bi bi-arrow-right"></i>
             </a>
@@ -310,7 +382,7 @@ include('inc/header.php');
     </div>
 </section>
 
-<!-- SECTION 5: BRAND STORY (PREMIUM EDITORIAL DESIGN) -->
+<!-- SECTION 5: BRAND STORY -->
 <section class="brand-story-section">
     <div class="container">
         <div class="row align-items-center">
@@ -348,8 +420,7 @@ include('inc/header.php');
                     <p class="story-desc">
                         AristoNut was born in 2024 with a simple, genuine ambition: to take this treasured heritage
                         ingredient beyond traditional snacking and seamlessly bring it into modern, health-conscious
-                        kitchens. From carefully selected raw foxnuts to our innovative makhana-based foods, we are
-                        creating exciting new ways for people to discover and enjoy true nutrition.
+                        kitchens.
                     </p>
 
                     <div class="story-highlight">
@@ -367,7 +438,7 @@ include('inc/header.php');
     </div>
 </section>
 
-<!-- SECTION 6: THE BIG BRAND STATEMENT (EVOLUTION TIMELINE DESIGN) -->
+<!-- SECTION 6: EVOLUTION TIMELINE -->
 <section class="evolution-section">
     <div class="container">
 
@@ -383,9 +454,7 @@ include('inc/header.php');
             </p>
         </div>
 
-        <!-- The Journey Grid (3 Columns on Desktop, elegantly wrapping) -->
         <div class="row g-4 justify-content-center">
-
             <!-- Step 1 -->
             <div class="col-lg-4 col-md-6 col-12">
                 <div class="journey-card">
@@ -440,10 +509,8 @@ include('inc/header.php');
                         this heritage ingredient into the next generation of food.</p>
                 </div>
             </div>
-
         </div>
 
-        <!-- Footer Highlight strictly from PDF -->
         <div class="evolve-footer">
             From a traditional ingredient to a new generation of food.
         </div>
@@ -451,7 +518,6 @@ include('inc/header.php');
     </div>
 </section>
 
-<!-- SECTION 6 END -->
 <section class="why-makhana-section">
     <div class="container">
         <div class="row align-items-center">
@@ -459,7 +525,6 @@ include('inc/header.php');
             <!-- Left Side: Lifestyle Image -->
             <div class="col-lg-5 col-md-12 slide-in-left" id="wmImgBox">
                 <div class="wm-image-wrapper">
-                    <!-- Note for admin: Use a high-quality image of raw makhana in a wooden bowl or similar aesthetic -->
                     <img src="<?php echo $site; ?>assets/images/why.jpeg"
                         alt="Mithila Origin Makhana" class="story-image">
                 </div>
@@ -476,9 +541,8 @@ include('inc/header.php');
                         nutrients and endless culinary potential.
                     </p>
 
-                    <!-- 2x2 Grid from PDF -->
+                    <!-- 2x2 Grid -->
                     <div class="row">
-                        <!-- 1. Versatile -->
                         <div class="col-md-6 col-sm-6">
                             <div class="wm-feature-item">
                                 <div class="wm-icon-box"><i class="bi bi-arrow-repeat"></i></div>
@@ -488,7 +552,6 @@ include('inc/header.php');
                             </div>
                         </div>
 
-                        <!-- 2. Plant-Based (Green Hover) -->
                         <div class="col-md-6 col-sm-6">
                             <div class="wm-feature-item green-hover">
                                 <div class="wm-icon-box"><i class="bi bi-flower2"></i></div>
@@ -498,7 +561,6 @@ include('inc/header.php');
                             </div>
                         </div>
 
-                        <!-- 3. Everyday Friendly -->
                         <div class="col-md-6 col-sm-6">
                             <div class="wm-feature-item">
                                 <div class="wm-icon-box"><i class="bi bi-sun"></i></div>
@@ -508,7 +570,6 @@ include('inc/header.php');
                             </div>
                         </div>
 
-                        <!-- 4. Indian Tradition -->
                         <div class="col-md-6 col-sm-6">
                             <div class="wm-feature-item">
                                 <div class="wm-icon-box"><i class="bi bi-brightness-high"></i></div>
@@ -519,7 +580,6 @@ include('inc/header.php');
                         </div>
                     </div>
 
-                    <!-- CTA Button -->
                     <a href="<?php echo $site; ?>about.php" class="wm-btn mt-4">
                         Discover Makhana <i class="bi bi-arrow-right"></i>
                     </a>
@@ -530,9 +590,8 @@ include('inc/header.php');
         </div>
     </div>
 </section>
-<!-- SECTION 7 END -->
 
-<!-- SECTION 8: BESTSELLERS & LATEST BLOGS (EXACT VIDEO MATCH & MODERN UI) -->
+<!-- ================= BOTTOM PRODUCT GRID (BESTSELLERS) ================= -->
 <section class="homepage-tail-section">
     <div class="container">
 
@@ -544,24 +603,24 @@ include('inc/header.php');
 
         <div class="row g-4">
             <?php
-            // Strict 8 products limit as requested by user
+            // Bestsellers query (different limit/order to show variance)
             $bestseller_query = "SELECT id, pro_name, selling_price, qty, pro_img, slug_url FROM products WHERE status = 1 ORDER BY id DESC LIMIT 8";
             $bestseller_result = $conn->query($bestseller_query);
 
             if ($bestseller_result && $bestseller_result->num_rows > 0) {
                 while ($prod = $bestseller_result->fetch_assoc()) {
                     $pid = $prod['id'];
-                    // 🔥 PHP 8 NULL SAFETY FIXES 🔥
                     $pname = htmlspecialchars($prod['pro_name'] ?? '');
                     $pprice = htmlspecialchars($prod['selling_price'] ?? '0');
-                    $pweight = htmlspecialchars($prod['qty'] ?? '100g'); // Default to 100g if missing
                     
-                    // 🔥 SLUG FALLBACK FIX (Click karne par ab index pe nahi jayega)
                     $raw_slug = !empty($prod['slug_url']) ? trim($prod['slug_url']) : $pid;
                     $pslug = htmlspecialchars($raw_slug);
 
-                    // Correct image path from database
-                    $pimg = !empty($prod['pro_img']) ? $site . 'admin/assets/img/uploads/' . htmlspecialchars($prod['pro_img']) : $site . 'assets/images/hero.webp';
+                    // 🔥 EXPLODE FIX FOR MULTIPLE IMAGES 🔥
+                    $raw_img_string = $prod['pro_img'];
+                    $img_array = explode(',', $raw_img_string);
+                    $first_main_img = !empty($img_array[0]) ? trim($img_array[0]) : '';
+                    $pimg = !empty($first_main_img) ? $site . 'admin/assets/img/uploads/' . htmlspecialchars($first_main_img) : $site . 'assets/images/hero.webp';
 
                     // Wishlist check
                     $is_wished = (isset($_SESSION['wishlist']) && in_array($pid, $_SESSION['wishlist'])) ? 'bi-heart-fill text-danger' : 'bi-heart';
@@ -569,43 +628,27 @@ include('inc/header.php');
                     <div class="col-lg-3 col-md-4 col-sm-6 col-12">
                         <div class="video-prod-card">
 
-                            <!-- Wishlist Toggle -->
                             <div class="v-wish-btn" onclick="handleWishlist(<?php echo $pid; ?>, this)">
                                 <i class="bi <?php echo $is_wished; ?>"></i>
                             </div>
 
-                            <!-- Product Image with Hover Rotation -->
                             <a href="<?php echo $site; ?>product/<?php echo $pslug; ?>" class="v-img-box">
                                 <img src="<?php echo $pimg; ?>" alt="<?php echo $pname; ?>">
                             </a>
 
-                            <!-- Rating Stars -->
                             <div class="v-rating">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                                 <span class="text-muted ms-1">(4.9)</span>
                             </div>
 
-                            <!-- Product Title & Weight -->
-                            <a href="<?php echo $site; ?>product/<?php echo $pslug; ?>" class="v-title"
-                                title="<?php echo $pname; ?>">
+                            <a href="<?php echo $site; ?>product/<?php echo $pslug; ?>" class="v-title" title="<?php echo $pname; ?>">
                                 <?php echo $pname; ?>
                             </a>
-                            <!-- <div class="v-weight">Net Wt: <?php echo $pweight; ?></div> -->
 
-                            <!-- Price & Side-by-Side Cart/Buy Now Buttons -->
                             <div class="v-bottom-section">
-                                <!-- <div class="v-price">₹<?php echo $pprice; ?></div> -->
                                 <div class="v-action-buttons">
-                                    <button class="v-btn-cart" onclick="addToCart(<?php echo $pid; ?>)">
-                                        Cart
-                                    </button>
-                                    <button class="v-btn-buy" onclick="buyNow(<?php echo $pid; ?>)">
-                                        Buy Now
-                                    </button>
+                                    <button class="v-btn-cart" onclick="addToCart(<?php echo $pid; ?>)">Cart</button>
+                                    <button class="v-btn-buy" onclick="buyNow(<?php echo $pid; ?>)">Buy Now</button>
                                 </div>
                             </div>
 
@@ -626,11 +669,10 @@ include('inc/header.php');
             </a>
         </div>
 
-
         <!-- Divider -->
         <hr class="section-divider">
 
-    <!-- ================= LATEST BLOGS SECTION (IMPROVED CLEAN MAGAZINE STYLE) ================= -->
+    <!-- ================= LATEST BLOGS SECTION ================= -->
         <div class="tail-header">
             <span class="tail-subtitle">STAY UPDATED</span>
             <h2 class="tail-title">Latest Health & Recipes</h2>
@@ -639,25 +681,21 @@ include('inc/header.php');
 
         <div class="row g-4 justify-content-center">
             <?php
-            // Fetching active blogs from database
             $blog_query = "SELECT blog_id, title, slug, image, description, created_at FROM blogs WHERE status = 1 ORDER BY blog_id DESC LIMIT 3";
             $blog_result = $conn->query($blog_query);
 
             if ($blog_result && $blog_result->num_rows > 0) {
                 while ($blog = $blog_result->fetch_assoc()) {
-                    // 🔥 PHP 8 NULL SAFETY FIXES FOR BLOGS 🔥
                     $btitle = htmlspecialchars($blog['title'] ?? '');
                     
                     $raw_bslug = !empty($blog['slug']) ? trim($blog['slug']) : $blog['blog_id'];
                     $bslug = htmlspecialchars($raw_bslug);
                     
-                    // 🔥 DESCRIPTION LIMIT FIX (Max 120 Characters) 🔥
                     $raw_desc = strip_tags($blog['description'] ?? '');
                     $bdesc = strlen($raw_desc) > 120 ? substr($raw_desc, 0, 120) . '...' : $raw_desc;
                     
                     $bdate = date('d M, Y', strtotime($blog['created_at']));
 
-                    // Image mapping
                     $bimg = !empty($blog['image']) ? $site . 'admin/assets/img/uploads/blogs/' . htmlspecialchars($blog['image']) : $site . 'assets/images/hero.webp';
                     if (!file_exists($_SERVER['DOCUMENT_ROOT'] . parse_url($bimg, PHP_URL_PATH))) {
                         $bimg = $site . 'admin/assets/img/uploads/blogs/' . htmlspecialchars($blog['image'] ?? '');
@@ -665,26 +703,17 @@ include('inc/header.php');
                     ?>
                     <div class="col-lg-4 col-md-6 col-12">
                         <a href="<?php echo $site; ?>blog-details.php?slug=<?php echo $bslug; ?>" class="modern-blog-card">
-
                             <div class="blog-img-box">
-                                <img src="<?php echo $bimg; ?>" alt="<?php echo $btitle; ?>"
-                                    onerror="this.src='https://thumbs.dreamstime.com/b/roasted-lotus-seed-makhana-22764990.jpg?w=768';">
+                                <img src="<?php echo $bimg; ?>" alt="<?php echo $btitle; ?>" onerror="this.src='https://thumbs.dreamstime.com/b/roasted-lotus-seed-makhana-22764990.jpg?w=768';">
                             </div>
-
                             <div class="blog-content">
                                 <div class="blog-date"><i class="bi bi-calendar3 me-1"></i> <?php echo $bdate; ?></div>
                                 <h3 class="blog-title"><?php echo $btitle; ?></h3>
-                                
-                                <!-- 🔥 CSS LINE CLAMP FIX (Force exactly 3 lines) 🔥 -->
-                                <p class="blog-snippet" style="display: -webkit-box; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 15px; height: 65px;">
+                                <p class="blog-snippet" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 15px; height: 65px;">
                                     <?php echo $bdesc; ?>
                                 </p>
-
-                                <div class="blog-read-more">
-                                    Read Full Article <i class="bi bi-arrow-right"></i>
-                                </div>
+                                <div class="blog-read-more">Read Full Article <i class="bi bi-arrow-right"></i></div>
                             </div>
-
                         </a>
                     </div>
                     <?php
@@ -709,23 +738,16 @@ include('inc/header.php');
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- NEW: BUY NOW SCRIPT -->
+<!-- BUY NOW & ADD TO CART SCRIPTS -->
 <script>
-    // BUY NOW FUNCTION
     function buyNow(productId, variationId = 0, qty = 1) {
         $.ajax({
             url: '<?php echo $site; ?>cart_action.php',
             type: 'POST',
-            data: {
-                action: 'buy_now',
-                product_id: productId,
-                variation_id: variationId,
-                quantity: qty
-            },
+            data: { action: 'buy_now', product_id: productId, variation_id: variationId, quantity: qty },
             dataType: 'json',
             success: function (response) {
                 if (response.status === 'success') {
-                    // Redirect to checkout specifically for Buy Now
                     window.location.href = '<?php echo $site; ?>checkout.php?buy_now=true';
                 } else {
                     showToast("Action Failed", response.message, "error");
@@ -737,17 +759,11 @@ include('inc/header.php');
         });
     }
 
-    // ADD TO CART FUNCTION
     function addToCart(productId, variationId = 0, qty = 1) {
         $.ajax({
             url: '<?php echo $site; ?>cart_action.php',
             type: 'POST',
-            data: {
-                action: 'add_to_cart',
-                product_id: productId,
-                variation_id: variationId,
-                quantity: qty
-            },
+            data: { action: 'add_to_cart', product_id: productId, variation_id: variationId, quantity: qty },
             dataType: 'json',
             success: function(response) {
                 if(response.status === 'success') {
@@ -764,129 +780,49 @@ include('inc/header.php');
     }
 </script>
 
-<!-- YEH SAHI KAREGA ISKO -->
+<!-- SWIPER & ANIMATION SCRIPTS -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         var heroSwiper = new Swiper(".heroSwiper", {
             spaceBetween: 30,
             effect: "fade",
-            fadeEffect: {
-                crossFade: true
-            },
+            fadeEffect: { crossFade: true },
             loop: true,
-            grabCursor: true, /* Shows hand cursor to indicate swipeability */
-            autoplay: {
-                delay: 4500,
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-            },
+            grabCursor: true, 
+            autoplay: { delay: 4500, disableOnInteraction: false },
+            pagination: { el: ".swiper-pagination", clickable: true },
         });
-    });
-</script>
 
-<!-- Vanilla JS for Scroll Reveal Animation -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.15 // Triggers when 15% of the card is visible
-        };
-
-        const observer = new IntersectionObserver((entries, observer) => {
+        // Intersectional Observers for animations
+        const observerOpts = { root: null, rootMargin: '0px', threshold: 0.15 };
+        
+        const observer = new IntersectionObserver((entries, obs) => {
             entries.forEach((entry, index) => {
                 if (entry.isIntersecting) {
-                    // Add slight delay for staggered effect based on column
-                    setTimeout(() => {
-                        entry.target.classList.add('revealed');
-                    }, index * 100); // 100ms delay between each card revealing
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        const cards = document.querySelectorAll('.feature-card');
-        cards.forEach(card => {
-            observer.observe(card);
-        });
-    });
-</script>
-<!-- WHY ARISTONUT SECTION END -->
-
-<!-- Vanilla JS for Scroll Reveal Animation -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.2 // Triggers when 20% of the element is visible
-        };
-
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    observer.unobserve(entry.target); // Run animation only once
-                }
-            });
-        }, observerOptions);
-
-        // Observe the elements
-        const storyImg = document.getElementById('storyImage');
-        const storyText = document.getElementById('storyContent');
-
-        if (storyImg) observer.observe(storyImg);
-        if (storyText) observer.observe(storyText);
-    });
-</script>
-
-<!-- Vanilla JS for Staggered Scroll Reveal -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const observerOpts = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.1
-        };
-
-        const stmtObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    observer.unobserve(entry.target);
+                    setTimeout(() => { entry.target.classList.add('revealed'); }, index * 100);
+                    obs.unobserve(entry.target);
                 }
             });
         }, observerOpts);
+        document.querySelectorAll('.feature-card').forEach(card => { observer.observe(card); });
 
-        const revealElements = document.querySelectorAll('.stmt-reveal');
-        revealElements.forEach(el => stmtObserver.observe(el));
-    });
-</script>
-
-<!-- Vanilla JS for Scroll Reveal -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const wmOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
-
-        const wmObserver = new IntersectionObserver((entries, observer) => {
+        const wmObserver = new IntersectionObserver((entries, obs) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
-                    observer.unobserve(entry.target);
+                    obs.unobserve(entry.target);
                 }
             });
-        }, wmOptions);
+        }, observerOpts);
+        
+        const elementsToObserve = ['storyImage', 'storyContent', 'wmImgBox', 'wmContentBox'];
+        elementsToObserve.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) wmObserver.observe(el);
+        });
 
-        const imgBox = document.getElementById('wmImgBox');
-        const contentBox = document.getElementById('wmContentBox');
-
-        if (imgBox) wmObserver.observe(imgBox);
-        if (contentBox) wmObserver.observe(contentBox);
+        document.querySelectorAll('.stmt-reveal').forEach(el => wmObserver.observe(el));
     });
 </script>
 </body>
-
 </html>

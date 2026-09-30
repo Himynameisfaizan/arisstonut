@@ -5,22 +5,29 @@ if (!isset($pageTitle)) {
 }
 
 if (!isset($bgImage)) {
-    $bgImage = isset($site) ? $site . "assets/images/flavoure/pack1/cream-onion/5.jpg" : "https://images.unsplash.com/photo-1596422846543-73c1d9b3e107?q=80&w=1920&auto=format&fit=crop";
+    $bgImage = isset($site) ? $site . "assets/images/flavoure/pack1/cream-onion/5.jpg" : "https://unsplash.com/photos/a-serene-rural-landscape-with-a-small-village-yCCjGf_HmkQ";
 }
 ?>
 
 <style>
     .premium-breadcrumb-section {
-  position: relative;
-  padding: 120px 0 90px 0;
-  background-image: url("<?php echo $bgImage; ?>");
-  background-size: contain;
-  background-position: top;
-  background-attachment: fixed;
-  text-align: center;
-  overflow: hidden;
-}
+        position: relative;
+        padding: 120px 0 90px 0;
+        background-image: url("<?php echo $bgImage; ?>");
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
+    @media (max-width: 768px) {
+        .premium-breadcrumb-section {
+            height: 200px;
+        }
+    }
 </style>
 
 <section class="premium-breadcrumb-section">
@@ -28,7 +35,7 @@ if (!isset($bgImage)) {
         <div class="bc-content">
             <!-- Dynamic Page Title -->
             <h1 class="bc-title"><?php echo htmlspecialchars($pageTitle); ?></h1>
-            
+
             <!-- Glassmorphism Trail Box -->
             <div class="bc-trail-wrapper">
                 <div class="bc-trail">
@@ -36,7 +43,7 @@ if (!isset($bgImage)) {
                     <a href="<?php echo isset($site) ? $site : ''; ?>index.php" class="bc-link">
                         <i class="bi bi-house-door"></i> Home
                     </a>
-                    
+
                     <!-- OPTIONAL: Parent Category Link -->
                     <?php if (isset($parentName) && isset($parentUrl)): ?>
                         <span class="bc-separator"><i class="bi bi-chevron-right"></i></span>
