@@ -248,17 +248,32 @@ if (count($address_parts) > 1) {
                 <div class="col-md-5 col-sm-7">
                     <table class="table table-sm table-borderless align-middle small">
                         <tbody>
+                            <?php
+                                $db_grand_total = floatval($order['grand_total']);
+                                $db_cart_subtotal = floatval($order['total_amount']); // process_checkout.php mein isme subtotal gaya tha
+                                
+                                $calculated_shipping = $db_grand_total - $db_cart_subtotal;
+                                
+                                if ($db_grand_total <= 0) {
+                                    $db_grand_total = $db_cart_subtotal;
+                                    $calculated_shipping = 0;
+                                }
+
+                                $shipping_display_text = ($calculated_shipping > 0) ? "+ ₹" . number_format($calculated_shipping, 2) : "FREE";
+                                $shipping_color = ($calculated_shipping > 0) ? "text-danger" : "text-success";
+                            ?>
+                            
                             <tr>
                                 <td class="text-muted text-start py-2">Subtotal Amount:</td>
-                                <td class="text-dark fw-medium text-end py-2">₹<?php echo htmlspecialchars($order['total_amount']); ?></td>
+                                <td class="text-dark fw-medium text-end py-2">₹<?php echo number_format($db_cart_subtotal, 2); ?></td>
                             </tr>
                             <tr>
                                 <td class="text-muted text-start py-2">Shipping Charges:</td>
-                                <td class="text-success text-end py-2">FREE</td>
+                                <td class="<?php echo $shipping_color; ?> fw-bold text-end py-2"><?php echo $shipping_display_text; ?></td>
                             </tr>
                             <tr class="border-top border-dark-subtle">
                                 <td class="text-dark fw-bold text-start py-3" style="font-size:1.05rem;">Grand Total Price:</td>
-                                <td class="brand-color fw-bold text-end py-3" style="font-size:1.2rem;">₹<?php echo htmlspecialchars($order['grand_total'] ? $order['grand_total'] : $order['total_amount']); ?></td>
+                                <td class="brand-color fw-bold text-end py-3" style="font-size:1.2rem;">₹<?php echo number_format($db_grand_total, 2); ?></td>
                             </tr>
                         </tbody>
                     </table>
