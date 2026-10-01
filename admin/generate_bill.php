@@ -216,10 +216,13 @@ if (count($address_parts) > 1) {
                         </thead>
                         <tbody>
                             <?php
+                            $calculated_subtotal = 0; // The Real Subtotal Counter
+
                             if (!empty($items_array)) {
                                 $count = 1;
                                 foreach ($items_array as $item) {
                                     $line_total = $item['rate'] * $item['qty'];
+                                    $calculated_subtotal += $line_total; // Dynamically add correct line total
                             ?>
                                     <tr>
                                         <td class="text-muted font-monospace"><?php echo $count++; ?></td>
@@ -231,7 +234,6 @@ if (count($address_parts) > 1) {
                                 <?php
                                 }
                             } else {
-                                // Fallback array handling
                                 ?>
                                 <tr>
                                     <td colspan="5" class="text-center py-3 text-muted">Items parsed matrix empty. Refer to address block info logs.</td>
@@ -249,23 +251,36 @@ if (count($address_parts) > 1) {
                     <table class="table table-sm table-borderless align-middle small">
                         <tbody>
                             <?php
-                                $db_grand_total = floatval($order['grand_total']);
-                                $db_cart_subtotal = floatval($order['total_amount']); // process_checkout.php mein isme subtotal gaya tha
+                                // ============================================
+                                // STRICT SHIPPING & GRAND TOTAL LOGIC
+                                // ============================================
+                                $calculated_shipping = 0;
+                                $pay_method = trim($order['payment_method']);
                                 
-                                $calculated_shipping = $db_grand_total - $db_cart_subtotal;
-                                
-                                if ($db_grand_total <= 0) {
-                                    $db_grand_total = $db_cart_subtotal;
-                                    $calculated_shipping = 0;
+                                // Condition 1: Agar COD hai toh ₹99 charge lagega
+                                if (strcasecmp($pay_method, 'COD') == 0) {
+                                    $calculated_shipping = 99; 
+                                } 
+                                // Condition 2: Agar Online (Prepaid) hai
+                                else {
+                                    if ($calculated_subtotal < 699) {
+                                        $calculated_shipping = 99; // 699 se kam par ₹99 charge
+                                    } else {
+                                        $calculated_shipping = 0;  // 699 ya upar par FREE
+                                    }
                                 }
 
+                                // Final Grand Total (Subtotal + Shipping)
+                                $final_grand_total = $calculated_subtotal + $calculated_shipping;
+
+                                // Display Formatting
                                 $shipping_display_text = ($calculated_shipping > 0) ? "+ ₹" . number_format($calculated_shipping, 2) : "FREE";
                                 $shipping_color = ($calculated_shipping > 0) ? "text-danger" : "text-success";
                             ?>
                             
                             <tr>
                                 <td class="text-muted text-start py-2">Subtotal Amount:</td>
-                                <td class="text-dark fw-medium text-end py-2">₹<?php echo number_format($db_cart_subtotal, 2); ?></td>
+                                <td class="text-dark fw-medium text-end py-2">₹<?php echo number_format($calculated_subtotal, 2); ?></td>
                             </tr>
                             <tr>
                                 <td class="text-muted text-start py-2">Shipping Charges:</td>
@@ -273,7 +288,7 @@ if (count($address_parts) > 1) {
                             </tr>
                             <tr class="border-top border-dark-subtle">
                                 <td class="text-dark fw-bold text-start py-3" style="font-size:1.05rem;">Grand Total Price:</td>
-                                <td class="brand-color fw-bold text-end py-3" style="font-size:1.2rem;">₹<?php echo number_format($db_grand_total, 2); ?></td>
+                                <td class="brand-color fw-bold text-end py-3" style="font-size:1.2rem;">₹<?php echo number_format($final_grand_total, 2); ?></td>
                             </tr>
                         </tbody>
                     </table>
