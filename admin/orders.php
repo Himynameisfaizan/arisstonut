@@ -39,7 +39,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_order_full'])) 
     <link rel="icon" href="assets/img/logo.png" type="image/png">
 
     <?php include "links.php"; ?>
-    <!-- Ensure FontAwesome is loaded -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -63,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_order_full'])) 
         
         .badge-status-pill { font-size: 0.75rem; font-weight: 600; padding: 5px 12px; border-radius: 50px; letter-spacing: 0.5px; }
         
-        /* Action Buttons (Fixed with FontAwesome) */
+        /* Action Buttons */
         .action-btn {
             width: 35px; height: 35px; display: inline-flex; align-items: center; justify-content: center;
             border-radius: 8px; border: none; transition: 0.3s; color: #fff; font-size: 1rem; cursor: pointer; text-decoration: none;
@@ -127,7 +126,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_order_full'])) 
 
                             <div class="white_card_body">
                                 
-                                <!-- ================= SEARCH & FILTER BAR ================= -->
                                 <div class="filter-bar">
                                     <input type="text" id="orderSearch" class="filter-input" placeholder="🔍 Search by Order ID, Name, or Phone...">
                                     
@@ -163,7 +161,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_order_full'])) 
                                             $sql = "SELECT * FROM `orders` ORDER BY `id` DESC LIMIT 200";
                                             $result = mysqli_query($conn, $sql);
                                             
-                                            // Array to hold all modals HTML so they render OUTSIDE the table
                                             $modals_html = ""; 
 
                                             if ($result && mysqli_num_rows($result) > 0) {
@@ -184,6 +181,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_order_full'])) 
                                                     $parts = explode('--- Items List ---', $raw_block);
                                                     $clean_address = str_replace('--- Shipping Address ---', '', $parts[0]);
                                                     $clean_items = isset($parts[1]) ? trim($parts[1]) : 'No items listed';
+
+                                                    // ============================================
+                                                    // LIVE CALCULATION FIX: MULTIPLY QTY * RATE
+                                                    // ============================================
+                                                    $calculated_subtotal = 0;
+                                                    if (isset($parts[1])) {
+                                                        $items_lines = explode("\n", trim($parts[1]));
+                                                        foreach ($items_lines as $line) {
+                                                            $line = trim($line);
+                                                            // Extracts Qty and Rate
+                                                            if (!empty($line) && preg_match('/\(x(\d+)\)\s-\sPrice:\s*₹?\s*(\d+(?:\.\d+)?)/', $line, $matches)) {
+                                                                $qty = intval($matches[1]);
+                                                                $rate = floatval($matches[2]);
+                                                                $calculated_subtotal += ($qty * $rate);
+                                                            }
+                                                        }
+                                                    }
+                                                    
+                                                    // Failsafe backup
+                                                    if ($calculated_subtotal == 0) {
+                                                        $calculated_subtotal = floatval($row['total_amount']);
+                                                    }
+
+                                                    $pay_method = trim($row['payment_method']);
+                                                    $calculated_shipping = 0;
+                                                    
+                                                    if (strcasecmp($pay_method, 'COD') == 0) {
+                                                        $calculated_shipping = 99;
+                                                    } else {
+                                                        if ($calculated_subtotal < 699) {
+                                                            $calculated_shipping = 99;
+                                                        } else {
+                                                            $calculated_shipping = 0;
+                                                        }
+                                                    }
+                                                    
+                                                    $final_grand_total = $calculated_subtotal + $calculated_shipping;
                                             ?>
                                             <tr class="order-row" data-status="<?php echo $o_status; ?>" data-payment="<?php echo $p_status; ?>">
                                                 
@@ -199,10 +233,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_order_full'])) 
                                                     <small class="text-muted search-target"><?php echo htmlspecialchars($row['customer_phone']); ?></small>
                                                 </td>
 
-                                                <!-- Amount & Payment -->
+                                                <!-- Amount & Payment (FIXED LIVE CALCULATION) -->
                                                 <td>
-                                                    <span class="fw-bold fs-6 d-block">₹<?php echo htmlspecialchars($row['total_amount']); ?></span>
-                                                    <small class="fw-bold <?php echo $p_color; ?>"><?php echo htmlspecialchars($row['payment_method']); ?> (<?php echo $p_status; ?>)</small>
+                                                    <span class="fw-bold fs-6 d-block text-success">₹<?php echo number_format($final_grand_total, 2); ?></span>
+                                                    <small class="fw-bold <?php echo $p_color; ?>"><?php echo htmlspecialchars($pay_method); ?> (<?php echo $p_status; ?>)</small>
                                                 </td>
 
                                                 <!-- Status -->
@@ -230,7 +264,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_order_full'])) 
                                             </tr>
 
                                             <?php
-                                            // ================= BUILD MODALS IN VARIABLE (To prevent dark screen issue) =================
+                                            // ================= BUILD MODALS IN VARIABLE =================
+                                            $shipping_text = ($calculated_shipping > 0) ? '+ ₹'.number_format($calculated_shipping, 2) : '<span class="text-success">FREE</span>';
+
                                             $modals_html .= '
                                             <!-- VIEW MODAL -->
                                             <div class="modal fade" id="viewModal'.$row['id'].'" tabindex="-1" aria-hidden="true">
@@ -262,7 +298,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_order_full'])) 
                                                                     <div class="info-card">
                                                                         <h6 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="fa-solid fa-box-open me-2"></i>Items Ordered</h6>
                                                                         <pre class="items-pre">'.htmlspecialchars($clean_items).'</pre>
-                                                                        <h5 class="text-end fw-bold text-success mt-2">Total Paid: ₹'.htmlspecialchars($row['total_amount']).'</h5>
+                                                                        
+                                                                        <div class="mt-3 text-end" style="border-top: 1px dashed #ccc; padding-top: 10px;">
+                                                                            <div class="text-muted small">Subtotal Amount: <strong class="text-dark">₹'.number_format($calculated_subtotal, 2).'</strong></div>
+                                                                            <div class="text-muted small">Shipping Charge: <strong>'.$shipping_text.'</strong></div>
+                                                                            <h5 class="fw-bold text-success mt-2">Grand Total: ₹'.number_format($final_grand_total, 2).'</h5>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-12">
@@ -270,7 +311,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_order_full'])) 
                                                                         <h6 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="fa-solid fa-credit-card me-2"></i>Payment & Tracking Data</h6>
                                                                         <div class="row">
                                                                             <div class="col-md-4">
-                                                                                <span class="info-label">Payment Mode</span><div class="info-data">'.htmlspecialchars($row['payment_method']).' ('.$p_status.')</div>
+                                                                                <span class="info-label">Payment Mode</span><div class="info-data">'.htmlspecialchars($pay_method).' ('.$p_status.')</div>
                                                                             </div>
                                                                             <div class="col-md-4">
                                                                                 <span class="info-label">Razorpay Order ID</span><div class="info-data">'.(!empty($row['razorpay_order_id']) ? htmlspecialchars($row['razorpay_order_id']) : 'N/A').'</div>
@@ -367,9 +408,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_order_full'])) 
         </div>
 
         <?php 
-        // PRINT MODALS HERE - THIS FIXES THE DARK SCREEN ISSUE!
         echo $modals_html; 
-        
         include "footer.php"; 
         ?>
     </section>
@@ -381,7 +420,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_order_full'])) 
     <!-- REAL-TIME JS FILTER ENGINE -->
     <script>
         $(document).ready(function() {
-            // Function to filter rows
             function filterOrders() {
                 var searchText = $('#orderSearch').val().toLowerCase();
                 var statusFilter = $('#statusFilter').val();
@@ -405,7 +443,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_order_full'])) 
                 });
             }
 
-            // Bind events
             $('#orderSearch').on('keyup', filterOrders);
             $('#statusFilter, #paymentFilter').on('change', filterOrders);
         });
