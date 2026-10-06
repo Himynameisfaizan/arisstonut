@@ -3,36 +3,73 @@ include ('config/connect.php');
 $pageTitle = "About AristoNut";
 include('inc/header.php');
 include ('inc/breadcrumb.php');
+
+// Database se About Us data fetch karne ki query
+$about_query = "SELECT * FROM about_us LIMIT 1";
+$about_result = $conn->query($about_query);
+$about = ($about_result && $about_result->num_rows > 0) ?$about_result->fetch_assoc() : [];
+
+// Fallback values agar database mein data na ho
+$tagline = htmlspecialchars($about['tagline'] ?? 'About AristoNut');
+$heading_1 = htmlspecialchars($about['heading_primary'] ?? 'From the Heart of Mithila');
+$heading_2 = htmlspecialchars($about['heading_secondary'] ?? 'to the World');
+// Description mein HTML tags allow karne ke liye htmlspecialchars nahi lagaya hai
+$desc_1 =$about['description_1'] ?? '<strong>AristoNut</strong> is a premium makhana brand owned and operated by <strong>NK Enterprises</strong>, an India-based business rooted in the primary makhana-producing region of Bihar.';
+$desc_2 =$about['description_2'] ?? 'Makhana (fox nuts / gorgon nuts) has been a traditional part of Bihar\'s agricultural and food heritage for generations. At AristoNut, we are bringing this traditional Indian superfood to modern global markets through thoughtful sourcing, quality-focused processing, and a professional approach to both B2B and consumer business.';
+
+$legal_name = htmlspecialchars($about['legal_name'] ?? 'NK Enterprises');
+$origin = htmlspecialchars($about['origin'] ?? 'Bihar, India • Fox Nuts');
+
+// Image path dynamic handling
+$about_img = !empty($about['image']) ?$site . 'admin/assets/img/uploads/' . htmlspecialchars($about['image']) :$site . 'assets/images/hero.webp';
 ?>
+
+<!-- Custom CSS to Prevent Design Breaking on Long Content -->
+<style>
+    .about-img-box img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+    .leading-relaxed {
+        line-height: 1.8;
+    }
+    .stat-card {
+        background: #F9F6F0;
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid rgba(156, 85, 33, 0.1);
+        height: 100%;
+    }
+</style>
 
 <!-- About Brand Story Section -->
 <section class="container py-5">
   <div class="row align-items-center g-5">
     <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1000">
-      <span class="section-tag">About AristoNut</span>
-      <h2 class="fw-bold mb-3 display-6">From the Heart of Mithila <br><span class="text-danger">to the World</span>
+      <span class="section-tag"><?php echo $tagline; ?></span>
+      <h2 class="fw-bold mb-3 display-6">
+        <?php echo $heading_1; ?> <br><span class="text-danger"><?php echo $heading_2; ?></span>
       </h2>
-      <p class="text-muted leading-relaxed">
-        <strong>AristoNut</strong> is a premium makhana brand owned and operated by <strong>NK Enterprises</strong>, an
-        India-based business rooted in the primary makhana-producing region of Bihar.
-      </p>
-      <p class="text-muted">
-        Makhana (fox nuts / gorgon nuts) has been a traditional part of Bihar's agricultural and food heritage for
-        generations. At AristoNut, we are bringing this traditional Indian superfood to modern global markets through
-        thoughtful sourcing, quality-focused processing, and a professional approach to both B2B and consumer business.
-      </p>
+      <div class="text-muted leading-relaxed mb-3">
+        <?php echo $desc_1; ?>
+      </div>
+      <div class="text-muted leading-relaxed">
+        <?php echo $desc_2; ?>
+      </div>
 
       <div class="row g-3 mt-3">
         <div class="col-sm-6">
           <div class="stat-card">
-            <h6 class="fw-bold mb-1">Legal Business Name</h6>
-            <p class="text-muted mb-0 small">NK Enterprises</p>
+            <h6 class="fw-bold mb-1" style="color: #2C1E16;">Legal Business Name</h6>
+            <p class="text-muted mb-0 small"><?php echo $legal_name; ?></p>
           </div>
         </div>
         <div class="col-sm-6">
           <div class="stat-card">
-            <h6 class="fw-bold mb-1">Origin & Category</h6>
-            <p class="text-muted mb-0 small">Bihar, India • Fox Nuts</p>
+            <h6 class="fw-bold mb-1" style="color: #2C1E16;">Origin & Category</h6>
+            <p class="text-muted mb-0 small"><?php echo $origin; ?></p>
           </div>
         </div>
       </div>
@@ -47,10 +84,14 @@ include ('inc/breadcrumb.php');
           <h3 class="text-danger fw-bold mb-0">AristoNut</h3>
           <p class="text-muted small">A Brand by NK Enterprises</p>
         </div>
-        <img src="assets/images/hero.webp" alt="AristoNut Makhana Packaging" class="img-fluid rounded-3 mb-3 shadow-sm">
+        
+        <!-- Dynamic Image with fixed styling to protect layout -->
+        <div class="about-img-box mb-3 shadow-sm">
+            <img src="<?php echo $about_img; ?>" alt="AristoNut Makhana Packaging" onerror="this.src='<?php echo $site; ?>assets/images/hero.webp';">
+        </div>
+
         <div class="text-center">
-          <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">🌱 Farm to Bowl Quality
-            Control</span>
+          <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">🌱 Farm to Bowl Quality Control</span>
         </div>
       </div>
     </div>
@@ -66,8 +107,7 @@ include ('inc/breadcrumb.php');
           <div class="icon-box"><i class="bi bi-eye"></i></div>
           <h4 class="fw-bold mb-3">Our Vision</h4>
           <p class="text-muted mb-0">
-            To build a globally recognised makhana brand representing the authentic heritage of Mithila and the
-            unmatched quality of Indian food products.
+            To build a globally recognised makhana brand representing the authentic heritage of Mithila and the unmatched quality of Indian food products.
           </p>
         </div>
       </div>
@@ -76,8 +116,7 @@ include ('inc/breadcrumb.php');
           <div class="icon-box"><i class="bi bi-bullseye"></i></div>
           <h4 class="fw-bold mb-3">Our Mission</h4>
           <p class="text-muted mb-0">
-            To deliver quality-focused makhana products through responsible sourcing, professional operations,
-            attractive packaging, and dependable long-term partnerships with customers and global buyers.
+            To deliver quality-focused makhana products through responsible sourcing, professional operations, attractive packaging, and dependable long-term partnerships with customers and global buyers.
           </p>
         </div>
       </div>
@@ -88,8 +127,6 @@ include ('inc/breadcrumb.php');
 <!-- Our Capabilities / Offerings -->
 <section class="capabilities-section">
     <div class="container">
-        
-        <!-- Section Header -->
         <div class="cap-header cap-reveal">
             <span class="cap-tag">Comprehensive Solutions</span>
             <h2 class="cap-title">Our Focus & Capabilities</h2>
@@ -97,7 +134,6 @@ include ('inc/breadcrumb.php');
         </div>
 
         <div class="row g-4">
-            <!-- Card 1 -->
             <div class="col-lg-4 col-md-6 col-12 cap-reveal cap-delay-1">
                 <div class="cap-card">
                     <div class="cap-icon-box"><i class="bi bi-bag-check"></i></div>
@@ -106,7 +142,6 @@ include ('inc/breadcrumb.php');
                 </div>
             </div>
 
-            <!-- Card 2 -->
             <div class="col-lg-4 col-md-6 col-12 cap-reveal cap-delay-2">
                 <div class="cap-card">
                     <div class="cap-icon-box"><i class="bi bi-boxes"></i></div>
@@ -115,7 +150,6 @@ include ('inc/breadcrumb.php');
                 </div>
             </div>
 
-            <!-- Card 3 -->
             <div class="col-lg-4 col-md-6 col-12 cap-reveal cap-delay-3">
                 <div class="cap-card">
                     <div class="cap-icon-box"><i class="bi bi-stars"></i></div>
@@ -124,7 +158,6 @@ include ('inc/breadcrumb.php');
                 </div>
             </div>
 
-            <!-- Card 4 -->
             <div class="col-lg-4 col-md-6 col-12 cap-reveal cap-delay-1">
                 <div class="cap-card">
                     <div class="cap-icon-box"><i class="bi bi-tag"></i></div>
@@ -133,7 +166,6 @@ include ('inc/breadcrumb.php');
                 </div>
             </div>
 
-            <!-- Card 5 -->
             <div class="col-lg-4 col-md-6 col-12 cap-reveal cap-delay-2">
                 <div class="cap-card">
                     <div class="cap-icon-box"><i class="bi bi-award"></i></div>
@@ -142,7 +174,6 @@ include ('inc/breadcrumb.php');
                 </div>
             </div>
 
-            <!-- Card 6 -->
             <div class="col-lg-4 col-md-6 col-12 cap-reveal cap-delay-3">
                 <div class="cap-card">
                     <div class="cap-icon-box"><i class="bi bi-globe2"></i></div>
@@ -151,11 +182,8 @@ include ('inc/breadcrumb.php');
                 </div>
             </div>
         </div>
-        
     </div>
 </section>
-
-<!-- Vanilla JS for Scroll Reveal Animation (No AOS Needed) -->
 
 <!-- ================= AVAILABLE ON PLATFORMS SECTION ================= -->
 <section class="available-platforms-sec">
@@ -167,23 +195,14 @@ include ('inc/breadcrumb.php');
         </div>
     </div>
 
-    <!-- The Infinite Slider -->
     <div class="marquee-wrapper">
         <div class="marquee-track">
             <?php
-            // Fetch brands from dynamic table
-            // Note: Update column names ('image', 'brand_name') according to your actual DB structure
             $brands_query = "SELECT * FROM `brands` ORDER BY `id` DESC";
-            $brands_result = $conn->query($brands_query);
-            
-            $brands_html = ""; // Variable to store HTML so we can duplicate it for seamless scrolling
+            $brands_result =$conn->query($brands_query);$brands_html = ""; 
 
-            if ($brands_result && $brands_result->num_rows > 0) {
-                while ($brand = $brands_result->fetch_assoc()) {
-                    // Update 'image' field below based on your actual table column name
-                    $brand_img = !empty($brand['logo_path']) ? $site . 'admin/' . htmlspecialchars($brand['logo_path']) : $site . 'assets/images/default-brand.png';
-                    
-                    // Fallback for brand name if missing
+            if ($brands_result &&$brands_result->num_rows > 0) {
+                while ($brand = $brands_result->fetch_assoc()) {$brand_img = !empty($brand['logo_path']) ?$site . 'admin/' . htmlspecialchars($brand['logo_path']) :$site . 'assets/images/default-brand.png';
                     $brand_name = htmlspecialchars($brand['title'] ?? 'Partner Brand');
 
                     $brands_html .= '
@@ -192,7 +211,6 @@ include ('inc/breadcrumb.php');
                     </div>';
                 }
             } else {
-                // Temporary dummy layout if database is empty
                 $brands_html .= '
                     <div class="brand-logo-box"><h4 class="text-muted fw-bold">Amazon</h4></div>
                     <div class="brand-logo-box"><h4 class="text-muted fw-bold">Flipkart</h4></div>
@@ -201,9 +219,7 @@ include ('inc/breadcrumb.php');
                     <div class="brand-logo-box"><h4 class="text-muted fw-bold">Zepto</h4></div>';
             }
 
-            // Print Original Set
             echo $brands_html;
-            // Print Duplicated Set (This creates the infinite seamless loop effect)
             echo $brands_html;
             ?>
         </div>
@@ -216,8 +232,7 @@ include ('inc/breadcrumb.php');
     <span class="section-tag" data-aos="fade-up">Global Trade</span>
     <h2 class="fw-bold mb-3" data-aos="fade-up" data-aos-delay="100">Serving International Buyers & Distributors</h2>
     <p class="text-muted mx-auto mb-4" style="max-width: 650px;" data-aos="fade-up" data-aos-delay="200">
-      We build long-term relationships through dependable supply, clear communication, consistent product parameters,
-      and seamless fulfillment.
+      We build long-term relationships through dependable supply, clear communication, consistent product parameters, and seamless fulfillment.
     </p>
 
     <div class="d-flex flex-wrap justify-content-center gap-3 mt-4" data-aos="fade-up" data-aos-delay="300">
@@ -238,8 +253,7 @@ include ('inc/breadcrumb.php');
       <div class="col-lg-8 mb-4 mb-lg-0">
         <h2 class="fw-bold text-white mb-2">Let's Build a Partnership</h2>
         <p class="text-light opacity-75 mb-0">
-          Whether you need wholesale supply, retail distribution, private labeling, or international export quotes — our
-          team is here to assist.
+          Whether you need wholesale supply, retail distribution, private labeling, or international export quotes — our team is here to assist.
         </p>
       </div>
       <div class="col-lg-4 text-lg-end">
@@ -251,7 +265,6 @@ include ('inc/breadcrumb.php');
   </div>
 </section>
 
-<!-- AOS Script Init -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 <script>
   AOS.init({
@@ -269,7 +282,7 @@ include ('inc/breadcrumb.php');
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
-                    observer.unobserve(entry.target); // Runs only once
+                    observer.unobserve(entry.target); 
                 }
             });
         }, capOptions);
@@ -281,5 +294,4 @@ include ('inc/breadcrumb.php');
 
 <?php include('inc/footer.php'); ?>
 </body>
-
 </html>

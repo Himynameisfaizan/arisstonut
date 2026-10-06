@@ -444,7 +444,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_order_full'])) 
             }
 
             $('#orderSearch').on('keyup', filterOrders);
-            $('#statusFilter, #paymentFilter').on('change', filterOrders);
+            $('#statusFilter, #payx mentFilter').on('change', filterOrders);
         });
     </script>
 </body>
