@@ -200,6 +200,36 @@ if (!isset($_SESSION['admin_logged_in'])) {
                 </div>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link text-white py-3 px-4 d-flex align-items-center" data-bs-toggle="collapse"
+                    href="#productMenu" role="button">
+                    <i class="fas fa-box fa-fw me-3"></i>
+                    <span class="flex-grow-1">Manage Coupons</span>
+                    <i class="fas fa-chevron-down ms-auto"></i>
+                </a>
+                <div class="collapse <?php echo in_array(basename($_SERVER['PHP_SELF']), ['add-coupon.php', 'show-coupons.php']) ? 'show' : ''; ?>"
+                    id="productMenu">
+                    <ul class="nav flex-column ps-5">
+                        <li class="nav-item">
+                            <a href="add-coupon.php"
+                                class="nav-link text-muted py-2 d-flex align-items-center 
+                               <?php echo basename($_SERVER['PHP_SELF']) == 'add-coupon.php' ? 'text-primary' : ''; ?>">
+                                <i class="fas fa-plus fa-sm me-2"></i>
+                                <span>Add Coupon</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="view-coupons.php"
+                                class="nav-link text-muted py-2 d-flex align-items-center 
+                               <?php echo basename($_SERVER['PHP_SELF']) == 'view-coupons.php' ? 'text-primary' : ''; ?>">
+                                <i class="fas fa-eye fa-sm me-2"></i>
+                                <span>Show Coupons</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
             <!-- <li class="nav-item">
                 <a href="orders.php" class="nav-link text-white py-3 px-4 d-flex align-items-center 
                    <?php echo basename($_SERVER['PHP_SELF']) == 'orders.php' ? 'active bg-primary' : ''; ?>">

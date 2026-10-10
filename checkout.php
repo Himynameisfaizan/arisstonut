@@ -34,7 +34,6 @@ include('inc/breadcrumb.php');
         padding: 60px 0 100px 0;
     }
 
-    /* Premium Box Styling */
     .checkout-box {
         background: var(--chk-card-bg);
         border-radius: 24px;
@@ -61,7 +60,6 @@ include('inc/breadcrumb.php');
         color: var(--chk-accent);
     }
 
-    /* Custom Form Inputs */
     .custom-input {
         background: #F9F9F9;
         border: 1px solid transparent;
@@ -88,7 +86,6 @@ include('inc/breadcrumb.php');
         margin-bottom: 8px;
     }
 
-    /* Item Summary List */
     .summary-item-row {
         display: flex;
         align-items: center;
@@ -145,7 +142,6 @@ include('inc/breadcrumb.php');
         font-size: 1.05rem;
     }
 
-    /* Payment Method Cards */
     .payment-option {
         display: none;
     }
@@ -185,7 +181,6 @@ include('inc/breadcrumb.php');
         color: var(--chk-accent);
     }
 
-    /* Place Order Button */
     .btn-pay {
         background: var(--chk-accent);
         color: #FFFFFF;
@@ -212,12 +207,58 @@ include('inc/breadcrumb.php');
         color: #FFF;
     }
 
+    /* RIGHT SIDE COUPON UI */
+    .coupon-box {
+        background: #FDFBF8;
+        border: 1px dashed #D2B48C;
+        border-radius: 12px;
+        padding: 15px;
+        margin-top: 15px;
+        margin-bottom: 25px;
+    }
+
+    .coupon-input-group {
+        display: flex;
+        gap: 10px;
+    }
+
+    .coupon-input-group input {
+        border: 1px solid #EADDCC;
+        border-radius: 8px;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: #9C5521;
+    }
+
+    .coupon-input-group input:focus {
+        border-color: #9C5521;
+        box-shadow: none;
+        outline: none;
+    }
+
+    .btn-apply-coupon {
+        background: #2C1E16;
+        color: #fff;
+        border-radius: 8px;
+        font-weight: 600;
+        padding: 0 20px;
+        transition: 0.3s;
+    }
+
+    .btn-apply-coupon:hover {
+        background: #9C5521;
+        color: #fff;
+    }
+
     @media (max-width: 991px) {
         .checkout-box {
             padding: 25px;
         }
     }
 </style>
+
+<!-- Add SweetAlert2 for premium popup alerts -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
 <main class="checkout-wrapper container">
     <form action="process_checkout.php" method="POST" id="checkoutForm">
@@ -374,7 +415,6 @@ include('inc/breadcrumb.php');
                                 $subtotal = $unit_price * $qty;
                                 $total += $subtotal;
 
-                                // Explode Fix for Image
                                 $img_array = explode(',', $item_img);
                                 $clean_img = trim($img_array[0]);
                                 $img_src = !empty($clean_img) ? $site . 'admin/assets/img/uploads/' . htmlspecialchars($clean_img) : $site . 'assets/images/hero.webp';
@@ -398,6 +438,15 @@ include('inc/breadcrumb.php');
                         ?>
                     </div>
 
+                    <!-- Moved Coupon Box to Right Side (Below Products) -->
+                    <div class="coupon-box">
+                        <label class="form-label fw-bold small text-muted"><i class="bi bi-tag-fill me-1" style="color: #9C5521;"></i> Have a Promo Code?</label>
+                        <div class="coupon-input-group">
+                            <input type="text" id="coupon_code_input" class="form-control" placeholder="ENTER CODE HERE">
+                            <button type="button" id="apply_coupon_btn" class="btn btn-apply-coupon">Apply</button>
+                        </div>
+                    </div>
+
                     <!-- Informational Banner for Shipping Rules -->
                     <div class="alert mt-3" style="background-color: #F9F6F0; border-left: 4px solid #9C5521; font-size: 0.85rem; color: #4A3326;">
                         <i class="bi bi-info-circle-fill" style="color: #9C5521;"></i>
@@ -412,13 +461,15 @@ include('inc/breadcrumb.php');
                         </li>
 
                         <li class="list-group-item d-flex justify-content-between border-0 px-0 pb-1" id="discount-row" style="display: none !important;">
-                            <span class="text-success"><i class="bi bi-tag"></i> Discount (<span id="applied-code-text"></span>)</span>
-                            <strong class="text-success">- ₹<span id="summary-discount">0.00</span></strong>
+                            <span class="text-success fw-bold"><i class="bi bi-tag"></i> Discount (<span id="applied-code-text"></span>)</span>
+                            <strong class="text-success fw-bold">- ₹<span id="summary-discount">0.00</span></strong>
                         </li>
+
                         <li class="list-group-item d-flex justify-content-between border-0 px-0 pb-3 border-bottom">
                             <span class="text-danger">Delivery Charge</span>
                             <strong class="text-danger">+ ₹<span id="summary-shipping">0.00</span></strong>
                         </li>
+
                         <li class="list-group-item d-flex justify-content-between border-0 px-0 pt-3">
                             <span class="fw-bold" style="color: #9C5521; font-size: 1.1rem;">Grand Total</span>
                             <strong style="color: #9C5521; font-size: 1.4rem;">₹<span id="summary-grand-total"><?php echo number_format($cart_subtotal, 2); ?></span></strong>
@@ -442,67 +493,6 @@ include('inc/breadcrumb.php');
                     </p>
                 </div>
             </div>
-
-            <!-- PREMIUM COUPON UI -->
-            <style>
-                .coupon-box {
-                    background: #FDFBF8;
-                    border: 1px dashed #D2B48C;
-                    border-radius: 12px;
-                    padding: 15px;
-                    margin-bottom: 20px;
-                }
-
-                .coupon-input-group {
-                    display: flex;
-                    gap: 10px;
-                }
-
-                .coupon-input-group input {
-                    border: 1px solid #EADDCC;
-                    border-radius: 8px;
-                    text-transform: uppercase;
-                    font-weight: 600;
-                    color: #9C5521;
-                }
-
-                .coupon-input-group input:focus {
-                    border-color: #9C5521;
-                    box-shadow: none;
-                    outline: none;
-                }
-
-                .btn-apply-coupon {
-                    background: #2C1E16;
-                    color: #fff;
-                    border-radius: 8px;
-                    font-weight: 600;
-                    padding: 0 20px;
-                    transition: 0.3s;
-                }
-
-                .btn-apply-coupon:hover {
-                    background: #9C5521;
-                    color: #fff;
-                }
-
-                #coupon-message {
-                    font-size: 0.85rem;
-                    margin-top: 8px;
-                    display: none;
-                    font-weight: 600;
-                }
-            </style>
-
-            <div class="coupon-box">
-                <label class="form-label fw-bold small text-muted"><i class="bi bi-tag-fill me-1" style="color: #9C5521;"></i> Have a Promo Code?</label>
-                <div class="coupon-input-group">
-                    <input type="text" id="coupon_code_input" class="form-control" placeholder="ENTER CODE HERE">
-                    <button type="button" id="apply_coupon_btn" class="btn btn-apply-coupon">Apply</button>
-                </div>
-                <div id="coupon-message"></div>
-            </div>
-
         </div>
     </form>
 </main>
@@ -512,6 +502,8 @@ include('inc/breadcrumb.php');
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- RAZORPAY SCRIPT -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<!-- SweetAlert2 Script -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -521,55 +513,11 @@ include('inc/breadcrumb.php');
         const grandTotalEl = document.getElementById('summary-grand-total');
         const paymentRadios = document.querySelectorAll('.payment-radio');
 
+        let discountAmount = 0;
+
         function calculateShipping() {
             let selectedPayment = document.querySelector('input[name="payment_method"]:checked').value;
             let shippingFee = 0;
-
-            let discountAmount = 0;
-
-            $('#apply_coupon_btn').click(function() {
-                let code = $('#coupon_code_input').val();
-                let btn = $(this);
-                let msgBox = $('#coupon-message');
-
-                if (code === '') {
-                    msgBox.html('<span class="text-danger">Please enter a code.</span>').show();
-                    return;
-                }
-
-                btn.html('<span class="spinner-border spinner-border-sm"></span>');
-
-                $.ajax({
-                    url: 'apply_coupon.php',
-                    type: 'POST',
-                    data: {
-                        coupon_code: code,
-                        cart_total: cartSubtotal
-                    },
-                    dataType: 'json',
-                    success: function(res) {
-                        msgBox.show();
-                        if (res.status === 'success') {
-                            msgBox.html('<span class="text-success"><i class="bi bi-check-circle"></i> ' + res.message + '</span>');
-                            discountAmount = parseFloat(res.discount);
-
-                            // Update UI
-                            $('#discount-row').show();
-                            $('#applied-code-text').text(code.toUpperCase());
-                            $('#summary-discount').text(discountAmount.toFixed(2));
-
-                            // Recalculate Grand Total with discount
-                            calculateShipping(); // Call your existing function
-                        } else {
-                            msgBox.html('<span class="text-danger"><i class="bi bi-x-circle"></i> ' + res.message + '</span>');
-                            discountAmount = 0;
-                            $('#discount-row').hide();
-                            calculateShipping();
-                        }
-                        btn.html('Apply');
-                    }
-                });
-            });
 
             if (selectedPayment === 'COD') {
                 shippingFee = 99; // COD always 99
@@ -582,21 +530,92 @@ include('inc/breadcrumb.php');
                 }
             }
 
-            let grandTotal = cartSubtotal + shippingFee - discountAmount;
+            // Fixed Grand Total Calculation
+            let grandTotal = (cartSubtotal + shippingFee) - discountAmount;
+            
+            // Failsafe to prevent negative total
+            if(grandTotal < 0) {
+                grandTotal = 0;
+            }
 
             // Update HTML
             shippingEl.innerText = shippingFee.toFixed(2);
             grandTotalEl.innerText = grandTotal.toFixed(2);
-
-
-
         }
 
+        // Apply Coupon AJAX
+        $('#apply_coupon_btn').click(function() {
+            let code = $('#coupon_code_input').val();
+            let btn = $(this);
+
+            if (code === '') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Please enter a coupon code first!',
+                    confirmButtonColor: '#9C5521'
+                });
+                return;
+            }
+
+            btn.html('<span class="spinner-border spinner-border-sm"></span>');
+
+            $.ajax({
+                url: 'apply_coupon.php',
+                type: 'POST',
+                data: {
+                    coupon_code: code,
+                    cart_total: cartSubtotal
+                },
+                dataType: 'json',
+                success: function(res) {
+                    if (res.status === 'success') {
+                        
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Woohoo!',
+                            text: res.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+
+                        discountAmount = parseFloat(res.discount);
+
+                        // Update UI
+                        $('#discount-row').show();
+                        $('#applied-code-text').text(code.toUpperCase());
+                        $('#summary-discount').text(discountAmount.toFixed(2));
+
+                        // Recalculate Grand Total with discount
+                        calculateShipping(); 
+                        
+                    } else {
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Invalid Code',
+                            text: res.message,
+                            confirmButtonColor: '#9C5521'
+                        });
+                        
+                        discountAmount = 0;
+                        $('#discount-row').hide();
+                        calculateShipping();
+                    }
+                    btn.html('Apply');
+                }
+            });
+        });
+
+        // Initialize Calculation on Load
         calculateShipping();
+        
+        // Recalculate on Payment Method Change
         paymentRadios.forEach(radio => {
             radio.addEventListener('change', calculateShipping);
         });
 
+        // Checkout Submission Logic
         document.getElementById('checkoutForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -675,5 +694,4 @@ include('inc/breadcrumb.php');
     });
 </script>
 </body>
-
 </html>
