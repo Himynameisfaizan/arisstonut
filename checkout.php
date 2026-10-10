@@ -228,7 +228,7 @@ include('inc/breadcrumb.php');
         <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
         <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
         <input type="hidden" name="razorpay_signature" id="razorpay_signature">
-        
+
         <div class="row g-5">
 
             <!-- ================= LEFT: SHIPPING DETAILS ================= -->
@@ -373,7 +373,7 @@ include('inc/breadcrumb.php');
 
                                 $subtotal = $unit_price * $qty;
                                 $total += $subtotal;
-                                
+
                                 // Explode Fix for Image
                                 $img_array = explode(',', $item_img);
                                 $clean_img = trim($img_array[0]);
@@ -394,13 +394,13 @@ include('inc/breadcrumb.php');
                         <?php
                             }
                         }
-                        $cart_subtotal = $total; 
+                        $cart_subtotal = $total;
                         ?>
                     </div>
 
                     <!-- Informational Banner for Shipping Rules -->
                     <div class="alert mt-3" style="background-color: #F9F6F0; border-left: 4px solid #9C5521; font-size: 0.85rem; color: #4A3326;">
-                        <i class="bi bi-info-circle-fill" style="color: #9C5521;"></i> 
+                        <i class="bi bi-info-circle-fill" style="color: #9C5521;"></i>
                         <strong>Shipping Policy:</strong> Free Shipping on Online Payments above ₹699! A flat ₹99 fee applies to all COD orders and orders below ₹699.
                     </div>
 
@@ -409,6 +409,11 @@ include('inc/breadcrumb.php');
                         <li class="list-group-item d-flex justify-content-between border-0 px-0 pb-1">
                             <span class="text-muted">Cart Subtotal</span>
                             <strong class="text-dark">₹<span id="summary-subtotal"><?php echo number_format($cart_subtotal, 2); ?></span></strong>
+                        </li>
+
+                        <li class="list-group-item d-flex justify-content-between border-0 px-0 pb-1" id="discount-row" style="display: none !important;">
+                            <span class="text-success"><i class="bi bi-tag"></i> Discount (<span id="applied-code-text"></span>)</span>
+                            <strong class="text-success">- ₹<span id="summary-discount">0.00</span></strong>
                         </li>
                         <li class="list-group-item d-flex justify-content-between border-0 px-0 pb-3 border-bottom">
                             <span class="text-danger">Delivery Charge</span>
@@ -438,6 +443,66 @@ include('inc/breadcrumb.php');
                 </div>
             </div>
 
+            <!-- PREMIUM COUPON UI -->
+            <style>
+                .coupon-box {
+                    background: #FDFBF8;
+                    border: 1px dashed #D2B48C;
+                    border-radius: 12px;
+                    padding: 15px;
+                    margin-bottom: 20px;
+                }
+
+                .coupon-input-group {
+                    display: flex;
+                    gap: 10px;
+                }
+
+                .coupon-input-group input {
+                    border: 1px solid #EADDCC;
+                    border-radius: 8px;
+                    text-transform: uppercase;
+                    font-weight: 600;
+                    color: #9C5521;
+                }
+
+                .coupon-input-group input:focus {
+                    border-color: #9C5521;
+                    box-shadow: none;
+                    outline: none;
+                }
+
+                .btn-apply-coupon {
+                    background: #2C1E16;
+                    color: #fff;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    padding: 0 20px;
+                    transition: 0.3s;
+                }
+
+                .btn-apply-coupon:hover {
+                    background: #9C5521;
+                    color: #fff;
+                }
+
+                #coupon-message {
+                    font-size: 0.85rem;
+                    margin-top: 8px;
+                    display: none;
+                    font-weight: 600;
+                }
+            </style>
+
+            <div class="coupon-box">
+                <label class="form-label fw-bold small text-muted"><i class="bi bi-tag-fill me-1" style="color: #9C5521;"></i> Have a Promo Code?</label>
+                <div class="coupon-input-group">
+                    <input type="text" id="coupon_code_input" class="form-control" placeholder="ENTER CODE HERE">
+                    <button type="button" id="apply_coupon_btn" class="btn btn-apply-coupon">Apply</button>
+                </div>
+                <div id="coupon-message"></div>
+            </div>
+
         </div>
     </form>
 </main>
@@ -449,114 +514,166 @@ include('inc/breadcrumb.php');
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    
-    const cartSubtotal = parseFloat(<?php echo $cart_subtotal; ?>);
-    const shippingEl = document.getElementById('summary-shipping');
-    const grandTotalEl = document.getElementById('summary-grand-total');
-    const paymentRadios = document.querySelectorAll('.payment-radio');
+    document.addEventListener("DOMContentLoaded", function() {
 
-    function calculateShipping() {
-        let selectedPayment = document.querySelector('input[name="payment_method"]:checked').value;
-        let shippingFee = 0;
+        const cartSubtotal = parseFloat(<?php echo $cart_subtotal; ?>);
+        const shippingEl = document.getElementById('summary-shipping');
+        const grandTotalEl = document.getElementById('summary-grand-total');
+        const paymentRadios = document.querySelectorAll('.payment-radio');
 
-        if (selectedPayment === 'COD') {
-            shippingFee = 99; // COD always 99
-        } else {
-            // Online Payment
-            if (cartSubtotal < 699) {
-                shippingFee = 99;
+        function calculateShipping() {
+            let selectedPayment = document.querySelector('input[name="payment_method"]:checked').value;
+            let shippingFee = 0;
+
+            let discountAmount = 0;
+
+            $('#apply_coupon_btn').click(function() {
+                let code = $('#coupon_code_input').val();
+                let btn = $(this);
+                let msgBox = $('#coupon-message');
+
+                if (code === '') {
+                    msgBox.html('<span class="text-danger">Please enter a code.</span>').show();
+                    return;
+                }
+
+                btn.html('<span class="spinner-border spinner-border-sm"></span>');
+
+                $.ajax({
+                    url: 'apply_coupon.php',
+                    type: 'POST',
+                    data: {
+                        coupon_code: code,
+                        cart_total: cartSubtotal
+                    },
+                    dataType: 'json',
+                    success: function(res) {
+                        msgBox.show();
+                        if (res.status === 'success') {
+                            msgBox.html('<span class="text-success"><i class="bi bi-check-circle"></i> ' + res.message + '</span>');
+                            discountAmount = parseFloat(res.discount);
+
+                            // Update UI
+                            $('#discount-row').show();
+                            $('#applied-code-text').text(code.toUpperCase());
+                            $('#summary-discount').text(discountAmount.toFixed(2));
+
+                            // Recalculate Grand Total with discount
+                            calculateShipping(); // Call your existing function
+                        } else {
+                            msgBox.html('<span class="text-danger"><i class="bi bi-x-circle"></i> ' + res.message + '</span>');
+                            discountAmount = 0;
+                            $('#discount-row').hide();
+                            calculateShipping();
+                        }
+                        btn.html('Apply');
+                    }
+                });
+            });
+
+            if (selectedPayment === 'COD') {
+                shippingFee = 99; // COD always 99
             } else {
-                shippingFee = 0; // FREE
+                // Online Payment
+                if (cartSubtotal < 699) {
+                    shippingFee = 99;
+                } else {
+                    shippingFee = 0; // FREE
+                }
             }
+
+            let grandTotal = cartSubtotal + shippingFee - discountAmount;
+
+            // Update HTML
+            shippingEl.innerText = shippingFee.toFixed(2);
+            grandTotalEl.innerText = grandTotal.toFixed(2);
+
+
+
         }
 
-        let grandTotal = cartSubtotal + shippingFee;
+        calculateShipping();
+        paymentRadios.forEach(radio => {
+            radio.addEventListener('change', calculateShipping);
+        });
 
-        // Update HTML
-        shippingEl.innerText = shippingFee.toFixed(2);
-        grandTotalEl.innerText = grandTotal.toFixed(2);
-    }
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            e.preventDefault();
 
-    calculateShipping();
-    paymentRadios.forEach(radio => {
-        radio.addEventListener('change', calculateShipping);
-    });
+            const form = this;
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
 
-    document.getElementById('checkoutForm').addEventListener('submit', function(e) {
-        e.preventDefault(); 
+            const payBtn = document.querySelector('.btn-pay');
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+            const isBuyNow = document.querySelector('input[name="is_buy_now"]').value;
 
-        const form = this;
-        if (!form.checkValidity()) {
-            form.reportValidity();
-            return;
-        }
+            const customerName = document.querySelector('input[name="first_name"]').value + " " + document.querySelector('input[name="last_name"]').value;
+            const customerEmail = document.querySelector('input[name="email"]').value;
+            const customerPhone = document.querySelector('input[name="phone"]').value;
 
-        const payBtn = document.querySelector('.btn-pay');
-        const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
-        const isBuyNow = document.querySelector('input[name="is_buy_now"]').value;
+            if (paymentMethod === 'COD') {
+                payBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Processing...';
+                form.submit();
+            } else {
+                payBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Initializing Payment...';
 
-        const customerName = document.querySelector('input[name="first_name"]').value + " " + document.querySelector('input[name="last_name"]').value;
-        const customerEmail = document.querySelector('input[name="email"]').value;
-        const customerPhone = document.querySelector('input[name="phone"]').value;
-
-        if (paymentMethod === 'COD') {
-            payBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Processing...';
-            form.submit();
-        } else {
-            payBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Initializing Payment...';
-
-            $.ajax({
-                url: 'create_razorpay_order.php',
-                type: 'POST',
-                data: {
-                    is_buy_now: isBuyNow
-                },
-                dataType: 'json',
-                success: function(res) {
-                    if (res.status === 'success') {
-                        var options = {
-                            "key": res.key,
-                            "amount": res.amount,
-                            "currency": "INR",
-                            "name": "AristoNut",
-                            "description": "Premium Makhana Order",
-                            "image": "assets/images/logo.webp",
-                            "order_id": res.order_id,
-                            "handler": function(response) {
-                                document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
-                                document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
-                                document.getElementById('razorpay_signature').value = response.razorpay_signature;
-                                payBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Verifying...';
-                                form.submit();
-                            },
-                            "prefill": {
-                                "name": customerName,
-                                "email": customerEmail,
-                                "contact": customerPhone
-                            },
-                            "theme": { "color": "#9C5521" },
-                            "modal": {
-                                "ondismiss": function() {
-                                    payBtn.innerHTML = 'Confirm & Pay <i class="bi bi-lock-fill"></i>';
+                $.ajax({
+                    url: 'create_razorpay_order.php',
+                    type: 'POST',
+                    data: {
+                        is_buy_now: isBuyNow
+                    },
+                    dataType: 'json',
+                    success: function(res) {
+                        if (res.status === 'success') {
+                            var options = {
+                                "key": res.key,
+                                "amount": res.amount,
+                                "currency": "INR",
+                                "name": "AristoNut",
+                                "description": "Premium Makhana Order",
+                                "image": "assets/images/logo.webp",
+                                "order_id": res.order_id,
+                                "handler": function(response) {
+                                    document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                                    document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+                                    document.getElementById('razorpay_signature').value = response.razorpay_signature;
+                                    payBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Verifying...';
+                                    form.submit();
+                                },
+                                "prefill": {
+                                    "name": customerName,
+                                    "email": customerEmail,
+                                    "contact": customerPhone
+                                },
+                                "theme": {
+                                    "color": "#9C5521"
+                                },
+                                "modal": {
+                                    "ondismiss": function() {
+                                        payBtn.innerHTML = 'Confirm & Pay <i class="bi bi-lock-fill"></i>';
+                                    }
                                 }
-                            }
-                        };
-                        var rzp = new Razorpay(options);
-                        rzp.open();
-                    } else {
-                        alert("Error: " + res.message);
+                            };
+                            var rzp = new Razorpay(options);
+                            rzp.open();
+                        } else {
+                            alert("Error: " + res.message);
+                            payBtn.innerHTML = 'Confirm & Pay <i class="bi bi-lock-fill"></i>';
+                        }
+                    },
+                    error: function() {
+                        alert("Server error while initializing payment.");
                         payBtn.innerHTML = 'Confirm & Pay <i class="bi bi-lock-fill"></i>';
                     }
-                },
-                error: function() {
-                    alert("Server error while initializing payment.");
-                    payBtn.innerHTML = 'Confirm & Pay <i class="bi bi-lock-fill"></i>';
-                }
-            });
-        }
+                });
+            }
+        });
     });
-});
 </script>
 </body>
+
 </html>

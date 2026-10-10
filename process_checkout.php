@@ -76,15 +76,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $shipping_fee = 0;
+
+    // ============================================
+    // COUPON & DISCOUNT SECURITY CALCULATION
+    // ============================================
+    $discount_amount = 0;
+    $applied_coupon = NULL;
+
+    if(isset($_SESSION['applied_coupon']) && isset($_SESSION['discount_amount'])) {
+        $applied_coupon = $_SESSION['applied_coupon'];
+        $discount_amount = floatval($_SESSION['discount_amount']);
+        
+        // Security check: Never allow discount more than cart value
+        if($discount_amount > $cart_subtotal) {
+            $discount_amount = $cart_subtotal;
+        }
+
+        // Increase the 'used_count' in coupons table
+        mysqli_query($conn, "UPDATE coupons SET used_count = used_count + 1 WHERE coupon_code = '$applied_coupon'");
+    }
+
+    // Final Grand Total
     
     if ($pay_mode === 'COD') {
         $shipping_fee = 99; 
         if ($cart_subtotal < 699) {
             $shipping_fee = 99; 
-        }
-    }
-
-    $grand_total = $cart_subtotal +$shipping_fee;
+            }
+            }
+            
+            $grand_total = ($cart_subtotal + $shipping_fee) - $discount_amount;
 
     if ($pay_mode === 'Online') {
         if (!empty($rzp_signature) && !empty($rzp_payment_id) && !empty($rzp_order_id)) {
