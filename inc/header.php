@@ -23,15 +23,12 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AristoNut - Premium Quality Makhana</title>
 
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-    <!-- Modern Fonts: Inter for UI, Playfair for headings if needed later -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <link rel="icon" type="image/webp" href="<?php echo $site; ?>admin/uploads/logo/logo_header_6a2a43785437e.webp">
+    <link rel="icon" type="image/webp" href="<?php echo $site; ?>admin/uploads/logo/logo_favicon_6accbb652f38b.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
 
