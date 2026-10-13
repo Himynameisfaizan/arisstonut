@@ -58,9 +58,15 @@ if ($seo_res && $seo_res->num_rows > 0) {
     <meta property="og:description" content="<?php echo htmlspecialchars($og_desc); ?>">
     <meta property="og:image" content="<?php echo htmlspecialchars($og_image); ?>">
 
-    <?php if (!empty($schema_markup)) {
-        echo $schema_markup;
-    } ?>
+    <?php
+    if (!empty($schema_markup)) {
+        if (strpos(trim($schema_markup), '<script') === 0) {
+            echo $schema_markup;
+        } else {
+            echo "<!-- ERROR: Schema must be enclosed in <script type=\"application/ld+json\"> tags -->\n";
+        }
+    }
+    ?>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">

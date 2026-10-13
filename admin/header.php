@@ -31,7 +31,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
             <ul>
                 <li><a href="home-items.php">Add Logo</a></li>
                 <!-- <li><a href="add-banner.php">Add Banners</a></li> -->
-                <li><a href="about_us.php">Add About</a></li>
+                <!-- <li><a href="about_us.php">Add About</a></li> -->
                 <li><a href="add-about-us-section.php"> About sections</a></li>
                 <li><a href="manage_seo.php"> Paage Seo</a></li>
                  <li><a href="add_contact.php"><span>Contact Details</span>
@@ -71,13 +71,13 @@ if (!isset($_SESSION['admin_logged_in'])) {
             </ul>
         </li>
 
-        <li>
+        <!-- <li>
             <a class="has-arrow" href="#"><i class="fas fa-fire" style="color: #ff6b6b;"></i><span>Service</span></a>
             <ul>
                 <li><a href="add-service.php">Add Service</a></li>
                 <li><a href="view-service.php">View Service</a></li>
             </ul>
-        </li>
+        </li> -->
 
         <li>
             <a class="has-arrow" href="#"><i class="fas fa-blog" style="color: #9b59b6;"></i><span>Blogs</span></a>
@@ -128,13 +128,13 @@ if (!isset($_SESSION['admin_logged_in'])) {
             </a>
         </li> -->
 
-         <li>
+         <!-- <li>
             <a class="has-arrow" href="#"><i class="fas fa-award" style="color: #1abc9c;"></i> <span>Custom Page</span></a>
             <ul>
                 <li><a href="add-page.php">Add Page</a></li>
                 <li><a href="view-pages.php">View Pages</a></li>
             </ul>
-        </li>
+        </li> -->
 
         <!-- <li>
             <a href="add-gallery.php">

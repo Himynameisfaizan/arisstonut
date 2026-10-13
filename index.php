@@ -591,6 +591,103 @@ include('inc/header.php');
     </div>
 </section>
 
+<!-- ================= TRUSTED TESTIMONIAL SECTION START ================= -->
+<section class="testimonial-section">
+    <div class="container">
+        <div class="section-header text-center mb-5">
+            <div class="hero-tagline">Real Reviews</div>
+            <h2 class="hero-title">Trusted by <span>Thousands.</span></h2>
+            <p class="hero-description mx-auto mt-3">See what our verified customers have to say about their AristoNut experience.</p>
+            
+            <div class="overall-rating-badge mt-3 d-inline-flex align-items-center justify-content-center">
+                <span class="fs-4 fw-bold me-2">4.9</span>
+                <div class="rating-stars me-2">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-half"></i>
+                </div>
+                <span class="text-muted fs-6">Based on 500+ Verified Reviews</span>
+            </div>
+        </div>
+
+        <div class="swiper testimonialSwiper pb-5">
+            <div class="swiper-wrapper">
+                <?php
+                // Fetch active testimonials from DB
+                $test_query = "SELECT * FROM testimonials WHERE status = 1 ORDER BY display_order ASC, created_at DESC";
+                $test_res = $conn->query($test_query);
+
+                if ($test_res && $test_res->num_rows > 0) {
+                    while ($test = $test_res->fetch_assoc()) {
+                        $name = htmlspecialchars($test['name']);
+                        $message = htmlspecialchars($test['message']);
+                        
+                        // Rating fallback (agar DB mein 0 ya null ho to 5 star dikhaye)
+                        $rating = isset($test['rating']) && intval($test['rating']) > 0 ? intval($test['rating']) : 5;
+                        
+                        // Date formatting 
+                        $date_str = !empty($test['created_at']) ? date('M d, Y', strtotime($test['created_at'])) : 'Recent';
+                        
+                        $img_src = !empty($test['image']) ? "admin/uploads/testimonials/" . htmlspecialchars($test['image']) : "assets/images/default-avatar.png";
+                ?>
+                <div class="swiper-slide">
+                    <div class="google-review-card">
+                        
+                        <!-- Header: Image, Name, Date and Google Icon -->
+                        <div class="review-header">
+                            <div class="reviewer-info">
+                                <div class="reviewer-avatar">
+                                    <img src="<?php echo $img_src; ?>" alt="<?php echo $name; ?>" onerror="this.src='assets/images/default-avatar.png';">
+                                </div>
+                                <div class="reviewer-details">
+                                    <h5 class="reviewer-name"><?php echo $name; ?></h5>
+                                    <div class="review-meta">
+                                        <span class="review-date"><?php echo $date_str; ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="google-icon">
+                                <i class="bi bi-google text-primary fs-5"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Middle: Stars and Verified Badge -->
+                        <div class="review-rating-row mt-3 mb-2 d-flex align-items-center">
+                            <div class="stars me-3">
+                                <?php 
+                                for($r = 1; $r <= 5; $r++) {
+                                    if($r <= $rating) {
+                                        echo '<i class="bi bi-star-fill"></i> ';
+                                    } else {
+                                        echo '<i class="bi bi-star"></i> ';
+                                    }
+                                }
+                                ?>
+                            </div>
+                            <div class="verified-badge">
+                                <i class="bi bi-patch-check-fill"></i> Verified Buyer
+                            </div>
+                        </div>
+                        
+                        <!-- Bottom: Review Text -->
+                        <p class="review-text">"<?php echo $message; ?>"</p>
+                    </div>
+                </div>
+                <?php
+                    }
+                } else {
+                    echo '<p class="text-center w-100 text-muted">More reviews coming soon!</p>';
+                }
+                ?>
+            </div>
+            <div class="swiper-pagination testimonial-pagination mt-4 position-relative"></div>
+        </div>
+    </div>
+</section>
+<!-- ================= TRUSTED TESTIMONIAL SECTION END ================= -->
+
 <!-- ================= BOTTOM PRODUCT GRID (BESTSELLERS) ================= -->
 <section class="homepage-tail-section">
     <div class="container">
@@ -824,5 +921,37 @@ include('inc/header.php');
         document.querySelectorAll('.stmt-reveal').forEach(el => wmObserver.observe(el));
     });
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var testimonialSwiper = new Swiper(".testimonialSwiper", {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            autoplay: {
+                delay: 4000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: ".testimonial-pagination",
+                clickable: true,
+            },
+            breakpoints: {
+                320: {
+                    slidesPerView: 1,
+                    spaceBetween: 20
+                },
+                768: {
+                    slidesPerView: 2,
+                    spaceBetween: 30
+                },
+                1024: {
+                    slidesPerView: 3,
+                    spaceBetween: 30
+                }
+            }
+        });
+    });
+</script>
+
 </body>
 </html>

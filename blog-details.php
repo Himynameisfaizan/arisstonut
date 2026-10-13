@@ -2,17 +2,12 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-// Database & Global Configuration Layer Integration
 include('config/connect.php');
 
-// ==========================================
-// DYNAMIC BLOG SLUG VERIFICATION
-// ==========================================
 if (isset($_GET['slug']) && !empty(trim($_GET['slug']))) {
     $blog_slug = $conn->real_escape_string(trim($_GET['slug']));
 
-    // Fetch the specific blog matching the unique slug parameter
-    $stmt = $conn->prepare("SELECT blog_id, title, author, image, description, meta_title, meta_desc, meta_key, created_at FROM blogs WHERE slug = ? AND status = 1 LIMIT 1");
+    $stmt = $conn->prepare("SELECT * FROM blogs WHERE slug = ? AND status = 1 LIMIT 1");
     $stmt->bind_param("s", $blog_slug);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -24,17 +19,19 @@ if (isset($_GET['slug']) && !empty(trim($_GET['slug']))) {
         $b_title = htmlspecialchars($blog['title']);
         $b_author = htmlspecialchars($blog['author'] ?? 'AristoNut Team');
         $b_date = date('F d, Y', strtotime($blog['created_at']));
-        $b_content = $blog['description']; // Contains rich text or standard paragraphs
-
-        // SEO Configurations Meta Properties
-        $seo_title = !empty($blog['meta_title']) ? htmlspecialchars($blog['meta_title']) : $b_title . " - AristoNut Blog";
-        $seo_desc = !empty($blog['meta_desc']) ? htmlspecialchars($blog['meta_desc']) : substr(strip_tags($b_content), 0, 160);
-        $seo_key = !empty($blog['meta_key']) ? htmlspecialchars($blog['meta_key']) : "makhana blogs, makhana benefits, health recipes";
-
-        // Image asset path validation logic
+        $b_content = $blog['description']; 
         $b_img = !empty($blog['image']) ? $site . 'admin/assets/img/uploads/blogs/' . htmlspecialchars($blog['image']) : $site . 'assets/images/hero.webp';
+
+        $meta_title = !empty($blog['meta_title']) ? htmlspecialchars($blog['meta_title']) : $b_title . " - AristoNut Blog";
+        $meta_desc = !empty($blog['meta_desc']) ? htmlspecialchars($blog['meta_desc']) : substr(strip_tags($b_content), 0, 160);
+        $meta_keyword = !empty($blog['meta_key']) ? htmlspecialchars($blog['meta_key']) : "makhana blogs, makhana benefits, health recipes";
+        $schema_markup = !empty($blog['schema_markup']) ? $blog['schema_markup'] : "";
+
+        $og_title = !empty($blog['og_title']) ? htmlspecialchars($blog['og_title']) : $meta_title;
+        $og_desc = !empty($blog['og_desc']) ? htmlspecialchars($blog['og_desc']) : $meta_desc;
+        $og_image = !empty($blog['og_image']) ? $site . 'admin/uploads/seo/' . htmlspecialchars($blog['og_image']) : $b_img;
+
     } else {
-        // Redirect to main blog directory if slug mismatch logs are found
         header("Location: " . $site . "blog.php");
         exit();
     }
@@ -44,12 +41,9 @@ if (isset($_GET['slug']) && !empty(trim($_GET['slug']))) {
     exit();
 }
 
-// Fetch Sidebar Recent Posts (Latest 4 blogs excluding current one)
 $sidebar_query = "SELECT title, slug, image, created_at FROM blogs WHERE status = 1 AND blog_id != '$b_id' ORDER BY blog_id DESC LIMIT 4";
 $sidebar_result = $conn->query($sidebar_query);
-?>
 
-<?php 
 $pageTitle = $blog['title'];
 include('inc/header.php');
 include ('inc/breadcrumb.php');

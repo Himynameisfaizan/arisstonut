@@ -423,7 +423,6 @@ body {
 
 .hero-title span {
   color: #ff0100;
-  display: block;
 }
 
 .hero-description {
@@ -1374,7 +1373,6 @@ body {
 .hero-title span {
   color: var(--brand-accent);
   position: relative;
-  display: inline-block;
 }
 
 .hero-description {
@@ -2959,4 +2957,145 @@ body {
   margin: 80px 0;
   border: none;
   border-top: 1px dashed rgba(156, 85, 33, 0.2);
+}
+
+
+/* ================= GOOGLE STYLE REVIEW CARDS ================= */
+.testimonial-section {
+    padding: 80px 0;
+    background-color: #f8f9fa; /* Light gray background to make white cards pop */
+}
+
+/* Overall Rating Badge at the top */
+.overall-rating-badge {
+    background: #ffffff;
+    padding: 10px 25px;
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+    border: 1px solid #ebebeb;
+}
+.overall-rating-badge .bi-star-fill, 
+.overall-rating-badge .bi-star-half {
+    color: #fbbc04; /* Google standard yellow */
+}
+/* ================= VERIFIED BADGE & STARS ALIGNMENT FIX ================= */
+.google-review-card .review-rating-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important; /* Dono ko left align aur paas-paas rakhne ke liye */
+    gap: 12px !important; /* Stars aur badge ke beech fix spacing */
+    flex-wrap: nowrap !important; /* Ek hi line me force karne ke liye */
+    width: 100%;
+}
+
+.google-review-card .stars {
+    display: inline-flex !important;
+    white-space: nowrap !important; /* Stars ko next line me jaane se rokna */
+    flex-shrink: 0 !important; /* Stars ka size chota hone se rokna */
+}
+
+.google-review-card .verified-badge {
+    position: static !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    white-space: nowrap !important; /* Text ko do line (VERIFIED \n BUYER) me tootne se rokna */
+    background: rgba(30, 142, 62, 0.1) !important;
+    color: #1e8e3e !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+    box-shadow: none !important; /* Theme ka extra 3D shadow hatane ke liye */
+    border: none !important;
+    font-size: 0.7rem !important;
+    line-height: 1.2 !important;
+    margin: 0 !important;
+    letter-spacing: 0.5px !important;
+}
+
+.google-review-card .verified-badge i {
+    margin-right: 4px !important;
+    font-size: 0.85rem !important;
+    display: inline-block !important;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.reviewer-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.reviewer-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #f0f0f0;
+}
+
+.reviewer-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.reviewer-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #202124; /* Google standard dark gray */
+    margin: 0 0 2px 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.review-meta {
+    font-size: 0.8rem;
+    color: #70757a; /* Google standard light gray */
+}
+
+/* Verified Badge */
+.verified-badge {
+    font-size: 0.75rem;
+    color: #1e8e3e; /* Google standard green */
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(30, 142, 62, 0.1);
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.verified-badge i {
+    font-size: 0.9rem;
+}
+
+/* Stars */
+.stars .bi-star-fill {
+    color: #fbbc04; /* Google yellow */
+    font-size: 1rem;
+}
+.stars .bi-star {
+    color: #dadce0; /* Empty star gray */
+    font-size: 1rem;
+}
+
+.review-text {
+    font-size: 0.95rem;
+    color: #3c4043;
+    line-height: 1.6;
+    margin-top: 5px;
+    margin-bottom: 0;
+    font-family: 'Inter', sans-serif;
+    text-align: start;
+}
+
+.testimonial-pagination .swiper-pagination-bullet {
+    background: #8b4513; 
 }

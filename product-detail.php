@@ -23,9 +23,17 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
         $p_short_desc = $product['short_desc'];
         $p_long_desc = $product['description'];
 
-        $seo_title = htmlspecialchars($product['meta_title']);
-        $seo_desc = htmlspecialchars($product['meta_desc']);
-        $seo_keywords = htmlspecialchars($product['meta_key']);
+        // --- 🚀 DYNAMIC SEO & SCHEMA SETUP FOR HEADER.PHP ---
+        $meta_title = !empty($product['meta_title']) ? htmlspecialchars($product['meta_title']) : $p_name . " - AristoNut";
+        $meta_desc = !empty($product['meta_desc']) ? htmlspecialchars($product['meta_desc']) : htmlspecialchars(strip_tags($p_short_desc));
+        $meta_keyword = !empty($product['meta_key']) ? htmlspecialchars($product['meta_key']) : "buy " . $p_name . ", premium makhana";
+        $schema_markup = !empty($product['schema_markup']) ? $product['schema_markup'] : "";
+
+        // Open Graph Tags
+        $og_title = !empty($product['og_title']) ? htmlspecialchars($product['og_title']) : $meta_title;
+        $og_desc = !empty($product['og_desc']) ? htmlspecialchars($product['og_desc']) : $meta_desc;
+        // Agar dedicated OG image nahi hai, toh default product image share hogi
+        $og_image = !empty($product['og_image']) ? $site . 'admin/uploads/seo/' . htmlspecialchars($product['og_image']) : $p_img; 
 
         // --- Fetch Variations ---
         $variations = [];
@@ -37,7 +45,7 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
         }
         $variations_json = json_encode($variations);
 
-        // --- NEW: Fetch Gallery Images ---
+        // --- Fetch Gallery Images ---
         $gallery_images = [];
         $gal_query = $conn->query("SELECT * FROM product_images WHERE product_id = '$p_id' ORDER BY id ASC");
         if ($gal_query && $gal_query->num_rows > 0) {
@@ -68,27 +76,15 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
     header("Location: " . $site . "index.php");
     exit();
 }
+
+$pageTitle = $p_name;
+$parentName = "All Products";
+$parentUrl = $site . "product.php";
+include('inc/header.php'); 
 ?>
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $seo_title; ?> - AristoNut</title>
-    <meta name="description" content="<?php echo $seo_desc; ?>">
-    <meta name="keywords" content="<?php echo $seo_keywords; ?>">
-
-    <?php 
-    // SETUP DYNAMIC BREADCRUMB
-    $pageTitle = $p_name;
-    $parentName = "All Products";
-    $parentUrl = $site . "product.php";
-    include('inc/header.php'); 
-    ?>
-    
-    <style>
-        /* 🔥 PREMIUM THUMBNAIL GRID CSS 🔥 */
+<!-- Product Custom CSS -->
+<style>
         .main-img-box {
             background: #FFFFFF;
             border-radius: 16px;
