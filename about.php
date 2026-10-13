@@ -4,27 +4,21 @@ $pageTitle = "About AristoNut";
 include('inc/header.php');
 include ('inc/breadcrumb.php');
 
-// Database se About Us data fetch karne ki query
 $about_query = "SELECT * FROM about_us LIMIT 1";
 $about_result = $conn->query($about_query);
 $about = ($about_result && $about_result->num_rows > 0) ?$about_result->fetch_assoc() : [];
 
-// Fallback values agar database mein data na ho
 $tagline = htmlspecialchars($about['tagline'] ?? 'About AristoNut');
-$heading_1 = htmlspecialchars($about['heading_primary'] ?? 'From the Heart of Mithila');
+$heading_1 = htmlspecialchars($about['title'] ?? 'From the Heart of Mithila');
 $heading_2 = htmlspecialchars($about['heading_secondary'] ?? 'to the World');
-// Description mein HTML tags allow karne ke liye htmlspecialchars nahi lagaya hai
-$desc_1 =$about['description_1'] ?? '<strong>AristoNut</strong> is a premium makhana brand owned and operated by <strong>NK Enterprises</strong>, an India-based business rooted in the primary makhana-producing region of Bihar.';
-$desc_2 =$about['description_2'] ?? 'Makhana (fox nuts / gorgon nuts) has been a traditional part of Bihar\'s agricultural and food heritage for generations. At AristoNut, we are bringing this traditional Indian superfood to modern global markets through thoughtful sourcing, quality-focused processing, and a professional approach to both B2B and consumer business.';
+$desc_1 =$about['content'] ?? '<strong>AristoNut</strong> is a premium makhana brand owned and operated by <strong>NK Enterprises</strong>, an India-based business rooted in the primary makhana-producing region of Bihar.';
 
 $legal_name = htmlspecialchars($about['legal_name'] ?? 'NK Enterprises');
 $origin = htmlspecialchars($about['origin'] ?? 'Bihar, India • Fox Nuts');
 
-// Image path dynamic handling
-$about_img = !empty($about['image']) ?$site . 'admin/assets/img/uploads/' . htmlspecialchars($about['image']) :$site . 'assets/images/hero.webp';
+$about_img = !empty($about['image_url']) ?$site . 'admin/uploads/' . htmlspecialchars($about['image_url']) :$site . 'assets/images/hero.webp';
 ?>
 
-<!-- Custom CSS to Prevent Design Breaking on Long Content -->
 <style>
     .about-img-box img {
         width: 100%;
@@ -55,10 +49,7 @@ $about_img = !empty($about['image']) ?$site . 'admin/assets/img/uploads/' . html
       <div class="text-muted leading-relaxed mb-3">
         <?php echo $desc_1; ?>
       </div>
-      <div class="text-muted leading-relaxed">
-        <?php echo $desc_2; ?>
-      </div>
-
+     
       <div class="row g-3 mt-3">
         <div class="col-sm-6">
           <div class="stat-card">

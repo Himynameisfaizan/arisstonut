@@ -139,7 +139,7 @@ include('inc/header.php');
     </div>
 </section>
 
-<!-- ================= NEW: TOP PRODUCT GRID (SIGNATURE COLLECTION) ================= -->
+    <!-- ================= NEW: TOP PRODUCT GRID (SIGNATURE COLLECTION) ================= -->
 <section class="homepage-tail-section" style="padding-top: 60px; padding-bottom: 20px; background-color: #fff;">
     <div class="container">
 

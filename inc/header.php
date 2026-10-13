@@ -1,10 +1,10 @@
 <?php
-include('config/connect.php'); // Global variable dependencies and cookie session path check
+include('config/connect.php');
 
-// Get current page name for dynamic active links
 $current_page = basename($_SERVER['PHP_SELF']);
+$current_full_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
-// Standard persistent session evaluation rules setup on page refresh
+// Cart logic
 $total_cart_items = 0;
 if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION['cart'])) {
     foreach ($_SESSION['cart'] as $item) {
@@ -13,26 +13,68 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
         }
     }
 }
-?>
 
+// SEO Variables Default
+$meta_title = isset($meta_title) ? $meta_title : "AristoNut - Premium Quality Makhana";
+$meta_desc = isset($meta_desc) ? $meta_desc : "AristoNut offers premium quality makhana and flavoured makhana from the heart of Mithila.";
+$meta_keyword = isset($meta_keyword) ? $meta_keyword : "makhana, premium makhana, flavoured makhana, aristonut, fox nuts";
+$schema_markup = isset($schema_markup) ? $schema_markup : "";
+
+// OG Defaults
+$og_title = isset($og_title) ? $og_title : $meta_title;
+$og_desc = isset($og_desc) ? $og_desc : $meta_desc;
+$og_image = isset($og_image) ? $og_image : $site . "admin/uploads/logo/logo_favicon_6accbb652f38b.png";
+
+// DB Query (Saari errors silent karne ke liye @ use kiya hai taaki UI na toote)
+$seo_query = "SELECT meta_title, meta_desc, meta_key, schema_markup, og_title, og_desc, og_image FROM page_seo WHERE page_url = '$current_page' LIMIT 1";
+$seo_res = @$conn->query($seo_query);
+
+if ($seo_res && $seo_res->num_rows > 0) {
+    $seo_row = $seo_res->fetch_assoc();
+
+    if (!empty($seo_row['meta_title'])) $meta_title = $seo_row['meta_title'];
+    if (!empty($seo_row['meta_desc'])) $meta_desc = $seo_row['meta_desc'];
+    if (!empty($seo_row['meta_key'])) $meta_keyword = $seo_row['meta_key'];
+    if (!empty($seo_row['schema_markup'])) $schema_markup = $seo_row['schema_markup'];
+
+    if (!empty($seo_row['og_title'])) $og_title = $seo_row['og_title'];
+    if (!empty($seo_row['og_desc'])) $og_desc = $seo_row['og_desc'];
+    if (!empty($seo_row['og_image'])) {
+        $og_image = $site . "admin/uploads/seo/" . $seo_row['og_image'];
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AristoNut - Premium Quality Makhana</title>
+    <title><?php echo htmlspecialchars($meta_title); ?></title>
+    <meta name="description" content="<?php echo htmlspecialchars($meta_desc); ?>">
+    <meta name="keywords" content="<?php echo htmlspecialchars($meta_keyword); ?>">
+
+    <link rel="canonical" href="<?php echo htmlspecialchars($current_full_url); ?>" />
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<?php echo htmlspecialchars($current_full_url); ?>">
+    <meta property="og:title" content="<?php echo htmlspecialchars($og_title); ?>">
+    <meta property="og:description" content="<?php echo htmlspecialchars($og_desc); ?>">
+    <meta property="og:image" content="<?php echo htmlspecialchars($og_image); ?>">
+
+    <?php if (!empty($schema_markup)) {
+        echo $schema_markup;
+    } ?>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
-    <link rel="icon" type="image/webp" href="<?php echo $site; ?>admin/uploads/logo/logo_favicon_6accbb652f38b.png">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="icon" type="image/webp" href="<?php echo $site; ?>admin/uploads/logo/logo_favicon_6accbb652f38b.png">
 
-
-    <!-- CSS Files -->
+    <!-- Remaining CSS connections... -->
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/cart.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/about.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/category.css?v=<?php echo time(); ?>">
@@ -43,35 +85,31 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/include.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/wishlist.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/blog.css?v=<?php echo time(); ?>">
-
-
 </head>
 
 <body>
 
-<div class="premium-topbar">
-    <div class="marquee-container">
-        
-        <!-- Main Content -->
-        <div class="topbar-content">
-            <span class="topbar-text">🎉 Free shipping on orders over ₹699</span>
-            <span class="topbar-badge">10% OFF FIRST ORDER</span>
-        </div>
+    <div class="premium-topbar">
+        <div class="marquee-container">
 
-        <div class="topbar-content mobile-duplicate" aria-hidden="true">
-            <span class="topbar-text">🎉 Free shipping on orders over ₹699</span>
-            <span class="topbar-badge">10% OFF FIRST ORDER</span>
-        </div>
+            <!-- Main Content -->
+            <div class="topbar-content">
+                <span class="topbar-text">🎉 Free shipping on orders over ₹699</span>
+                <span class="topbar-badge">10% OFF FIRST ORDER</span>
+            </div>
 
+            <div class="topbar-content mobile-duplicate" aria-hidden="true">
+                <span class="topbar-text">🎉 Free shipping on orders over ₹699</span>
+                <span class="topbar-badge">10% OFF FIRST ORDER</span>
+            </div>
+
+        </div>
     </div>
-</div>
 
-    <!-- 2. NAVBAR START -->
     <nav class="navbar navbar-expand-lg sticky-top modern-navbar">
         <div class="container d-flex justify-content-between align-items-center">
 
             <?php
-            // PHP Logic for Logo
             $logo_img = $site . "assets/images/logo.webp";
             $logo_table_query = "SELECT `logo_path` FROM `logos` WHERE `location` = 'header' AND `is_active` = 1 LIMIT 1";
             $logo_table_res = $conn->query($logo_table_query);
@@ -228,7 +266,7 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
         <div class="sidebar-bottom">
             <div class="d-flex flex-column gap-2">
                 <a href="<?php echo $site; ?>track-order.php"
-                  class="btn btn-light border text-start rounded-pill px-4 shadow-sm" style="font-weight: 500;">
+                    class="btn btn-light border text-start rounded-pill px-4 shadow-sm" style="font-weight: 500;">
                     <i class="bi bi-geo-alt"></i> Track Your Order
                 </a>
                 <a href="<?php echo $site; ?>wishlist.php"

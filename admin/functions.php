@@ -294,7 +294,6 @@ function get_Category()
                     $parent_cate = $parent['categories'];
                 }
     
-                // Output row
                 echo "<tr>
                     <td>" . $sno++ . "</td>
                     <td>" . htmlspecialchars($result['cate_id']) . "</td>
@@ -324,7 +323,7 @@ function get_Category()
         $check = mysqli_query($conn, $sql);
     ?>
     <option value="select">Select</option>
-<?php
+    <?php
         while ($result = mysqli_fetch_assoc($check)) {
             echo "<option value=" . $result['cate_id'] . ">" . $result['categories'] . "</option>";
         }
