@@ -33,8 +33,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
                 <!-- <li><a href="add-banner.php">Add Banners</a></li> -->
                 <li><a href="about_us.php">Add About</a></li>
                 <li><a href="add-about-us-section.php"> About sections</a></li>
-                <li><a href="manage-meta.php"> Paage Meta</a></li>
-                <li><a href="manage-schema.php"> Page Schema</a></li>
+                <li><a href="manage_seo.php"> Paage Seo</a></li>
                  <li><a href="add_contact.php"><span>Contact Details</span>
                 <li><a href="view-testimonials.php">View Testimonials</a></li>
 
@@ -167,7 +166,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
             </ul>
         </li> -->
 
-        <!-- <li><a href="orders.php"><i class="fas fa-shopping-cart" style="color: #e67e22;"></i> <span>Orders</span></a></li> -->
+        <li><a href="orders.php"><i class="fas fa-shopping-cart" style="color: #e67e22;"></i> <span>Orders</span></a></li>
         <!-- <li>
             <a href="view-all-policies.php"><i class="fas fa-file-contract" style="color: #e67e22;"></i>
                 <span>Policies</span>

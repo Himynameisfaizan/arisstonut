@@ -4,7 +4,6 @@ include('config/connect.php');
 $current_page = basename($_SERVER['PHP_SELF']);
 $current_full_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
-// Cart logic
 $total_cart_items = 0;
 if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION['cart'])) {
     foreach ($_SESSION['cart'] as $item) {
@@ -14,18 +13,15 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION[
     }
 }
 
-// SEO Variables Default
 $meta_title = isset($meta_title) ? $meta_title : "AristoNut - Premium Quality Makhana";
 $meta_desc = isset($meta_desc) ? $meta_desc : "AristoNut offers premium quality makhana and flavoured makhana from the heart of Mithila.";
 $meta_keyword = isset($meta_keyword) ? $meta_keyword : "makhana, premium makhana, flavoured makhana, aristonut, fox nuts";
 $schema_markup = isset($schema_markup) ? $schema_markup : "";
 
-// OG Defaults
 $og_title = isset($og_title) ? $og_title : $meta_title;
 $og_desc = isset($og_desc) ? $og_desc : $meta_desc;
 $og_image = isset($og_image) ? $og_image : $site . "admin/uploads/logo/logo_favicon_6accbb652f38b.png";
 
-// DB Query (Saari errors silent karne ke liye @ use kiya hai taaki UI na toote)
 $seo_query = "SELECT meta_title, meta_desc, meta_key, schema_markup, og_title, og_desc, og_image FROM page_seo WHERE page_url = '$current_page' LIMIT 1";
 $seo_res = @$conn->query($seo_query);
 
@@ -74,7 +70,6 @@ if ($seo_res && $seo_res->num_rows > 0) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="icon" type="image/webp" href="<?php echo $site; ?>admin/uploads/logo/logo_favicon_6accbb652f38b.png">
 
-    <!-- Remaining CSS connections... -->
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/cart.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/about.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/category.css?v=<?php echo time(); ?>">
@@ -92,7 +87,6 @@ if ($seo_res && $seo_res->num_rows > 0) {
     <div class="premium-topbar">
         <div class="marquee-container">
 
-            <!-- Main Content -->
             <div class="topbar-content">
                 <span class="topbar-text">🎉 Free shipping on orders over ₹699</span>
                 <span class="topbar-badge">10% OFF FIRST ORDER</span>
@@ -120,12 +114,10 @@ if ($seo_res && $seo_res->num_rows > 0) {
                 }
             }
             ?>
-            <!-- LEFT: LOGO -->
             <a class="navbar-brand m-0 p-0" href="<?php echo $site; ?>index.php">
                 <img src="<?php echo $logo_img; ?>" alt="AristoNut Logo" class="brand-logo-img">
             </a>
 
-            <!-- CENTER: DESKTOP MENU WITH DYNAMIC ACTIVE STATE -->
             <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex desktop-nav">
                 <ul class="navbar-nav">
 
@@ -143,7 +135,6 @@ if ($seo_res && $seo_res->num_rows > 0) {
                         <!-- Hover Dropdown Menu -->
                         <ul class="dropdown-menu" aria-labelledby="navbarProducts">
                             <?php
-                            // Fetch Top Categories & IMAGES dynamically from database
                             $head_cat_query = "SELECT categories, slug_url, image FROM categories WHERE status = 1 ORDER BY id ASC LIMIT 5";
                             $head_cat_res = $conn->query($head_cat_query);
 
@@ -152,10 +143,8 @@ if ($seo_res && $seo_res->num_rows > 0) {
                                     $h_name = htmlspecialchars($h_cat['categories']);
                                     $h_slug = htmlspecialchars($h_cat['slug_url']);
 
-                                    // Image Handling with Fallback
                                     $h_img = !empty($h_cat['image']) ? $site . 'admin/uploads/category/' . htmlspecialchars($h_cat['image']) : $site . 'assets/images/default-cat.png';
 
-                                    // Print individual rich category link
                             ?>
                                     <li>
                                         <a class="dropdown-item" href="<?php echo $site; ?>category/<?php echo $h_slug; ?>">
@@ -169,12 +158,10 @@ if ($seo_res && $seo_res->num_rows > 0) {
                             <?php
                                 }
                             } else {
-                                // Fallback just in case DB is empty
                                 echo '<li><a class="dropdown-item" href="' . $site . 'product.php"><div class="nav-cat-img-box"><i class="bi bi-box-seam text-muted"></i></div><span>Premium Makhana</span></a></li>';
                             }
                             ?>
 
-                            <!-- View All Products Link at the bottom -->
                             <li class="dropdown-view-all">
                                 <a class="dropdown-item" href="<?php echo $site; ?>product.php">
                                     View All Range <i class="bi bi-arrow-right"></i>
@@ -216,7 +203,6 @@ if ($seo_res && $seo_res->num_rows > 0) {
                     <span class="cart-badge-circle"><?php echo $total_cart_items; ?></span>
                 </a>
 
-                <!-- Hamburger Icon (Mobile Only) -->
                 <button class="menu-toggle-btn d-lg-none m-0 p-0" id="openSidebarBtn">
                     <i class="bi bi-list"></i>
                 </button>
