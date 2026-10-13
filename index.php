@@ -709,7 +709,7 @@ include('inc/header.php');
                             <div class="blog-content">
                                 <div class="blog-date"><i class="bi bi-calendar3 me-1"></i> <?php echo $bdate; ?></div>
                                 <h3 class="blog-title"><?php echo $btitle; ?></h3>
-                                <p class="blog-snippet" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 15px; height: 65px;">
+                                <p class="blog-snippet" style="display: -webkit-box; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 15px; height: 65px;">
                                     <?php echo $bdesc; ?>
                                 </p>
                                 <div class="blog-read-more">Read Full Article <i class="bi bi-arrow-right"></i></div>

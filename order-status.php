@@ -1,12 +1,10 @@
 <?php
 session_start();
-include('config/connect.php'); // Database config
+include('config/connect.php'); 
 
 $pageTitle = "Order Status";
 include('inc/header.php');
 
-// URL se status check karna (Success ya Failed)
-// Example: order-status.php?status=success&order_id=AR-98765
 $status = isset($_GET['status']) ? $_GET['status'] : 'success'; 
 $order_id = isset($_GET['order_id']) ? htmlspecialchars($_GET['order_id']) : 'ORD-' . rand(100000, 999999);
 ?>

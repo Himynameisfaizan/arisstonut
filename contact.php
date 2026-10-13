@@ -9,18 +9,24 @@ include ('inc/breadcrumb.php');
         <div class="contact-glass-container cp-reveal">
             
             <?php
-            $contact_query = "SELECT phone, email, address FROM contacts LIMIT 1";
+            // Fetching contact info from database dynamically
+            $contact_query = "SELECT * FROM contacts ORDER BY id DESC LIMIT 1";
             $contact_res = $conn->query($contact_query);
 
+            // Default Fallbacks
             $c_address = "Subhankarpur, Darbhanga, Bihar-846004";
             $c_email   = "aristowebin@gmail.com";
             $c_phone   = "+91 99997 28084";
+            $c_working_hours = "Monday - Saturday, 10 AM to 6 PM";
+            $c_map     = '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d229569.17641275997!2d85.76065584879644!3d26.1521727780003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39edb7a4bf6b4b47%3A0xc6c4293e62f02cb8!2sDarbhanga%2C%20Bihar!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>';
 
-            if ($contact_res && $contact_res->num_rows > 0) {
-                $c_info = $contact_res->fetch_assoc();
+            if ($contact_res &&$contact_res->num_rows > 0) {
+                $c_info =$contact_res->fetch_assoc();
                 if (!empty($c_info['address'])) $c_address = htmlspecialchars($c_info['address']);
                 if (!empty($c_info['email']))   $c_email   = htmlspecialchars($c_info['email']);
                 if (!empty($c_info['phone']))   $c_phone   = htmlspecialchars($c_info['phone']);
+                if (!empty($c_info['working_hours'])) $c_working_hours = htmlspecialchars($c_info['working_hours']);
+                if (!empty($c_info['map']))     $c_map     =$c_info['map']; // Map is an iframe string, so we don't use htmlspecialchars here
             }
             ?>
 
@@ -52,6 +58,15 @@ include ('inc/breadcrumb.php');
                         <a href="tel:<?php echo preg_replace('/[^0-9+]/', '', $c_phone); ?>"><?php echo $c_phone; ?></a>
                     </div>
                 </div>
+
+                <!-- NEW: Dynamic Working Hours -->
+                <div class="info-item">
+                    <div class="info-icon"><i class="bi bi-clock"></i></div>
+                    <div class="info-text">
+                        <h5>Working Hours</h5>
+                        <p><?php echo $c_working_hours; ?></p>
+                    </div>
+                </div>
             </div>
 
             <!-- RIGHT PANEL: Form -->
@@ -70,17 +85,13 @@ include ('inc/breadcrumb.php');
                     $subject = htmlspecialchars(trim($_POST['subject']));
                     $message = htmlspecialchars(trim($_POST['message']));
 
-                    if (empty($name) || empty($email) || empty($subject) || empty($message)) {
-                        $msg_status = "⚠️ Please fill in all fields before transmitting data.";
+                    if (empty($name) || empty($email) || empty($subject) || empty($message)) {$msg_status = "⚠️ Please fill in all fields before transmitting data.";
                         $msg_class = "alert-danger";
-                    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                        $msg_status = "⚠️ Invalid Email Address format syntax validation pattern fail.";
+                    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {$msg_status = "⚠️ Invalid Email Address format syntax validation pattern fail.";
                         $msg_class = "alert-danger";
                     } else {
-                        $db_stmt = $conn->prepare("INSERT INTO `inquiries` (`name`, `email`, `subject`, `message`) VALUES (?, ?, ?, ?)");
-                        $db_stmt->bind_param("ssss", $name, $email, $subject, $message);
-                        $db_execute_success = $db_stmt->execute();
-                        $db_stmt->close();
+                        $db_stmt =$conn->prepare("INSERT INTO `inquiries` (`name`, `email`, `subject`, `message`) VALUES (?, ?, ?, ?)");
+                        $db_stmt->bind_param("ssss", $name, $email,$subject, $message);$db_execute_success = $db_stmt->execute();$db_stmt->close();
 
                         if ($db_execute_success) {
                             if (file_exists('vendor/autoload.php')) {
@@ -89,19 +100,17 @@ include ('inc/breadcrumb.php');
 
                                 try {
                                     $mail->isSMTP();
-                                    $mail->Host       = 'smtp.gmail.com';
-                                    $mail->SMTPAuth   = true;
+                                    $mail->Host       = 'smtp.gmail.com';$mail->SMTPAuth   = true;
+                                    // Credentials
                                     $mail->Username   = 'aristowebin@gmail.com';
-                                    $mail->Password   = 'kzte hzkh tysh cezg'; 
-                                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                                    $mail->Password   = 'kzte hzkh tysh cezg';$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                                     $mail->Port       = 587;
 
                                     $mail->setFrom('aristowebin@gmail.com', 'AristoNut Webportal');
-                                    $mail->addAddress('aristowebin@gmail.com', 'AristoNut Admin');
-                                    $mail->addReplyTo($email, $name);
+                                    // Send to dynamic email from Database
+                                    $mail->addAddress($c_email, 'AristoNut Admin');$mail->addReplyTo($email,$name);
 
-                                    $mail->isHTML(true);
-                                    $mail->Subject = "AristoNut Contact Form: " . $subject;
+                                    $mail->isHTML(true);$mail->Subject = "AristoNut Contact Form: " . $subject;
                                     $mail->Body = "
                                     <div style='font-family: Arial, sans-serif; background-color: #fffaf5; padding: 20px; color: #3e2723;'>
                                         <div style='max-width: 600px; background: #fff; padding: 25px; border-radius: 15px; border: 2px solid #f5e6d3;'>
@@ -115,12 +124,10 @@ include ('inc/breadcrumb.php');
                                         </div>
                                     </div>";
 
-                                    $mail->send();
-                                    $msg_status = "🎉 Your inquiry has been submitted! Our team will get back to you shortly.";
+                                    $mail->send();$msg_status = "🎉 Your inquiry has been submitted! Our team will get back to you shortly.";
                                     $msg_class = "alert-success";
-                                    $name = $email = $subject = $message = "";
-                                } catch (Exception $e) {
-                                    $msg_status = "⚠️ Data saved, but email delivery failed. Error: " . $mail->ErrorInfo;
+                                    $name =$email = $subject =$message = "";
+                                } catch (Exception $e) {$msg_status = "⚠️ Data saved, but email delivery failed. Error: " . $mail->ErrorInfo;
                                     $msg_class = "alert-warning";
                                 }
                             } else {
@@ -133,7 +140,6 @@ include ('inc/breadcrumb.php');
                         }
                     }
                 }
-                // --- YOUR PHP LOGIC ENDS HERE ---
                 ?>
 
                 <?php if (!empty($msg_status)): ?>
@@ -148,20 +154,20 @@ include ('inc/breadcrumb.php');
                     <div class="row">
                         <div class="col-md-6 mb-4">
                             <label class="form-label">Full Name</label>
-                            <input type="text" name="full_name" class="form-control custom-input" placeholder="e.g. John Doe" value="<?php echo isset($name) ? $name : ''; ?>" required>
+                            <input type="text" name="full_name" class="form-control custom-input" placeholder="e.g. John Doe" value="<?php echo isset($name) ?$name : ''; ?>" required>
                         </div>
                         <div class="col-md-6 mb-4">
                             <label class="form-label">Email Address</label>
-                            <input type="email" name="email" class="form-control custom-input" placeholder="name@example.com" value="<?php echo isset($email) ? $email : ''; ?>" required>
+                            <input type="email" name="email" class="form-control custom-input" placeholder="name@example.com" value="<?php echo isset($email) ?$email : ''; ?>" required>
                         </div>
                     </div>
                     <div class="mb-4">
                         <label class="form-label">Subject</label>
-                        <input type="text" name="subject" class="form-control custom-input" placeholder="How can we help you?" value="<?php echo isset($subject) ? $subject : ''; ?>" required>
+                        <input type="text" name="subject" class="form-control custom-input" placeholder="How can we help you?" value="<?php echo isset($subject) ?$subject : ''; ?>" required>
                     </div>
                     <div class="mb-4">
                         <label class="form-label">Message</label>
-                        <textarea name="message" class="form-control custom-input" rows="5" placeholder="Write your message here..." required><?php echo isset($message) ? $message : ''; ?></textarea>
+                        <textarea name="message" class="form-control custom-input" rows="5" placeholder="Write your message here..." required><?php echo isset($message) ?$message : ''; ?></textarea>
                     </div>
 
                     <button type="submit" name="submit_contact" class="btn-submit">
@@ -171,13 +177,10 @@ include ('inc/breadcrumb.php');
             </div>
         </div>
 
-
-        <!-- ================= PREMIUM GOOGLE MAP SECTION ================= -->
+        <!-- ================= PREMIUM GOOGLE MAP SECTION (DYNAMIC) ================= -->
         <div class="map-container cp-reveal">
-            <!-- Darbhanga, Bihar Google Map Embed -->
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d229569.17641275997!2d85.76065584879644!3d26.1521727780003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39edb7a4bf6b4b47%3A0xc6c4293e62f02cb8!2sDarbhanga%2C%20Bihar!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <iframe src="<?php echo $c_map; ?>" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>   
         </div>
-
 
         <!-- ================= B2B / WHOLESALE CTA ================= -->
         <div class="b2b-banner cp-reveal">
@@ -188,20 +191,17 @@ include ('inc/breadcrumb.php');
             </a>
         </div>
 
-
-        <!-- ================= CUSTOM JS FAQ SECTION (NO BOOTSTRAP REQUIRED) ================= -->
+        <!-- ================= CUSTOM JS FAQ SECTION (STATIC) ================= -->
         <div class="faq-section cp-reveal">
             <h2 class="faq-title">Frequently Asked Questions</h2>
             
             <div class="custom-faq-wrapper">
                 
-                <!-- FAQ Item 1 -->
                 <div class="custom-faq-item">
                     <button class="custom-faq-btn active">
                         Where do you source your Makhana from?
                         <i class="bi bi-chevron-down"></i>
                     </button>
-                    <!-- Initial state open -->
                     <div class="custom-faq-content" style="max-height: 500px;">
                         <div class="custom-faq-body">
                             Our premium foxnuts are directly sourced from the heart of Mithila, Darbhanga in Bihar. This region is globally recognized for producing the finest quality and largest size of Makhana.
@@ -209,7 +209,6 @@ include ('inc/breadcrumb.php');
                     </div>
                 </div>
 
-                <!-- FAQ Item 2 -->
                 <div class="custom-faq-item">
                     <button class="custom-faq-btn">
                         Do you offer free shipping?
@@ -217,12 +216,11 @@ include ('inc/breadcrumb.php');
                     </button>
                     <div class="custom-faq-content">
                         <div class="custom-faq-body">
-                            Yes! We offer free delivery across India on all orders over ₹600. For orders below this amount, a nominal standard shipping fee applies.
+                            Yes! We offer free delivery across India on all orders over ₹699. For orders below this amount, a nominal standard shipping fee applies.
                         </div>
                     </div>
                 </div>
 
-                <!-- FAQ Item 3 -->
                 <div class="custom-faq-item">
                     <button class="custom-faq-btn">
                         Are your flavored Makhanas fried or roasted?
