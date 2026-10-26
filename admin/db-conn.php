@@ -11,7 +11,7 @@ if ($local) {
     $username = 'root';
     $password = '';
     $dbName = 'aristonut';
-    $site = "http://localhost/office_php_project/aristonut/";
+    $site = "http://localhost/projects/aristonut/";
     // $site = "http://localhost/projects/aristonut/";
 
 } else {
