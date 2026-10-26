@@ -120,7 +120,7 @@ if ($seo_res && $seo_res->num_rows > 0) {
                 }
             }
             ?>
-            <a class="navbar-brand m-0 p-0" href="<?php echo $site; ?>index.php">
+            <a class="navbar-brand m-0 p-0" href="<?php echo $site; ?>./">
                 <img src="<?php echo $logo_img; ?>" alt="AristoNut Logo" class="brand-logo-img">
             </a>
 
@@ -129,12 +129,13 @@ if ($seo_res && $seo_res->num_rows > 0) {
 
                     <li class="nav-item">
                         <a class="nav-link <?php echo ($current_page == 'index.php' || $current_page == '') ? 'active-link' : ''; ?>"
-                            href="<?php echo $site; ?>index.php">HOME</a>
+                            href="<?php echo $site; ?>./">HOME</a>
                     </li>
 
                     <li class="nav-item dropdown premium-dropdown">
                         <!-- Main Link -->
-                        <a class="nav-link dropdown-toggle" href="<?php echo $site; ?>product.php" id="navbarProducts" role="button" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="<?php echo $site; ?>product.php" id="navbarProducts"
+                            role="button" aria-expanded="false">
                             Products
                         </a>
 
@@ -152,15 +153,16 @@ if ($seo_res && $seo_res->num_rows > 0) {
                                     $h_img = !empty($h_cat['image']) ? $site . 'admin/uploads/category/' . htmlspecialchars($h_cat['image']) : $site . 'assets/images/default-cat.png';
 
                             ?>
-                                    <li>
-                                        <a class="dropdown-item" href="<?php echo $site; ?>category/<?php echo $h_slug; ?>">
-                                            <div class="nav-cat-img-box">
-                                                <!-- Image included here -->
-                                                <img src="<?php echo $h_img; ?>" alt="<?php echo $h_name; ?>" onerror="this.src='<?php echo $site; ?>assets/images/default-cat.png';">
-                                            </div>
-                                            <span><?php echo $h_name; ?></span>
-                                        </a>
-                                    </li>
+                            <li>
+                                <a class="dropdown-item" href="<?php echo $site; ?>category/<?php echo $h_slug; ?>">
+                                    <div class="nav-cat-img-box">
+                                        <!-- Image included here -->
+                                        <img src="<?php echo $h_img; ?>" alt="<?php echo $h_name; ?>"
+                                            onerror="this.src='<?php echo $site; ?>assets/images/default-cat.png';">
+                                    </div>
+                                    <span><?php echo $h_name; ?></span>
+                                </a>
+                            </li>
                             <?php
                                 }
                             } else {
@@ -275,26 +277,26 @@ if ($seo_res && $seo_res->num_rows > 0) {
 
     <!-- Vanilla JS for Sidebar -->
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const openBtn = document.getElementById('openSidebarBtn');
-            const closeBtn = document.getElementById('closeSidebarBtn');
-            const sidebar = document.getElementById('mobileSidebar');
-            const overlay = document.getElementById('sidebarOverlay');
+    document.addEventListener("DOMContentLoaded", function() {
+        const openBtn = document.getElementById('openSidebarBtn');
+        const closeBtn = document.getElementById('closeSidebarBtn');
+        const sidebar = document.getElementById('mobileSidebar');
+        const overlay = document.getElementById('sidebarOverlay');
 
-            function openSidebar() {
-                sidebar.classList.add('active');
-                overlay.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
+        function openSidebar() {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
 
-            function closeSidebar() {
-                sidebar.classList.remove('active');
-                overlay.classList.remove('active');
-                document.body.style.overflow = '';
-            }
+        function closeSidebar() {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
 
-            if (openBtn) openBtn.addEventListener('click', openSidebar);
-            if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
-            if (overlay) overlay.addEventListener('click', closeSidebar);
-        });
+        if (openBtn) openBtn.addEventListener('click', openSidebar);
+        if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+        if (overlay) overlay.addEventListener('click', closeSidebar);
+    });
     </script>
