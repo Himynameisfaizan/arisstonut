@@ -3,42 +3,151 @@ include('config/connect.php');
 include('inc/header.php');
 ?>
 <style>
-    /* Modern Button Styles for Index Page */
-    .modern-btn-add {
-        background-color: #FFF8F0;
-        color: #8B4513;
-        border: 1.5px solid #8B4513;
-        border-radius: 20px;
-        padding: 8px 5px;
-        font-size: 0.85rem;
-        font-weight: 700;
-        transition: all 0.3s;
-        width: 50%;
+/* Modern Button Styles for Index Page */
+.modern-btn-add {
+    background-color: #FFF8F0;
+    color: #8B4513;
+    border: 1.5px solid #8B4513;
+    border-radius: 20px;
+    padding: 8px 5px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: all 0.3s;
+    width: 50%;
+}
+
+.modern-btn-add:hover {
+    background-color: #8B4513;
+    color: #FFFFFF;
+}
+
+.modern-btn-buy {
+    background-color: #8B4513;
+    color: #FFFFFF;
+    border: 1.5px solid #8B4513;
+    border-radius: 20px;
+    padding: 8px 5px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: all 0.3s;
+    width: 50%;
+}
+
+.modern-btn-buy:hover {
+    background-color: #6D3410;
+    border-color: #6D3410;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(139, 69, 19, 0.2);
+}
+
+
+
+
+/* Hero Slider Content Alignment */
+.hero-content-box {
+    width: 100%;
+    max-width: 540px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px 15px;
+}
+
+.hero-tagline {
+    display: inline-block;
+    margin-bottom: 22px;
+}
+
+.hero-title {
+    font-size: clamp(32px, 3.4vw, 52px);
+    line-height: 1.15;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin: 0 auto 20px;
+    max-width: 540px;
+    text-align: center;
+    overflow-wrap: break-word;
+}
+
+.hero-title span {
+    display: inline;
+    white-space: normal;
+}
+
+.hero-description {
+    max-width: 480px;
+    margin: 0 auto 30px;
+    font-size: 17px;
+    line-height: 1.8;
+    text-align: center;
+}
+
+.hero-buttons-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Tablet */
+@media (max-width: 991px) {
+    .hero-content-box {
+        max-width: 600px;
+        padding: 25px 15px;
     }
 
-    .modern-btn-add:hover {
-        background-color: #8B4513;
-        color: #FFFFFF;
+    .hero-title {
+        font-size: clamp(30px, 5vw, 42px);
+        line-height: 1.2;
+        letter-spacing: -0.5px;
     }
 
-    .modern-btn-buy {
-        background-color: #8B4513;
-        color: #FFFFFF;
-        border: 1.5px solid #8B4513;
-        border-radius: 20px;
-        padding: 8px 5px;
-        font-size: 0.85rem;
-        font-weight: 700;
-        transition: all 0.3s;
-        width: 50%;
+    .hero-description {
+        font-size: 16px;
+        line-height: 1.7;
+    }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+    .hero-content-box {
+        padding: 20px 12px;
     }
 
-    .modern-btn-buy:hover {
-        background-color: #6D3410;
-        border-color: #6D3410;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(139, 69, 19, 0.2);
+    .hero-title {
+        font-size: 30px;
+        line-height: 1.2;
+        letter-spacing: -0.4px;
+        margin-bottom: 16px;
     }
+
+    .hero-tagline {
+        margin-bottom: 16px;
+    }
+
+    .hero-description {
+        font-size: 15px;
+        line-height: 1.7;
+        margin-bottom: 22px;
+    }
+}
+
+@media (min-width: 992px) {
+    .hero-content-box {
+        text-align: left;
+        margin-left: auto;
+        margin-right: 0;
+    }
+
+    .hero-title,
+    .hero-description {
+        text-align: left;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .hero-buttons-wrapper {
+        justify-content: flex-start;
+    }
+}
 </style>
 
 <section class="premium-hero">
@@ -53,13 +162,12 @@ include('inc/header.php');
                         <div class="col-lg-6 order-2 order-lg-1">
                             <div class="hero-content-box">
                                 <div class="hero-tagline">Born in Mithila</div>
-                                <h1 class="hero-title">Mithila's Premium <span>Makhana</span> Reimagined.</h1>
-                                <p class="hero-description">From the heart of Darbhanga, Bihar - premium foxnuts and
-                                    innovative makhana-based foods crafted for today's lifestyle.</p>
+                                <h1 class="hero-title">Premium Phool Makhana from <span>Mithila</span></h1>
+                                <p class="hero-description">Discover premium Phool Makhana from Bihar, carefully
+                                    selected for your everyday snacking and favourite homemade recipes.</p>
                                 <div class="hero-buttons-wrapper">
-                                    <a href="product.php" class="hero-btn-primary">Shop Now <i
+                                    <a href="product/raw-makhana-regular-size" class="hero-btn-primary">View More <i
                                             class="bi bi-arrow-right ms-2"></i></a>
-                                    <a href="about.php" class="hero-btn-outline">Our Story</a>
                                 </div>
                             </div>
                         </div>
@@ -77,11 +185,11 @@ include('inc/header.php');
                         <div class="col-lg-6 order-2 order-lg-1">
                             <div class="hero-content-box">
                                 <div class="hero-tagline">Bold Flavours</div>
-                                <h1 class="hero-title">Big Crunch, <span>Zero Guilt.</span></h1>
-                                <p class="hero-description">Explore our flavoured makhana range. From Chatkara to
-                                    Peri-Peri and Cream & Onion, discover your favorite healthy snack.</p>
+                                <h1 class="hero-title">Cream & Onion Makhana Creamy, Savoury & Delicious</h1>
+                                <p class="hero-description">Enjoy the irresistible taste of Cream & Onion Makhana. A
+                                    flavour-packed roasted snack for your everyday cravings and snack breaks.</p>
                                 <div class="hero-buttons-wrapper">
-                                    <a href="product.php?category=flavoured" class="hero-btn-primary">Shop Flavours <i
+                                    <a href="product/cream-onion-makhana" class="hero-btn-primary">View More<i
                                             class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>
@@ -99,11 +207,12 @@ include('inc/header.php');
                         <div class="col-lg-6 order-2 order-lg-1">
                             <div class="hero-content-box">
                                 <div class="hero-tagline">Modern Twist</div>
-                                <h1 class="hero-title">More Than Just a <span>Snack.</span></h1>
-                                <p class="hero-description">Bring the goodness of makhana into everyday meals with our
-                                    gluten-free Cookies, Pasta, and flour.</p>
+                                <h1 class="hero-title">Tomato Chatkara Makhana - Tangy & Full of <span>Flavour.</span>
+                                </h1>
+                                <p class="hero-description">Give your snack time a tangy twist with Tomato Chatkara
+                                    Makhana. Enjoy a delicious tomato-inspired flavour in every crunchy bite.</p>
                                 <div class="hero-buttons-wrapper">
-                                    <a href="product.php?category=cookies-pasta" class="hero-btn-primary">Explore Range
+                                    <a href="product/chatkara-makhana" class="hero-btn-primary">View More
                                         <i class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>
@@ -139,14 +248,15 @@ include('inc/header.php');
     </div>
 </section>
 
-    <!-- ================= NEW: TOP PRODUCT GRID (SIGNATURE COLLECTION) ================= -->
-<section class="homepage-tail-section" style="padding-top: 60px; padding-bottom: 20px; background-color: #fff;">
+<!-- ================= NEW: TOP PRODUCT GRID (SIGNATURE COLLECTION) ================= -->
+<section class="homepage-tail-section" style="padding-top: 80px; padding-bottom: 20px; background-color: #fff;">
     <div class="container">
 
-       <div class="tail-header">
+        <div class="tail-header">
             <span class="tail-subtitle" style="color: #9C5521;">OUR SIGNATURE COLLECTION</span>
-            <h2 class="tail-title">Trending & New Arrivals</h2>
-            <p class="tail-desc">Handpicked premium makhana crafted to satisfy your daily cravings.</p>
+            <h2 class="tail-title">Discover Our Trending Makhana & New Arrivals</h2>
+            <p class="tail-desc">Explore our latest makhana varieties and customer favourites. From classic raw makhana
+                to flavourful roasted snacks, discover products made for different tastes and everyday occasions.</p>
         </div>
 
         <div class="row g-4">
@@ -173,37 +283,39 @@ include('inc/header.php');
                     // Wishlist check
                     $is_wished = (isset($_SESSION['wishlist']) && in_array($pid, $_SESSION['wishlist'])) ? 'bi-heart-fill text-danger' : 'bi-heart';
                     ?>
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                        <div class="video-prod-card">
-                            <div class="v-wish-btn" onclick="handleWishlist(<?php echo $pid; ?>, this)">
-                                <i class="bi <?php echo $is_wished; ?>"></i>
-                            </div>
-                            <a href="<?php echo $site; ?>product/<?php echo $pslug; ?>" class="v-img-box">
-                                <img src="<?php echo $pimg; ?>" alt="<?php echo $pname; ?>">
-                            </a>
-                            <div class="v-rating">
-                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                <span class="text-muted ms-1">(4.9)</span>
-                            </div>
-                            <a href="<?php echo $site; ?>product/<?php echo $pslug; ?>" class="v-title" title="<?php echo $pname; ?>">
-                                <?php echo $pname; ?>
-                            </a>
-                            <div class="v-bottom-section">
-                                <div class="v-action-buttons">
-                                    <button class="v-btn-cart" onclick="addToCart(<?php echo $pid; ?>)">Cart</button>
-                                    <button class="v-btn-buy" onclick="buyNow(<?php echo $pid; ?>)">Buy Now</button>
-                                </div>
-                            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                <div class="video-prod-card">
+                    <div class="v-wish-btn" onclick="handleWishlist(<?php echo $pid; ?>, this)">
+                        <i class="bi <?php echo $is_wished; ?>"></i>
+                    </div>
+                    <a href="<?php echo $site; ?>product/<?php echo $pslug; ?>" class="v-img-box">
+                        <img src="<?php echo $pimg; ?>" alt="<?php echo $pname; ?>">
+                    </a>
+                    <div class="v-rating">
+                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
+                            class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                        <span class="text-muted ms-1">(4.9)</span>
+                    </div>
+                    <a href="<?php echo $site; ?>product/<?php echo $pslug; ?>" class="v-title"
+                        title="<?php echo $pname; ?>">
+                        <?php echo $pname; ?>
+                    </a>
+                    <div class="v-bottom-section">
+                        <div class="v-action-buttons">
+                            <button class="v-btn-cart" onclick="addToCart(<?php echo $pid; ?>)">Cart</button>
+                            <button class="v-btn-buy" onclick="buyNow(<?php echo $pid; ?>)">Buy Now</button>
                         </div>
                     </div>
-                    <?php
+                </div>
+            </div>
+            <?php
                 }
             } else {
                 echo "<div class='col-12 text-center'><p class='text-muted'>Products coming soon.</p></div>";
             }
             ?>
         </div>
-        
+
         <div class="text-center mt-5">
             <a href="<?php echo $site; ?>product.php" class="btn btn-outline-dark rounded-pill px-5 py-2 shadow-sm"
                 style="font-weight: 600; font-size: 0.90rem; text-transform: uppercase; letter-spacing: 1px; color: #8B4513; border-color: #8B4513;">
@@ -218,9 +330,10 @@ include('inc/header.php');
         <!-- Section Header -->
         <div class="section-header">
             <span class="section-subtitle">The AristoNut Promise</span>
-            <h2 class="section-title">Why Choose AristoNut?</h2>
-            <p class="section-desc">We bring you the purest, most nutritious makhana, crafted with uncompromising
-                quality and deep respect for our heritage.</p>
+            <h2 class="section-title">Why Choose AristoNut for Premium Makhana?</h2>
+            <p class="section-desc">At AristoNut, we bring together the makhana heritage of Mithila and a carefully
+                curated range of makhana-based products. Discover our collection of raw makhana, flavoured snacks and
+                innovative food products.</p>
         </div>
 
         <div class="row g-4">
@@ -231,9 +344,8 @@ include('inc/header.php');
                     <div class="icon-box">
                         <i class="bi bi-geo-alt-fill"></i>
                     </div>
-                    <h3 class="feature-title">Mithila Origin</h3>
-                    <p class="feature-text">Proudly rooted in Darbhanga, Bihar. Sourced directly from the heart of the
-                        world's finest makhana farms.</p>
+                    <h3 class="feature-title">Rooted in Mithila</h3>
+                    <p class="feature-text">Inspired by the makhana-growing traditions of Mithila, Bihar.</p>
                 </div>
             </div>
 
@@ -244,9 +356,9 @@ include('inc/header.php');
                     <div class="icon-box safety-box">
                         <i class="bi bi-patch-check-fill"></i>
                     </div>
-                    <h3 class="feature-title">Quality Focused</h3>
-                    <p class="feature-text">Strictly tested for food safety. Zero adulteration, unpolished, and
-                        hygienically packed to preserve authentic taste.</p>
+                    <h3 class="feature-title">Quality-Focused Selection</h3>
+                    <p class="feature-text">Product quality and specifications you can explore before placing your
+                        order.</p>
                 </div>
             </div>
 
@@ -256,9 +368,8 @@ include('inc/header.php');
                     <div class="icon-box">
                         <i class="bi bi-stars"></i>
                     </div>
-                    <h3 class="feature-title">Makhana Specialists</h3>
-                    <p class="feature-text">From premium foxnuts to innovative modern foods like cookies and pasta. We
-                        know makhana best.</p>
+                    <h3 class="feature-title">Flavours for Every Preference</h3>
+                    <p class="feature-text">Discover classic makhana alongside a variety of flavoured snack options.</p>
                 </div>
             </div>
 
@@ -268,9 +379,9 @@ include('inc/header.php');
                     <div class="icon-box">
                         <i class="bi bi-box-seam-fill"></i>
                     </div>
-                    <h3 class="feature-title">Doorstep Delivery</h3>
-                    <p class="feature-text">From our traditional homes in Mithila straight to your modern kitchen,
-                        delivered fresh and crunchy.</p>
+                    <h3 class="feature-title">More Ways to Enjoy Makhana</h3>
+                    <p class="feature-text">Explore makhana atta, cookies, pasta and other products in our collection.
+                    </p>
                 </div>
             </div>
 
@@ -284,8 +395,10 @@ include('inc/header.php');
         <!-- Section Header -->
         <div class="cat-section-header">
             <span class="cat-subtitle">MORE THAN MAKHANA</span>
-            <h2 class="cat-title">A World of Makhana.</h2>
-            <p class="cat-desc">One traditional ingredient. Endless possibilities.</p>
+            <h2 class="cat-title">Explore Our Range of Makhana Products</h2>
+            <p class="cat-desc">Discover the versatility of makhana with AristoNut. Whether you prefer raw fox nuts,
+                seasoned snacks or creative makhana-based foods, explore our range and find products to suit your
+                preferences.</p>
         </div>
 
         <div class="row g-4">
@@ -297,27 +410,28 @@ include('inc/header.php');
             $pdf_content_map = [
                 'raw-makhana' => [
                     'tagline' => 'Pure. Natural. Versatile.',
-                    'desc' => 'Premium foxnuts from Mithila perfect for snacking, roasting and cooking.',
+                    'desc' => 'Explore raw makhana in available sizes and pack options, suitable for home roasting and your preferred recipes.',
                     'bg_class' => 'bg-peach',
                 ],
-                'flavour-makhana' => [
+                'flavoured-makhana' => [
                     'tagline' => 'BOLD FLAVOURS.',
-                    'desc' => 'From Chatkara to Peri-Peri, discover your favourite crunch.',
+                    'desc' => 'Discover classic makhana alongside a variety of flavoured snack options.',
                     'bg_class' => 'bg-mint',
                 ],
                 'cookies' => [
                     'tagline' => 'A MODERN TWIST.',
-                    'desc' => 'Deliciously crunchy cookies with makhana at the heart of the recipe.',
+                    'desc' => 'Discover AristoNut Makhana Cookies, a delightful treat for your tea-time breaks and everyday cravings. Enjoy a tasty twist on a familiar favourite.',
                     'bg_class' => 'bg-sand',
                 ],
-                'pasta microni' => [
+                'pasta-macaroni' => [
                     'tagline' => 'YOUR FAVOURITE MEALS.',
-                    'desc' => 'Bring the goodness of makhana into everyday meals with our pasta.',
+                    'desc' => 'Try AristoNut Makhana Pasta Macaroni and bring variety to your everyday meals. Pair it with your favourite sauces, vegetables and seasonings for a delicious dish.',
                     'bg_class' => 'bg-lavender',
                 ],
                 'makhana-aata-powder' => [
                     'tagline' => 'FOXNUTS TO FLOUR.',
-                    'desc' => 'Finely ground makhana for cooking, baking and everyday recipes.',
+                    'desc' => 'Content: Discover AristoNut Makhana Atta, a versatile flour perfect for preparing delicious homemade recipes. Bring a unique makhana-inspired touch to your everyday meals.
+',
                     'bg_class' => 'bg-rose',
                 ]
             ];
@@ -345,26 +459,26 @@ include('inc/header.php');
                         $layout_class = "bento-vertical";
                     }
                     ?>
-                    <div class="<?php echo $col_class; ?>">
-                        <a href="<?php echo $site; ?>category/<?php echo $c_slug; ?>"
-                            class="bento-card <?php echo $mapped_data['bg_class']; ?> <?php echo $layout_class; ?>">
+            <div class="<?php echo $col_class; ?>">
+                <a href="<?php echo $site; ?>category/<?php echo $c_slug; ?>"
+                    class="bento-card <?php echo $mapped_data['bg_class']; ?> <?php echo $layout_class; ?>">
 
-                            <!-- Content Section -->
-                            <div class="bento-content">
-                                <div class="bento-tagline"><?php echo $mapped_data['tagline']; ?></div>
-                                <h3 class="bento-title"><?php echo $c_name; ?></h3>
-                                <p class="bento-desc"><?php echo $mapped_data['desc']; ?></p>
-                                <div class="bento-arrow"><i class="bi bi-arrow-right"></i></div>
-                            </div>
-
-                            <!-- Image Section (Safely contained) -->
-                            <div class="img-wrapper">
-                                <img src="<?php echo $c_img; ?>" alt="<?php echo $c_name; ?>" class="bento-img">
-                            </div>
-
-                        </a>
+                    <!-- Content Section -->
+                    <div class="bento-content">
+                        <div class="bento-tagline"><?php echo $mapped_data['tagline']; ?></div>
+                        <h3 class="bento-title"><?php echo $c_name; ?></h3>
+                        <p class="bento-desc"><?php echo $mapped_data['desc']; ?></p>
+                        <div class="bento-arrow"><i class="bi bi-arrow-right"></i></div>
                     </div>
-                    <?php
+
+                    <!-- Image Section (Safely contained) -->
+                    <div class="img-wrapper">
+                        <img src="<?php echo $c_img; ?>" alt="<?php echo $c_name; ?>" class="bento-img">
+                    </div>
+
+                </a>
+            </div>
+            <?php
                     $count++;
                 }
             } else {
@@ -390,8 +504,8 @@ include('inc/header.php');
             <!-- Left Side: Editorial Image -->
             <div class="col-lg-5 col-md-12 reveal-up" id="storyImage">
                 <div class="story-image-wrapper">
-                    <img src="<?php echo $site; ?>assets/images/banner.jpeg"
-                        alt="Mithila Origin Makhana" class="story-image">
+                    <img src="<?php echo $site; ?>assets/images/banner.jpeg" alt="Mithila Origin Makhana"
+                        class="story-image">
 
                     <!-- Trust Badge Floating over image -->
                     <div class="story-badge py-6">
@@ -412,15 +526,14 @@ include('inc/header.php');
                     <h2 class="story-title">Born in Darbhanga.<br>Made for the World.</h2>
 
                     <p class="story-desc">
-                        For generations, makhana has been an inseparable part of the land, culture, and livelihoods of
-                        Mithila. The fertile lands of Darbhanga nurture the finest foxnuts, harvested with tradition and
-                        care.
+                        Rooted in Darbhanga, Bihar, AristoNut celebrates the makhana heritage of Mithila. We bring this
+                        traditional ingredient to modern kitchens through a growing range of raw makhana, flavoured
+                        snacks and makhana-based foods.
                     </p>
 
                     <p class="story-desc">
-                        AristoNut was born in 2024 with a simple, genuine ambition: to take this treasured heritage
-                        ingredient beyond traditional snacking and seamlessly bring it into modern, health-conscious
-                        kitchens.
+                        Discover our story, learn more about our products and explore how we bring the traditions of
+                        Mithila to customers near and far.
                     </p>
 
                     <div class="story-highlight">
@@ -449,8 +562,8 @@ include('inc/header.php');
                 <span>ENDLESS POSSIBILITIES.</span>
             </h2>
             <p class="evolve-desc">
-                Makhana has been enjoyed in India for generations. At AristoNut, we are redefining how you experience
-                this traditional superfood, taking it from farm to future with modern expressions.
+                From a quick roasted snack to creative recipes, makhana offers plenty of ways to experiment in the
+                kitchen. Explore different ways to prepare, season and enjoy makhana with ideas from AristoNut.
             </p>
         </div>
 
@@ -525,8 +638,8 @@ include('inc/header.php');
             <!-- Left Side: Lifestyle Image -->
             <div class="col-lg-5 col-md-12 slide-in-left" id="wmImgBox">
                 <div class="wm-image-wrapper">
-                    <img src="<?php echo $site; ?>assets/images/why.jpeg"
-                        alt="Mithila Origin Makhana" class="story-image">
+                    <img src="<?php echo $site; ?>assets/images/why.jpeg" alt="Mithila Origin Makhana"
+                        class="story-image">
                 </div>
             </div>
 
@@ -597,8 +710,9 @@ include('inc/header.php');
         <div class="section-header text-center mb-5">
             <div class="hero-tagline">Real Reviews</div>
             <h2 class="hero-title">Trusted by <span>Thousands.</span></h2>
-            <p class="hero-description mx-auto mt-3">See what our verified customers have to say about their AristoNut experience.</p>
-            
+            <p class="hero-description mx-auto mt-3">See what our verified customers have to say about their AristoNut
+                experience.</p>
+
             <div class="overall-rating-badge mt-3 d-inline-flex align-items-center justify-content-center">
                 <span class="fs-4 fw-bold me-2">4.9</span>
                 <div class="rating-stars me-2">
@@ -634,12 +748,13 @@ include('inc/header.php');
                 ?>
                 <div class="swiper-slide">
                     <div class="google-review-card">
-                        
+
                         <!-- Header: Image, Name, Date and Google Icon -->
                         <div class="review-header">
                             <div class="reviewer-info">
                                 <div class="reviewer-avatar">
-                                    <img src="<?php echo $img_src; ?>" alt="<?php echo $name; ?>" onerror="this.src='assets/images/default-avatar.png';">
+                                    <img src="<?php echo $img_src; ?>" alt="<?php echo $name; ?>"
+                                        onerror="this.src='assets/images/default-avatar.png';">
                                 </div>
                                 <div class="reviewer-details">
                                     <h5 class="reviewer-name"><?php echo $name; ?></h5>
@@ -652,7 +767,7 @@ include('inc/header.php');
                                 <i class="bi bi-google text-primary fs-5"></i>
                             </div>
                         </div>
-                        
+
                         <!-- Middle: Stars and Verified Badge -->
                         <div class="review-rating-row mt-3 mb-2 d-flex align-items-center">
                             <div class="stars me-3">
@@ -670,7 +785,7 @@ include('inc/header.php');
                                 <i class="bi bi-patch-check-fill"></i> Verified Buyer
                             </div>
                         </div>
-                        
+
                         <!-- Bottom: Review Text -->
                         <p class="review-text">"<?php echo $message; ?>"</p>
                     </div>
@@ -692,7 +807,7 @@ include('inc/header.php');
 <section class="homepage-tail-section">
     <div class="container">
 
-       <div class="tail-header">
+        <div class="tail-header">
             <span class="tail-subtitle">YOUR NEXT FAVOURITE IS HERE</span>
             <h2 class="tail-title">AristoNut Bestsellers</h2>
             <p class="tail-desc">Not sure where to start? Start with what everyone loves.</p>
@@ -722,36 +837,38 @@ include('inc/header.php');
                     // Wishlist check
                     $is_wished = (isset($_SESSION['wishlist']) && in_array($pid, $_SESSION['wishlist'])) ? 'bi-heart-fill text-danger' : 'bi-heart';
                     ?>
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                        <div class="video-prod-card">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                <div class="video-prod-card">
 
-                            <div class="v-wish-btn" onclick="handleWishlist(<?php echo $pid; ?>, this)">
-                                <i class="bi <?php echo $is_wished; ?>"></i>
-                            </div>
+                    <div class="v-wish-btn" onclick="handleWishlist(<?php echo $pid; ?>, this)">
+                        <i class="bi <?php echo $is_wished; ?>"></i>
+                    </div>
 
-                            <a href="<?php echo $site; ?>product/<?php echo $pslug; ?>" class="v-img-box">
-                                <img src="<?php echo $pimg; ?>" alt="<?php echo $pname; ?>">
-                            </a>
+                    <a href="<?php echo $site; ?>product/<?php echo $pslug; ?>" class="v-img-box">
+                        <img src="<?php echo $pimg; ?>" alt="<?php echo $pname; ?>">
+                    </a>
 
-                            <div class="v-rating">
-                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                <span class="text-muted ms-1">(4.9)</span>
-                            </div>
+                    <div class="v-rating">
+                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
+                            class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                        <span class="text-muted ms-1">(4.9)</span>
+                    </div>
 
-                            <a href="<?php echo $site; ?>product/<?php echo $pslug; ?>" class="v-title" title="<?php echo $pname; ?>">
-                                <?php echo $pname; ?>
-                            </a>
+                    <a href="<?php echo $site; ?>product/<?php echo $pslug; ?>" class="v-title"
+                        title="<?php echo $pname; ?>">
+                        <?php echo $pname; ?>
+                    </a>
 
-                            <div class="v-bottom-section">
-                                <div class="v-action-buttons">
-                                    <button class="v-btn-cart" onclick="addToCart(<?php echo $pid; ?>)">Cart</button>
-                                    <button class="v-btn-buy" onclick="buyNow(<?php echo $pid; ?>)">Buy Now</button>
-                                </div>
-                            </div>
-
+                    <div class="v-bottom-section">
+                        <div class="v-action-buttons">
+                            <button class="v-btn-cart" onclick="addToCart(<?php echo $pid; ?>)">Cart</button>
+                            <button class="v-btn-buy" onclick="buyNow(<?php echo $pid; ?>)">Buy Now</button>
                         </div>
                     </div>
-                    <?php
+
+                </div>
+            </div>
+            <?php
                 }
             } else {
                 echo "<div class='col-12 text-center'><p class='text-muted'>No bestsellers found right now.</p></div>";
@@ -769,7 +886,7 @@ include('inc/header.php');
         <!-- Divider -->
         <hr class="section-divider">
 
-    <!-- ================= LATEST BLOGS SECTION ================= -->
+        <!-- ================= LATEST BLOGS SECTION ================= -->
         <div class="tail-header">
             <span class="tail-subtitle">STAY UPDATED</span>
             <h2 class="tail-title">Latest Health & Recipes</h2>
@@ -798,22 +915,24 @@ include('inc/header.php');
                         $bimg = $site . 'admin/assets/img/uploads/blogs/' . htmlspecialchars($blog['image'] ?? '');
                     }
                     ?>
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <a href="<?php echo $site; ?>blog-details.php?slug=<?php echo $bslug; ?>" class="modern-blog-card">
-                            <div class="blog-img-box">
-                                <img src="<?php echo $bimg; ?>" alt="<?php echo $btitle; ?>" onerror="this.src='https://thumbs.dreamstime.com/b/roasted-lotus-seed-makhana-22764990.jpg?w=768';">
-                            </div>
-                            <div class="blog-content">
-                                <div class="blog-date"><i class="bi bi-calendar3 me-1"></i> <?php echo $bdate; ?></div>
-                                <h3 class="blog-title"><?php echo $btitle; ?></h3>
-                                <p class="blog-snippet" style="display: -webkit-box; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 15px; height: 65px;">
-                                    <?php echo $bdesc; ?>
-                                </p>
-                                <div class="blog-read-more">Read Full Article <i class="bi bi-arrow-right"></i></div>
-                            </div>
-                        </a>
+            <div class="col-lg-4 col-md-6 col-12">
+                <a href="<?php echo $site; ?>blog-details.php?slug=<?php echo $bslug; ?>" class="modern-blog-card">
+                    <div class="blog-img-box">
+                        <img src="<?php echo $bimg; ?>" alt="<?php echo $btitle; ?>"
+                            onerror="this.src='https://thumbs.dreamstime.com/b/roasted-lotus-seed-makhana-22764990.jpg?w=768';">
                     </div>
-                    <?php
+                    <div class="blog-content">
+                        <div class="blog-date"><i class="bi bi-calendar3 me-1"></i> <?php echo $bdate; ?></div>
+                        <h3 class="blog-title"><?php echo $btitle; ?></h3>
+                        <p class="blog-snippet"
+                            style="display: -webkit-box; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 15px; height: 65px;">
+                            <?php echo $bdesc; ?>
+                        </p>
+                        <div class="blog-read-more">Read Full Article <i class="bi bi-arrow-right"></i></div>
+                    </div>
+                </a>
+            </div>
+            <?php
                 }
             } else {
                 echo "<div class='col-12 text-center'><p class='text-muted'>No health articles or recipes posted yet.</p></div>";
@@ -837,121 +956,148 @@ include('inc/header.php');
 
 <!-- BUY NOW & ADD TO CART SCRIPTS -->
 <script>
-    function buyNow(productId, variationId = 0, qty = 1) {
-        $.ajax({
-            url: '<?php echo $site; ?>cart_action.php',
-            type: 'POST',
-            data: { action: 'buy_now', product_id: productId, variation_id: variationId, quantity: qty },
-            dataType: 'json',
-            success: function (response) {
-                if (response.status === 'success') {
-                    window.location.href = '<?php echo $site; ?>checkout.php?buy_now=true';
-                } else {
-                    showToast("Action Failed", response.message, "error");
-                }
-            },
-            error: function () {
-                showToast("System Error", "Could not connect to the server.", "error");
+function buyNow(productId, variationId = 0, qty = 1) {
+    $.ajax({
+        url: '<?php echo $site; ?>cart_action.php',
+        type: 'POST',
+        data: {
+            action: 'buy_now',
+            product_id: productId,
+            variation_id: variationId,
+            quantity: qty
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                window.location.href = '<?php echo $site; ?>checkout.php?buy_now=true';
+            } else {
+                showToast("Action Failed", response.message, "error");
             }
-        });
-    }
+        },
+        error: function() {
+            showToast("System Error", "Could not connect to the server.", "error");
+        }
+    });
+}
 
-    function addToCart(productId, variationId = 0, qty = 1) {
-        $.ajax({
-            url: '<?php echo $site; ?>cart_action.php',
-            type: 'POST',
-            data: { action: 'add_to_cart', product_id: productId, variation_id: variationId, quantity: qty },
-            dataType: 'json',
-            success: function(response) {
-                if(response.status === 'success') {
-                    $('.cart-count').text(response.cart_count);
-                    showToast("Added to Cart!", "Item successfully added to your basket.", "success");
-                } else {
-                    showToast("Action Failed", response.message, "error");
-                }
-            },
-            error: function() {
-                showToast("System Error", "Could not connect to the server.", "error");
+function addToCart(productId, variationId = 0, qty = 1) {
+    $.ajax({
+        url: '<?php echo $site; ?>cart_action.php',
+        type: 'POST',
+        data: {
+            action: 'add_to_cart',
+            product_id: productId,
+            variation_id: variationId,
+            quantity: qty
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                $('.cart-count').text(response.cart_count);
+                showToast("Added to Cart!", "Item successfully added to your basket.", "success");
+            } else {
+                showToast("Action Failed", response.message, "error");
             }
-        });
-    }
+        },
+        error: function() {
+            showToast("System Error", "Could not connect to the server.", "error");
+        }
+    });
+}
 </script>
 
 <!-- SWIPER & ANIMATION SCRIPTS -->
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var heroSwiper = new Swiper(".heroSwiper", {
-            spaceBetween: 30,
-            effect: "fade",
-            fadeEffect: { crossFade: true },
-            loop: true,
-            grabCursor: true, 
-            autoplay: { delay: 4500, disableOnInteraction: false },
-            pagination: { el: ".swiper-pagination", clickable: true },
-        });
-
-        // Intersectional Observers for animations
-        const observerOpts = { root: null, rootMargin: '0px', threshold: 0.15 };
-        
-        const observer = new IntersectionObserver((entries, obs) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => { entry.target.classList.add('revealed'); }, index * 100);
-                    obs.unobserve(entry.target);
-                }
-            });
-        }, observerOpts);
-        document.querySelectorAll('.feature-card').forEach(card => { observer.observe(card); });
-
-        const wmObserver = new IntersectionObserver((entries, obs) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    obs.unobserve(entry.target);
-                }
-            });
-        }, observerOpts);
-        
-        const elementsToObserve = ['storyImage', 'storyContent', 'wmImgBox', 'wmContentBox'];
-        elementsToObserve.forEach(id => {
-            const el = document.getElementById(id);
-            if(el) wmObserver.observe(el);
-        });
-
-        document.querySelectorAll('.stmt-reveal').forEach(el => wmObserver.observe(el));
+document.addEventListener("DOMContentLoaded", function() {
+    var heroSwiper = new Swiper(".heroSwiper", {
+        spaceBetween: 30,
+        effect: "fade",
+        fadeEffect: {
+            crossFade: true
+        },
+        loop: true,
+        grabCursor: true,
+        autoplay: {
+            delay: 4500,
+            disableOnInteraction: false
+        },
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true
+        },
     });
+
+    // Intersectional Observers for animations
+    const observerOpts = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.15
+    };
+
+    const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.classList.add('revealed');
+                }, index * 100);
+                obs.unobserve(entry.target);
+            }
+        });
+    }, observerOpts);
+    document.querySelectorAll('.feature-card').forEach(card => {
+        observer.observe(card);
+    });
+
+    const wmObserver = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                obs.unobserve(entry.target);
+            }
+        });
+    }, observerOpts);
+
+    const elementsToObserve = ['storyImage', 'storyContent', 'wmImgBox', 'wmContentBox'];
+    elementsToObserve.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) wmObserver.observe(el);
+    });
+
+    document.querySelectorAll('.stmt-reveal').forEach(el => wmObserver.observe(el));
+});
 </script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var testimonialSwiper = new Swiper(".testimonialSwiper", {
-            slidesPerView: 1,
-            spaceBetween: 20,
-            autoplay: {
-                delay: 4000,
-                disableOnInteraction: false,
+document.addEventListener("DOMContentLoaded", function() {
+    var testimonialSwiper = new Swiper(".testimonialSwiper", {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        autoplay: {
+            delay: 4000,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: ".testimonial-pagination",
+            clickable: true,
+        },
+        breakpoints: {
+            320: {
+                slidesPerView: 1,
+                spaceBetween: 20
             },
-            pagination: {
-                el: ".testimonial-pagination",
-                clickable: true,
+            768: {
+                slidesPerView: 2,
+                spaceBetween: 30
             },
-            breakpoints: {
-                320: {
-                    slidesPerView: 1,
-                    spaceBetween: 20
-                },
-                768: {
-                    slidesPerView: 2,
-                    spaceBetween: 30
-                },
-                1024: {
-                    slidesPerView: 3,
-                    spaceBetween: 30
-                }
+            1024: {
+                slidesPerView: 3,
+                spaceBetween: 30
             }
-        });
+        }
     });
+});
 </script>
 
 </body>
+
 </html>
