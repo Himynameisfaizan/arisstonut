@@ -1,8 +1,8 @@
 <?php
-$pageTitle = 'Locations & Custom Pages | Bhagirath Enterprises';
-$meta_title = 'Locations & Custom Pages | Bhagirath Enterprises';
-$meta_desc = 'Explore location and information pages published by Bhagirath Enterprises.';
-$meta_key = 'Bhagirath Enterprises, locations, custom pages';
+$pageTitle = 'Locations & Custom Pages | N.K Enterises';
+$meta_title = 'Locations & Custom Pages | N.K Enterises';
+$meta_desc = 'Explore location and information pages published by N.K Enterises.';
+$meta_key = 'N.K Enterises, locations, custom pages';
 $breadcrumb_title = 'Locations';
 
 // Adjust this path if your database connection file is in a different folder.
@@ -28,7 +28,7 @@ function locationPageText($value): string
 }
 
 // Use the existing shared site header (it should output the opening HTML/head/body).
-include 'includes/header.php';
+include 'inc/header.php';
 ?>
 
 <style>
@@ -293,7 +293,7 @@ body.location-page {
 
 <header class="location-hero">
     <div class="container">
-        <span class="eyebrow">Bhagirath Enterprises</span>
+        <span class="eyebrow">N.K Enterises</span>
         <h1>Explore Our Pages</h1>
         <p>Discover our location-focused pages, services and useful information for wholesale and commercial
             requirements.</p>
@@ -318,7 +318,7 @@ body.location-page {
             <div class="location-section-heading">
                 <span class="small-label">Find a Page</span>
                 <h2>Our Locations &amp; Information Pages</h2>
-                <p>Browse the pages published by Bhagirath Enterprises. Select a page to open its complete details in a
+                <p>Browse the pages published by N.K Enterises. Select a page to open its complete details in a
                     new tab.</p>
             </div>
 
@@ -335,7 +335,7 @@ body.location-page {
 
                         $description = trim(strip_tags((string)($customPage['meta_desc'] ?? '')));
                         if ($description === '') {
-                            $description = 'Explore details and information from Bhagirath Enterprises.';
+                            $description = 'Explore details and information from N.K Enterises.';
                         }
 
                         $slug = trim((string)($customPage['slug_url'] ?? ''));
@@ -357,7 +357,7 @@ body.location-page {
                         <p><?= locationPageText($description); ?></p>
 
                         <div class="location-card-footer">
-                            <span class="location-card-label">Bhagirath Enterprises</span>
+                            <span class="location-card-label">N.K Enterises</span>
                             <a class="location-card-button" href="<?= locationPageText($pageUrl); ?>" target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label="Open <?= locationPageText($cardTitle); ?> in a new tab">
@@ -379,4 +379,4 @@ body.location-page {
     </section>
 </main>
 
-<?php include 'includes/footer.php'; ?>
+<?php include 'inc/footer.php'; ?>

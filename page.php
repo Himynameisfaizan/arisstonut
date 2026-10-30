@@ -111,7 +111,7 @@ include 'inc/breadcrumb.php';
                             <input type="text" name="search" class="form-control me-2" placeholder="Search..." required
                                 style="font-size: 0.9rem;">
                             <button type="submit" class="btn text-white px-3" style="background: #2b5e2c;"><i
-                                    class="fa-solid fa-magnifying-glass"></i></button>
+                                    class="bi bi-search"></i></button>
                         </form>
                     </div>
 

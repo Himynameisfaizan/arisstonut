@@ -302,6 +302,7 @@ $wp_clean_link = preg_replace('/[^0-9]/', '', $db_wp);
                 <a href="<?php echo $site; ?>privacy-policy.php">Privacy Policy</a>
                 <a href="<?php echo $site; ?>terms-conditions.php">Terms & Conditions</a>
                 <a href="<?php echo $site; ?>track-order.php">Track Order</a>
+                <a href="<?php echo $site; ?>location.php">Location</a>
             </div>
 
             <!-- Col 3: Our Products -->
