@@ -34,15 +34,15 @@ if (!isset($_SESSION['admin_logged_in'])) {
                 <!-- <li><a href="about_us.php">Add About</a></li> -->
                 <li><a href="add-about-us-section.php"> About sections</a></li>
                 <li><a href="manage_seo.php"> Paage Seo</a></li>
-                 <li><a href="add_contact.php"><span>Contact Details</span>
+                <li><a href="add_contact.php"><span>Contact Details</span>
                 <li><a href="view-testimonials.php">View Testimonials</a></li>
 
-            </a>
+                </a>
         </li>
-            </ul>
-        </li>
+    </ul>
+    </li>
 
-         <!-- <li>
+    <!-- <li>
             <a class="has-arrow" href="#"><i class="fas fa-info-circle" style="color: #d35400;"></i> <span>About Us
                     Page</span></a>
             <ul>
@@ -50,28 +50,28 @@ if (!isset($_SESSION['admin_logged_in'])) {
             </ul>
         </li> -->
 
-        <li>
-            <a class="has-arrow" href="#"><i class="fas fa-layer-group" style="color: #2ecc71;"></i>
-                <span>Categories</span></a>
-            <ul>
-                <li><a href="add-categories.php">Add Category</a></li>
-                <li><a href="view-categories.php">View Categories</a></li>
-                <li><a href="add-sub-category.php">Add Sub Category</a></li>
-                <li><a href="view-sub-categories.php">View Sub Categories</a></li>
-            </ul>
-        </li>
+    <li>
+        <a class="has-arrow" href="#"><i class="fas fa-layer-group" style="color: #2ecc71;"></i>
+            <span>Categories</span></a>
+        <ul>
+            <li><a href="add-categories.php">Add Category</a></li>
+            <li><a href="view-categories.php">View Categories</a></li>
+            <li><a href="add-sub-category.php">Add Sub Category</a></li>
+            <li><a href="view-sub-categories.php">View Sub Categories</a></li>
+        </ul>
+    </li>
 
-        <li>
-            <a class="has-arrow" href="#"><i class="fas fa-box-open" style="color: #f39c12;"></i>
-                <span>Products</span></a>
-            <ul>
-                <li><a href="add-products.php">Add Products</a></li>
-                <li><a href="show-products.php">Show Products</a></li>
-                <li><a href="show-products-review.php">Products Reviews</a></li>
-            </ul>
-        </li>
+    <li>
+        <a class="has-arrow" href="#"><i class="fas fa-box-open" style="color: #f39c12;"></i>
+            <span>Products</span></a>
+        <ul>
+            <li><a href="add-products.php">Add Products</a></li>
+            <li><a href="show-products.php">Show Products</a></li>
+            <li><a href="show-products-review.php">Products Reviews</a></li>
+        </ul>
+    </li>
 
-        <!-- <li>
+    <!-- <li>
             <a class="has-arrow" href="#"><i class="fas fa-fire" style="color: #ff6b6b;"></i><span>Service</span></a>
             <ul>
                 <li><a href="add-service.php">Add Service</a></li>
@@ -79,26 +79,36 @@ if (!isset($_SESSION['admin_logged_in'])) {
             </ul>
         </li> -->
 
-        <li>
-            <a class="has-arrow" href="#"><i class="fas fa-blog" style="color: #9b59b6;"></i><span>Blogs</span></a>
-            <ul>
-                <li><a href="blog.php">Show Blogs</a></li>
-                <li><a href="add-blog.php">Add Blog</a></li>
-            </ul>
-        </li>
-
-      
-
-        <li>
-            <a class="has-arrow" href="#"><i class="fa-solid fa-ticket" style="color: #1abc9c;"></i> <span>Manage Coupon</span></a>
-            <ul>
-                <li><a href="add-coupon.php">Add Coupons</a></li>
-                <li><a href="view-coupons.php">View Coupons</a></li>
-            </ul>
-        </li>
+    <li>
+        <a class="has-arrow" href="#"><i class="fas fa-blog" style="color: #9b59b6;"></i><span>Blogs</span></a>
+        <ul>
+            <li><a href="blog.php">Show Blogs</a></li>
+            <li><a href="add-blog.php">Add Blog</a></li>
+        </ul>
+    </li>
 
 
-        <!-- <li>
+
+    <li>
+        <a class="has-arrow" href="#"><i class="fa-solid fa-ticket" style="color: #1abc9c;"></i> <span>Manage
+                Coupon</span></a>
+        <ul>
+            <li><a href="add-coupon.php">Add Coupons</a></li>
+            <li><a href="view-coupons.php">View Coupons</a></li>
+        </ul>
+    </li>
+
+    <li>
+        <a class="has-arrow" href="#"><i class="fas fa-envelope" style="color: #27ae60;"></i> <span>Manage
+                Page</span></a>
+        <ul>
+            <li><a href="add-page.php">Edit Page</a></li>
+            <li><a href="view-pages.php">View Page</a></li>
+        </ul>
+    </li>
+
+
+    <!-- <li>
             <a class="has-arrow" href="#"><i class="fas fa-envelope" style="color: #27ae60;"></i> <span>Contact
                     Page</span></a>
             <ul>
@@ -107,28 +117,28 @@ if (!isset($_SESSION['admin_logged_in'])) {
             </ul>
         </li> -->
 
-        <!-- <li>
+    <!-- <li>
             <a href="about_us.php">
                 <i class="fas fa-info-circle" style="color: #d35400;"></i>
                 <span>About Us</span>
             </a>
         </li> -->
 
-        <!-- <li>
+    <!-- <li>
             <a href="add_contact.php">
                 <i class="fa-regular fa-address-book" style="color: #e4d72b;"></i>
                 <span>Contact Details</span>
             </a>
         </li> -->
 
-        <!-- <li>
+    <!-- <li>
             <a href="new-leads.php">
                 <i class="fa-solid fa-inbox" style="color: #3cc008;"></i>
                 <span>Inquiries</span>
             </a>
         </li> -->
 
-         <!-- <li>
+    <!-- <li>
             <a class="has-arrow" href="#"><i class="fas fa-award" style="color: #1abc9c;"></i> <span>Custom Page</span></a>
             <ul>
                 <li><a href="add-page.php">Add Page</a></li>
@@ -136,21 +146,21 @@ if (!isset($_SESSION['admin_logged_in'])) {
             </ul>
         </li> -->
 
-        <!-- <li>
+    <!-- <li>
             <a href="add-gallery.php">
                 <i class="fas fa-images" style="color: #8e44ad;"></i>
                 <span>Gallery</span>
             </a>
         </li>-->
 
-        <li>
-            <a href="brands.php">
-                <i class="fas fa-images" style="color: #8e44ad;"></i>
-                <span>Brands</span>
-            </a>
-        </li> 
+    <li>
+        <a href="brands.php">
+            <i class="fas fa-images" style="color: #8e44ad;"></i>
+            <span>Brands</span>
+        </a>
+    </li>
 
-        <!-- <li>
+    <!-- <li>
             <a class="has-arrow" href="#"><i class="fas fa-quote-left" style="color: #16a085;"></i>
                 <span>Testimonials</span></a>
             <ul>
@@ -159,15 +169,15 @@ if (!isset($_SESSION['admin_logged_in'])) {
             </ul>
         </li> -->
 
-        <!-- <li>
+    <!-- <li>
             <a class="has-arrow" href="#"><i class="fas fa-users" style="color: #c0392b;"></i> <span>Customers</span></a>
             <ul>
                 <li><a href="all-customers.php">All Customers</a></li>
             </ul>
         </li> -->
 
-        <li><a href="orders.php"><i class="fas fa-shopping-cart" style="color: #e67e22;"></i> <span>Orders</span></a></li>
-        <!-- <li>
+    <li><a href="orders.php"><i class="fas fa-shopping-cart" style="color: #e67e22;"></i> <span>Orders</span></a></li>
+    <!-- <li>
             <a href="view-all-policies.php"><i class="fas fa-file-contract" style="color: #e67e22;"></i>
                 <span>Policies</span>
             </a>
@@ -180,21 +190,21 @@ if (!isset($_SESSION['admin_logged_in'])) {
             </ul>
         </li> -->
 
-        <li>
-            <a href="auth/logout.php">
-                <i class="fas fa-sign-out-alt" style="color: #e74c3c;"></i>
-                <span>Log Out</span>
-            </a>
-        </li>
+    <li>
+        <a href="auth/logout.php">
+            <i class="fas fa-sign-out-alt" style="color: #e74c3c;"></i>
+            <span>Log Out</span>
+        </a>
+    </li>
     </ul>
 </nav>
 
 <script>
-    document.getElementById('sidebarSearch').addEventListener('input', function () {
-        let filter = this.value.toLowerCase();
-        document.querySelectorAll('#sidebar_menu li').forEach(item => {
-            let text = item.textContent.toLowerCase();
-            item.style.display = text.includes(filter) ? '' : 'none';
-        });
+document.getElementById('sidebarSearch').addEventListener('input', function() {
+    let filter = this.value.toLowerCase();
+    document.querySelectorAll('#sidebar_menu li').forEach(item => {
+        let text = item.textContent.toLowerCase();
+        item.style.display = text.includes(filter) ? '' : 'none';
     });
+});
 </script>

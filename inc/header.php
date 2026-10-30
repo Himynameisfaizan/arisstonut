@@ -74,6 +74,7 @@ if ($seo_res && $seo_res->num_rows > 0) {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="icon" type="image/webp" href="<?php echo $site; ?>admin/uploads/logo/logo_favicon_6accbb652f38b.png">
 
     <link rel="stylesheet" href="<?php echo $site; ?>assets/css/cart.css?v=<?php echo time(); ?>">
