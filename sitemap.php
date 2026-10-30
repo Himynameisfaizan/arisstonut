@@ -29,6 +29,31 @@ echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
 
     if (isset($conn)) {
 
+
+    // 1. Dynamic Custom SEO Pages
+    $customPageQuery = mysqli_query(
+    $conn,
+    "SELECT slug_url FROM custom_pages WHERE status = 1"
+    );
+
+    if ($customPageQuery && mysqli_num_rows($customPageQuery) > 0) {
+    while ($row = mysqli_fetch_assoc($customPageQuery)) {
+
+    if (!empty($row['slug_url'])) {
+    echo '<url>';
+        echo '<loc>' . htmlspecialchars(
+            rtrim($baseUrl, '/') . '/page/' .
+            rawurlencode($row['slug_url']),
+            ENT_XML1,
+            'UTF-8'
+            ) . '</loc>';
+        echo '<changefreq>monthly</changefreq>';
+        echo '<priority>0.7</priority>';
+        echo '</url>';
+    }
+    }
+    }
+
     // 2. Dynamic Categories
     $catQuery = mysqli_query($conn, "SELECT slug_url FROM categories WHERE status = 1");
     if ($catQuery && mysqli_num_rows($catQuery) > 0) {
