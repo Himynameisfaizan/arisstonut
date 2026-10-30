@@ -295,33 +295,22 @@ include ('inc/breadcrumb.php');
 
 <main class="container blog-detail-container mb-5 pb-5">
 
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="<?php echo $site; ?>index.php"
-                    class="text-brown text-decoration-none">Home</a></li>
-            <li class="breadcrumb-item"><a href="<?php echo $site; ?>blog.php"
-                    class="text-brown text-decoration-none">Blogs</a></li>
-            <li class="breadcrumb-item active text-truncate" style="max-width: 300px;" aria-current="page">
-                <?php echo $b_title; ?></li>
-        </ol>
-    </nav>
-
     <div class="row g-5">
 
         <div class="col-lg-8">
             <article>
-                <h2 class="article-title mb-3"><?php echo $b_title; ?></h2>
 
+
+                <div class="featured-img-box mb-4">
+                    <img src="<?php echo $b_img; ?>" alt="<?php echo $b_title; ?>">
+                </div>
                 <div class="meta-strip mb-4 pb-3 border-bottom">
                     <span><i class="bi bi-person-fill text-brown me-1"></i> By
                         <strong><?php echo $b_author; ?></strong></span>
                     <span><i class="bi bi-calendar3 text-brown me-1"></i> <?php echo $b_date; ?></span>
                     <span><i class="bi bi-folder-fill text-brown me-1"></i> Healthy Superfoods</span>
                 </div>
-
-                <div class="featured-img-box mb-4">
-                    <img src="<?php echo $b_img; ?>" alt="<?php echo $b_title; ?>">
-                </div>
+                <h2 class="article-title mb-3"><?php echo $b_title; ?></h2>
 
                 <div class="article-rich-textContent mt-4">
                     <?php echo $b_content; ?>

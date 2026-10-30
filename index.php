@@ -707,7 +707,7 @@ include('inc/header.php');
 <!-- ================= TRUSTED TESTIMONIAL SECTION START ================= -->
 <section class="testimonial-section">
     <div class="container">
-        <div class="section-header text-center mb-5">
+        <div class="section-header text-center mb-5" style="text-align:center;">
             <div class="hero-tagline">Real Reviews</div>
             <h2 class="hero-title">Trusted by <span>Thousands.</span></h2>
             <p class="hero-description mx-auto mt-3">See what our verified customers have to say about their AristoNut

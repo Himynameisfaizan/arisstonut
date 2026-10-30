@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Admin panel aur secure folders ko index hone se rokna
+Disallow: /admin/
+Disallow: /include/
+Disallow: /assets/
+Disallow: /config/
+
+# Auto-Generated Sitemap Link
+Sitemap: https://aristonut.com/sitemap.xml

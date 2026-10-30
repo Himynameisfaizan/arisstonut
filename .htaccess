@@ -6,8 +6,12 @@ RewriteCond %{REQUEST_FILENAME} !-d
 
 # Clean SEO URL Rule Mapping
 RewriteRule ^product/([^/]+)$ product-detail.php?slug=$1 [L,QSA]
+RewriteRule ^blog/([^/]+)/?$ blog-details.php?slug=$1 [L,QSA]
 
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^category/([^/]+)/?$ category.php?url=$1 [L,QSA]
+
+
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
