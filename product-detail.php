@@ -69,11 +69,13 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
         }
 
     } else {
-        header("Location: " . $site . "index.php");
-        exit();
+     http_response_code(404);
+    include('404.php');
+    exit();
     }
 } else {
-    header("Location: " . $site . "index.php");
+   http_response_code(404);
+    include('404.php');
     exit();
 }
 
@@ -85,69 +87,146 @@ include('inc/header.php');
 
 <!-- Product Custom CSS -->
 <style>
-        .main-img-box {
-            background: #FFFFFF;
-            border-radius: 16px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 400px;
-            border: 1px solid rgba(0,0,0,0.05);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.02);
-            margin-bottom: 20px;
-        }
-        .main-img-box img {
-            max-height: 100%;
-            max-width: 100%;
-            object-fit: contain;
-            mix-blend-mode: multiply;
-        }
-        .thumb-gallery {
-            display: flex;
-            flex-wrap: wrap; /* Allows wrapping to new lines like a grid */
-            gap: 12px;
-            justify-content: center;
-        }
-        .thumb-item {
-            width: 75px;
-            height: 75px;
-            object-fit: cover;
-            border-radius: 12px;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: #F9F6F0;
-            padding: 5px;
-        }
-        .thumb-item:hover,
-        .thumb-item.active-thumb {
-            border-color: #9C5521;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(156,85,33,0.2);
-            background: #FFFFFF;
-        }
+.main-img-box {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.02);
+    margin-bottom: 20px;
+}
 
-        /* Premium Reviews UI */
-        .reviews-wrapper { background: #FFFFFF; border-radius: 24px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); margin-top: 50px; border: 1px solid rgba(0,0,0,0.02); }
-        .review-card { background: #FCFAF8; border-radius: 16px; padding: 25px; margin-bottom: 20px; border: 1px dashed rgba(156, 85, 33, 0.2); }
-        .rev-avatar { width: 45px; height: 45px; background: #9C5521; color: #FFF; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; }
-        .rev-name { font-family: 'Poppins', sans-serif; font-weight: 700; color: #2C1E16; margin: 0; }
-        .rev-date { font-size: 0.8rem; color: #888; }
-        .rev-stars { color: #F39C12; font-size: 0.9rem; margin: 5px 0 10px 0; }
-        .rev-text { font-family: 'Inter', sans-serif; color: #4A3326; font-size: 0.95rem; line-height: 1.6; margin: 0; }
-        
-        /* Interactive Star Rating Form */
-        .star-rating-select { font-size: 2rem; color: #DDD; cursor: pointer; display: inline-block; direction: rtl; }
-        .star-rating-select i { transition: 0.2s; }
-        .star-rating-select i:hover, .star-rating-select i:hover ~ i, .star-rating-select i.active, .star-rating-select i.active ~ i { color: #F39C12; }
-        
-        @media (max-width: 768px) {
-            .reviews-wrapper { padding: 25px; }
-            .main-img-box { height: 300px; }
-            .thumb-item { width: 60px; height: 60px; }
-        }
-    </style>
+.main-img-box img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+}
+
+.thumb-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    /* Allows wrapping to new lines like a grid */
+    gap: 12px;
+    justify-content: center;
+}
+
+.thumb-item {
+    width: 75px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #F9F6F0;
+    padding: 5px;
+}
+
+.thumb-item:hover,
+.thumb-item.active-thumb {
+    border-color: #9C5521;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(156, 85, 33, 0.2);
+    background: #FFFFFF;
+}
+
+/* Premium Reviews UI */
+.reviews-wrapper {
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+    margin-top: 50px;
+    border: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+.review-card {
+    background: #FCFAF8;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 20px;
+    border: 1px dashed rgba(156, 85, 33, 0.2);
+}
+
+.rev-avatar {
+    width: 45px;
+    height: 45px;
+    background: #9C5521;
+    color: #FFF;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.rev-name {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    color: #2C1E16;
+    margin: 0;
+}
+
+.rev-date {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.rev-stars {
+    color: #F39C12;
+    font-size: 0.9rem;
+    margin: 5px 0 10px 0;
+}
+
+.rev-text {
+    font-family: 'Inter', sans-serif;
+    color: #4A3326;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Interactive Star Rating Form */
+.star-rating-select {
+    font-size: 2rem;
+    color: #DDD;
+    cursor: pointer;
+    display: inline-block;
+    direction: rtl;
+}
+
+.star-rating-select i {
+    transition: 0.2s;
+}
+
+.star-rating-select i:hover,
+.star-rating-select i:hover~i,
+.star-rating-select i.active,
+.star-rating-select i.active~i {
+    color: #F39C12;
+}
+
+@media (max-width: 768px) {
+    .reviews-wrapper {
+        padding: 25px;
+    }
+
+    .main-img-box {
+        height: 300px;
+    }
+
+    .thumb-item {
+        width: 60px;
+        height: 60px;
+    }
+}
+</style>
 </head>
 
 <body>
@@ -155,12 +234,12 @@ include('inc/header.php');
     <?php include('inc/breadcrumb.php'); ?>
 
     <main class="product-detail-wrapper container">
-        
+
         <div class="row g-5">
             <!-- ================= LEFT: STICKY IMAGE GALLERY ================= -->
             <div class="col-lg-5">
                 <div class="sticky-gallery">
-                    
+
                     <!-- Main Center Image -->
                     <div class="main-img-box" id="magnify-container-node">
                         <img src="<?php echo $p_img; ?>" alt="<?php echo $p_name; ?>" id="magnify-target-img">
@@ -168,29 +247,26 @@ include('inc/header.php');
 
                     <!-- Unified Thumbnail Grid -->
                     <div class="thumb-gallery" id="all-thumbnails">
-                        
+
                         <!-- 1. Variation Images -->
                         <?php if (!empty($variations)): ?>
-                            <?php foreach ($variations as $index => $var): ?>
-                                <?php $thumb_img = !empty($var['image_path']) ? $site . 'admin/assets/img/uploads/' . $var['image_path'] : $p_img; ?>
-                                <img src="<?php echo $thumb_img; ?>"
-                                    class="var-thumb thumb-item <?php echo $index === 0 ? 'active-thumb' : ''; ?>"
-                                    data-index="<?php echo $index; ?>" 
-                                    alt="<?php echo htmlspecialchars($var['weight_size']); ?>"
-                                    title="Pack: <?php echo htmlspecialchars($var['weight_size']); ?>">
-                            <?php endforeach; ?>
+                        <?php foreach ($variations as $index => $var): ?>
+                        <?php $thumb_img = !empty($var['image_path']) ? $site . 'admin/assets/img/uploads/' . $var['image_path'] : $p_img; ?>
+                        <img src="<?php echo $thumb_img; ?>"
+                            class="var-thumb thumb-item <?php echo $index === 0 ? 'active-thumb' : ''; ?>"
+                            data-index="<?php echo $index; ?>"
+                            alt="<?php echo htmlspecialchars($var['weight_size']); ?>"
+                            title="Pack: <?php echo htmlspecialchars($var['weight_size']); ?>">
+                        <?php endforeach; ?>
                         <?php endif; ?>
 
                         <!-- 2. Extra Gallery Images -->
                         <?php if (!empty($gallery_images)): ?>
-                            <?php foreach ($gallery_images as $g_img): ?>
-                                <?php $g_thumb = $site . 'admin/assets/img/uploads/' . htmlspecialchars($g_img['image_path']); ?>
-                                <img src="<?php echo $g_thumb; ?>"
-                                    class="gal-thumb thumb-item" 
-                                    alt="Gallery Image"
-                                    title="View Image"
-                                    onclick="changeMainImage(this)">
-                            <?php endforeach; ?>
+                        <?php foreach ($gallery_images as $g_img): ?>
+                        <?php $g_thumb = $site . 'admin/assets/img/uploads/' . htmlspecialchars($g_img['image_path']); ?>
+                        <img src="<?php echo $g_thumb; ?>" class="gal-thumb thumb-item" alt="Gallery Image"
+                            title="View Image" onclick="changeMainImage(this)">
+                        <?php endforeach; ?>
                         <?php endif; ?>
 
                     </div>
@@ -200,11 +276,11 @@ include('inc/header.php');
             <!-- ================= RIGHT: PRODUCT INFO & ACTION BAR ================= -->
             <div class="col-lg-7">
                 <div class="product-info-panel">
-                    
+
                     <div class="stock-badge" id="stock-badge">
                         <i class="bi bi-shield-check me-1"></i> In Stock
                     </div>
-                    
+
                     <h2 class="product-title"><?php echo $p_name; ?></h2>
 
                     <!-- DYNAMIC AVERAGE RATING -->
@@ -218,7 +294,9 @@ include('inc/header.php');
                             }
                             ?>
                         </span>
-                        <a href="#reviews-section" class="text-muted ms-2 text-decoration-underline">(<?php echo $total_reviews; ?> Customer Reviews)</a>
+                        <a href="#reviews-section"
+                            class="text-muted ms-2 text-decoration-underline">(<?php echo $total_reviews; ?> Customer
+                            Reviews)</a>
                     </div>
 
                     <div class="price-wrap">
@@ -226,38 +304,42 @@ include('inc/header.php');
                             <span class="current-price" id="display-price">₹<?php echo $p_price; ?></span>
                             <span class="total-price-hint" id="display-total-price"></span>
                         </div>
-                        <span class="tax-inclusive"><i class="bi bi-tags-fill me-1"></i> Inclusive of all regional taxes</span>
+                        <span class="tax-inclusive"><i class="bi bi-tags-fill me-1"></i> Inclusive of all regional
+                            taxes</span>
                     </div>
 
                     <?php if (!empty($variations)): ?>
-                        <div class="mb-4">
-                            <h4 class="section-label">Select Pack Size:</h4>
-                            <div class="d-flex flex-wrap" id="weight-options">
-                                <?php foreach ($variations as $index => $var): ?>
-                                    <input type="radio" class="variation-radio" name="pack_size"
-                                        id="var_<?php echo $var['id']; ?>" value="<?php echo $var['id']; ?>" <?php echo $index === 0 ? 'checked' : ''; ?> data-index="<?php echo $index; ?>">
-                                    <label class="variation-label" for="var_<?php echo $var['id']; ?>">
-                                        <?php echo htmlspecialchars($var['weight_size']); ?>
-                                    </label>
-                                <?php endforeach; ?>
-                            </div>
+                    <div class="mb-4">
+                        <h4 class="section-label">Select Pack Size:</h4>
+                        <div class="d-flex flex-wrap" id="weight-options">
+                            <?php foreach ($variations as $index => $var): ?>
+                            <input type="radio" class="variation-radio" name="pack_size"
+                                id="var_<?php echo $var['id']; ?>" value="<?php echo $var['id']; ?>"
+                                <?php echo $index === 0 ? 'checked' : ''; ?> data-index="<?php echo $index; ?>">
+                            <label class="variation-label" for="var_<?php echo $var['id']; ?>">
+                                <?php echo htmlspecialchars($var['weight_size']); ?>
+                            </label>
+                            <?php endforeach; ?>
                         </div>
+                    </div>
                     <?php endif; ?>
 
                     <div class="action-bar">
                         <h4 class="section-label mb-3">Quantity:</h4>
-                        
+
                         <div class="action-grid">
                             <div class="qty-control">
-                                <button type="button" class="qty-btn" id="btn-qty-minus"><i class="bi bi-dash"></i></button>
+                                <button type="button" class="qty-btn" id="btn-qty-minus"><i
+                                        class="bi bi-dash"></i></button>
                                 <input type="text" class="qty-input" id="product-qty" value="1" readonly>
-                                <button type="button" class="qty-btn" id="btn-qty-plus"><i class="bi bi-plus"></i></button>
+                                <button type="button" class="qty-btn" id="btn-qty-plus"><i
+                                        class="bi bi-plus"></i></button>
                             </div>
 
                             <button type="button" class="btn-action btn-add-cart" id="custom-add-to-cart-btn">
                                 <i class="bi bi-bag"></i> Add to Cart
                             </button>
-                            
+
                             <button type="button" class="btn-action btn-buy-now" id="custom-buy-now-btn">
                                 <i class="bi bi-lightning-charge-fill"></i> Buy Now
                             </button>
@@ -279,12 +361,12 @@ include('inc/header.php');
         <!-- ================= CUSTOMER REVIEWS SECTION ================= -->
         <div class="reviews-wrapper" id="reviews-section">
             <h3 class="desc-heading border-0 mb-4 text-center">Customer Reviews & Feedback</h3>
-            
+
             <div class="row g-5">
                 <!-- Left: Review List -->
                 <div class="col-lg-7">
                     <h5 class="fw-bold mb-4" style="color: #2C1E16;">Latest Reviews (<?php echo $total_reviews; ?>)</h5>
-                    
+
                     <div style="max-height: 600px; overflow-y: auto; padding-right: 10px;">
                         <?php
                         if ($total_reviews > 0) {
@@ -295,23 +377,25 @@ include('inc/header.php');
                                 $r_text = htmlspecialchars($rev['review_text']);
                                 $initial = strtoupper(substr($r_name, 0, 1));
                         ?>
-                                <div class="review-card">
-                                    <div class="d-flex align-items-center gap-3 mb-2">
-                                        <div class="rev-avatar"><?php echo $initial; ?></div>
-                                        <div>
-                                            <h6 class="rev-name"><?php echo $r_name; ?> <i class="bi bi-patch-check-fill text-success" title="Verified Customer" style="font-size: 0.9rem;"></i></h6>
-                                            <span class="rev-date"><?php echo $r_date; ?></span>
-                                        </div>
-                                    </div>
-                                    <div class="rev-stars">
-                                        <?php 
+                        <div class="review-card">
+                            <div class="d-flex align-items-center gap-3 mb-2">
+                                <div class="rev-avatar"><?php echo $initial; ?></div>
+                                <div>
+                                    <h6 class="rev-name"><?php echo $r_name; ?> <i
+                                            class="bi bi-patch-check-fill text-success" title="Verified Customer"
+                                            style="font-size: 0.9rem;"></i></h6>
+                                    <span class="rev-date"><?php echo $r_date; ?></span>
+                                </div>
+                            </div>
+                            <div class="rev-stars">
+                                <?php 
                                         for($i=1; $i<=5; $i++){
                                             echo ($i <= $r_stars) ? '<i class="bi bi-star-fill"></i>' : '<i class="bi bi-star"></i>';
                                         }
                                         ?>
-                                    </div>
-                                    <p class="rev-text"><?php echo $r_text; ?></p>
-                                </div>
+                            </div>
+                            <p class="rev-text"><?php echo $r_text; ?></p>
+                        </div>
                         <?php
                             }
                         } else {
@@ -326,10 +410,10 @@ include('inc/header.php');
                     <div class="bg-white p-4 rounded-4 shadow-sm border">
                         <h5 class="fw-bold mb-3" style="color: #2C1E16;">Write a Review</h5>
                         <p class="text-muted small">Share your experience with the AristoNut community.</p>
-                        
+
                         <form id="reviewForm">
                             <input type="hidden" name="product_id" value="<?php echo $p_id; ?>">
-                            
+
                             <div class="mb-3 text-center bg-light py-3 rounded-3">
                                 <label class="d-block fw-bold mb-2">Rate this product</label>
                                 <div class="star-rating-select">
@@ -343,15 +427,20 @@ include('inc/header.php');
                             </div>
 
                             <div class="mb-3">
-                                <input type="text" name="reviewer_name" class="form-control bg-light border-0 py-2" placeholder="Your Name *" required>
+                                <input type="text" name="reviewer_name" class="form-control bg-light border-0 py-2"
+                                    placeholder="Your Name *" required>
                             </div>
                             <div class="mb-3">
-                                <input type="email" name="reviewer_email" class="form-control bg-light border-0 py-2" placeholder="Your Email (Hidden) *" required>
+                                <input type="email" name="reviewer_email" class="form-control bg-light border-0 py-2"
+                                    placeholder="Your Email (Hidden) *" required>
                             </div>
                             <div class="mb-3">
-                                <textarea name="review_text" class="form-control bg-light border-0" rows="4" placeholder="What did you love about this makhana? *" required></textarea>
+                                <textarea name="review_text" class="form-control bg-light border-0" rows="4"
+                                    placeholder="What did you love about this makhana? *" required></textarea>
                             </div>
-                            <button type="submit" class="btn w-100 py-3 rounded-pill text-white fw-bold" style="background: #9C5521;" id="submitRevBtn">Submit Review <i class="bi bi-send-fill ms-2"></i></button>
+                            <button type="submit" class="btn w-100 py-3 rounded-pill text-white fw-bold"
+                                style="background: #9C5521;" id="submitRevBtn">Submit Review <i
+                                    class="bi bi-send-fill ms-2"></i></button>
                         </form>
                     </div>
                 </div>
@@ -360,10 +449,10 @@ include('inc/header.php');
 
         <!-- ================= RELATED PRODUCTS ================= -->
         <?php if ($related_query && $related_query->num_rows > 0): ?>
-            <div class="pt-5 mt-5">
-                <h2 class="desc-heading text-center border-0 mb-5">You Might Also Like</h2>
-                <div class="row g-4 justify-content-center">
-                    <?php while ($r_prod = $related_query->fetch_assoc()): 
+        <div class="pt-5 mt-5">
+            <h2 class="desc-heading text-center border-0 mb-5">You Might Also Like</h2>
+            <div class="row g-4 justify-content-center">
+                <?php while ($r_prod = $related_query->fetch_assoc()): 
                         $rp_id = $r_prod['id'];
                         $rp_name = htmlspecialchars($r_prod['pro_name']);
                         $rp_price = htmlspecialchars($r_prod['selling_price']);
@@ -372,35 +461,38 @@ include('inc/header.php');
                         $rp_img = $site . 'admin/assets/img/uploads/' . htmlspecialchars($r_prod['pro_img']);
                         $is_wished_rp = (isset($_SESSION['wishlist']) && in_array($rp_id, $_SESSION['wishlist'])) ? 'bi-heart-fill text-danger' : 'bi-heart';
                     ?>
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                            <div class="video-prod-card">
-                                
-                                <div class="v-wish-btn" onclick="handleWishlist(<?php echo $rp_id; ?>, this)">
-                                    <i class="bi <?php echo $is_wished_rp; ?>"></i>
-                                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                    <div class="video-prod-card">
 
-                                <a href="<?php echo $site; ?>product/<?php echo $rp_slug; ?>" class="v-img-box">
-                                    <img src="<?php echo $rp_img; ?>" alt="<?php echo $rp_name; ?>">
-                                </a>
+                        <div class="v-wish-btn" onclick="handleWishlist(<?php echo $rp_id; ?>, this)">
+                            <i class="bi <?php echo $is_wished_rp; ?>"></i>
+                        </div>
 
-                                <div class="v-rating">
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                </div>
+                        <a href="<?php echo $site; ?>product/<?php echo $rp_slug; ?>" class="v-img-box">
+                            <img src="<?php echo $rp_img; ?>" alt="<?php echo $rp_name; ?>">
+                        </a>
 
-                                <a href="<?php echo $site; ?>product/<?php echo $rp_slug; ?>" class="v-title" title="<?php echo $rp_name; ?>"><?php echo $rp_name; ?></a>
+                        <div class="v-rating">
+                            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
+                                class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
+                                class="bi bi-star-fill"></i>
+                        </div>
 
-                                <div class="v-bottom-section">
-                                    <div class="v-action-buttons">
-                                        <button class="v-btn-cart-sm" onclick="addToCart(<?php echo $rp_id; ?>)">Cart</button>
-                                        <button class="v-btn-buy-sm" onclick="buyNow(<?php echo $rp_id; ?>)">Buy Now</button>
-                                    </div>
-                                </div>
+                        <a href="<?php echo $site; ?>product/<?php echo $rp_slug; ?>" class="v-title"
+                            title="<?php echo $rp_name; ?>"><?php echo $rp_name; ?></a>
 
+                        <div class="v-bottom-section">
+                            <div class="v-action-buttons">
+                                <button class="v-btn-cart-sm" onclick="addToCart(<?php echo $rp_id; ?>)">Cart</button>
+                                <button class="v-btn-buy-sm" onclick="buyNow(<?php echo $rp_id; ?>)">Buy Now</button>
                             </div>
                         </div>
-                    <?php endwhile; ?>
+
+                    </div>
                 </div>
+                <?php endwhile; ?>
             </div>
+        </div>
         <?php endif; ?>
 
     </main>
@@ -410,229 +502,281 @@ include('inc/header.php');
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-  <script>
-        document.addEventListener("DOMContentLoaded", function () {
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
 
-            const targetImg = document.getElementById("magnify-target-img");
-            const variations = <?php echo !empty($variations_json) ? $variations_json : '[]'; ?>;
-            const baseImgUrl = '<?php echo $site . "admin/assets/img/uploads/"; ?>';
-            const defaultImg = '<?php echo $p_img; ?>';
+        const targetImg = document.getElementById("magnify-target-img");
+        const variations = <?php echo !empty($variations_json) ? $variations_json : '[]'; ?>;
+        const baseImgUrl = '<?php echo $site . "admin/assets/img/uploads/"; ?>';
+        const defaultImg = '<?php echo $p_img; ?>';
 
-            let currentVariation = variations.length > 0 ? variations[0] : null;
-            let qty = 1;
+        let currentVariation = variations.length > 0 ? variations[0] : null;
+        let qty = 1;
 
-            // Thumbnail Click Event (Variations only)
-            document.querySelectorAll('.var-thumb').forEach(thumb => {
-                thumb.addEventListener('click', function () {
-                    const index = this.getAttribute('data-index');
-                    const radio = document.querySelectorAll('.variation-radio')[index];
-                    if(radio) {
-                        radio.checked = true;
-                        radio.dispatchEvent(new Event('change'));
-                    }
-                });
+        // Thumbnail Click Event (Variations only)
+        document.querySelectorAll('.var-thumb').forEach(thumb => {
+            thumb.addEventListener('click', function() {
+                const index = this.getAttribute('data-index');
+                const radio = document.querySelectorAll('.variation-radio')[index];
+                if (radio) {
+                    radio.checked = true;
+                    radio.dispatchEvent(new Event('change'));
+                }
+            });
+        });
+
+        // 🔥 NEW: Extra Gallery Image Click Event
+        window.changeMainImage = function(element) {
+            // Update central image
+            targetImg.src = element.src;
+
+            // Remove border/highlight from all thumbnails
+            document.querySelectorAll('.thumb-item').forEach(img => {
+                img.classList.remove('active-thumb');
             });
 
-            // 🔥 NEW: Extra Gallery Image Click Event
-            window.changeMainImage = function(element) {
-                // Update central image
-                targetImg.src = element.src;
-                
-                // Remove border/highlight from all thumbnails
-                document.querySelectorAll('.thumb-item').forEach(img => {
-                    img.classList.remove('active-thumb');
-                });
-                
-                // Highlight clicked thumbnail
-                element.classList.add('active-thumb');
-            };
+            // Highlight clicked thumbnail
+            element.classList.add('active-thumb');
+        };
 
-            function updateUI() {
-                if (!currentVariation) return;
+        function updateUI() {
+            if (!currentVariation) return;
 
-                let unitPrice = parseFloat(currentVariation.single_price);
-                let discountMsg = "";
+            let unitPrice = parseFloat(currentVariation.single_price);
+            let discountMsg = "";
 
-                if (qty >= 6 && currentVariation.price_6_plus !== null && parseFloat(currentVariation.price_6_plus) > 0) {
-                    unitPrice = parseFloat(currentVariation.price_6_plus); discountMsg = "Super Saver: 6+ Bulk Price Applied! 💥";
-                } else if (qty >= 5 && currentVariation.price_5_plus !== null && parseFloat(currentVariation.price_5_plus) > 0) {
-                    unitPrice = parseFloat(currentVariation.price_5_plus); discountMsg = "Mega Saver: 5+ Bulk Price Applied! 🔥";
-                } else if (qty >= 4 && currentVariation.price_4_plus !== null && parseFloat(currentVariation.price_4_plus) > 0) {
-                    unitPrice = parseFloat(currentVariation.price_4_plus); discountMsg = "Smart Saver: 4+ Bulk Price Applied! 🎉";
-                }
-
-                let totalPrice = unitPrice * qty;
-
-                document.getElementById('display-price').innerHTML = '₹' + unitPrice.toFixed(2) + ' <span style="font-size: 1rem; color: #6B5B53; font-weight: 500;">(' + currentVariation.weight_size + ')</span>';
-                if (qty > 1) document.getElementById('display-total-price').innerText = '(Total: ₹' + totalPrice.toFixed(2) + ')';
-                else document.getElementById('display-total-price').innerText = '';
-
-                // Change main image based on variation
-                if (currentVariation.image_path && currentVariation.image_path.trim() !== '') {
-                    targetImg.src = baseImgUrl + currentVariation.image_path;
-                } else { 
-                    targetImg.src = defaultImg; 
-                }
-
-                // Update active state on thumbnails
-                document.querySelectorAll('.thumb-item').forEach(img => {
-                    img.classList.remove('active-thumb');
-                });
-                document.querySelectorAll('.var-thumb').forEach(thumb => {
-                    if (thumb.getAttribute('data-index') == variations.indexOf(currentVariation)) {
-                        thumb.classList.add('active-thumb');
-                    }
-                });
-
-                const stockBadge = document.getElementById('stock-badge');
-                if (parseInt(currentVariation.stock) > 0) {
-                    stockBadge.style.background = 'rgba(39, 174, 96, 0.1)';
-                    stockBadge.style.color = '#27AE60';
-                    stockBadge.innerHTML = '<i class="bi bi-shield-check me-1"></i> In Stock';
-                } else {
-                    stockBadge.style.background = 'rgba(224, 32, 32, 0.1)';
-                    stockBadge.style.color = '#E02020';
-                    stockBadge.innerHTML = '<i class="bi bi-x-circle-fill me-1"></i> Out of Stock';
-                }
+            if (qty >= 6 && currentVariation.price_6_plus !== null && parseFloat(currentVariation
+                    .price_6_plus) > 0) {
+                unitPrice = parseFloat(currentVariation.price_6_plus);
+                discountMsg = "Super Saver: 6+ Bulk Price Applied! 💥";
+            } else if (qty >= 5 && currentVariation.price_5_plus !== null && parseFloat(currentVariation
+                    .price_5_plus) > 0) {
+                unitPrice = parseFloat(currentVariation.price_5_plus);
+                discountMsg = "Mega Saver: 5+ Bulk Price Applied! 🔥";
+            } else if (qty >= 4 && currentVariation.price_4_plus !== null && parseFloat(currentVariation
+                    .price_4_plus) > 0) {
+                unitPrice = parseFloat(currentVariation.price_4_plus);
+                discountMsg = "Smart Saver: 4+ Bulk Price Applied! 🎉";
             }
 
-            document.querySelectorAll('.variation-radio').forEach(radio => {
-                radio.addEventListener('change', function () {
-                    const index = this.getAttribute('data-index');
-                    currentVariation = variations[index];
-                    qty = 1; document.getElementById('product-qty').value = qty;
-                    updateUI();
-                });
-            });
+            let totalPrice = unitPrice * qty;
 
-            document.getElementById('btn-qty-plus').addEventListener('click', () => {
-                if (currentVariation && qty < parseInt(currentVariation.stock)) {
-                    qty++; document.getElementById('product-qty').value = qty; updateUI();
+            document.getElementById('display-price').innerHTML = '₹' + unitPrice.toFixed(2) +
+                ' <span style="font-size: 1rem; color: #6B5B53; font-weight: 500;">(' + currentVariation
+                .weight_size + ')</span>';
+            if (qty > 1) document.getElementById('display-total-price').innerText = '(Total: ₹' + totalPrice
+                .toFixed(2) + ')';
+            else document.getElementById('display-total-price').innerText = '';
+
+            // Change main image based on variation
+            if (currentVariation.image_path && currentVariation.image_path.trim() !== '') {
+                targetImg.src = baseImgUrl + currentVariation.image_path;
+            } else {
+                targetImg.src = defaultImg;
+            }
+
+            // Update active state on thumbnails
+            document.querySelectorAll('.thumb-item').forEach(img => {
+                img.classList.remove('active-thumb');
+            });
+            document.querySelectorAll('.var-thumb').forEach(thumb => {
+                if (thumb.getAttribute('data-index') == variations.indexOf(currentVariation)) {
+                    thumb.classList.add('active-thumb');
                 }
             });
 
-            document.getElementById('btn-qty-minus').addEventListener('click', () => {
-                if (qty > 1) { qty--; document.getElementById('product-qty').value = qty; updateUI(); }
-            });
+            const stockBadge = document.getElementById('stock-badge');
+            if (parseInt(currentVariation.stock) > 0) {
+                stockBadge.style.background = 'rgba(39, 174, 96, 0.1)';
+                stockBadge.style.color = '#27AE60';
+                stockBadge.innerHTML = '<i class="bi bi-shield-check me-1"></i> In Stock';
+            } else {
+                stockBadge.style.background = 'rgba(224, 32, 32, 0.1)';
+                stockBadge.style.color = '#E02020';
+                stockBadge.innerHTML = '<i class="bi bi-x-circle-fill me-1"></i> Out of Stock';
+            }
+        }
 
-            // ADD TO CART
-            document.getElementById('custom-add-to-cart-btn').addEventListener('click', () => {
-                if (currentVariation && parseInt(currentVariation.stock) > 0) {
-                    $.ajax({
-                        url: '<?php echo $site; ?>cart_action.php',
-                        type: 'POST',
-                        data: { action: 'add_to_cart', product_id: <?php echo $p_id; ?>, variation_id: currentVariation.id, quantity: qty },
-                        dataType: 'json',
-                        success: function (response) {
-                            if (response.status === 'success') {
-                                $('.cart-count').text(response.cart_count);
-                                showToast("Added to Cart!", qty + " Pack of " + currentVariation.weight_size + " is in your basket.", "success");
-                            } else { 
-                                showToast("Action Failed", response.message, "error"); 
-                            }
-                        }
-                    });
-                } else { alert('Cannot add out of stock item to basket.'); }
-            });
-
-            // BUY NOW
-            document.getElementById('custom-buy-now-btn').addEventListener('click', () => {
-                if (currentVariation && parseInt(currentVariation.stock) > 0) {
-                    const btn = document.getElementById('custom-buy-now-btn');
-                    btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
-                    
-                    $.ajax({
-                        url: '<?php echo $site; ?>cart_action.php',
-                        type: 'POST',
-                        data: { action: 'buy_now', product_id: <?php echo $p_id; ?>, variation_id: currentVariation.id, quantity: qty },
-                        dataType: 'json',
-                        success: function (response) {
-                            if (response.status === 'success') { 
-                                window.location.href = '<?php echo $site; ?>checkout.php?buy_now=true'; 
-                            } else { 
-                                showToast("Action Failed", response.message, "error"); 
-                                btn.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> Buy Now';
-                            }
-                        }
-                    });
-                } else { alert('Cannot buy out of stock item.'); }
-            });
-
-            updateUI();
-        });
-
-        // ==========================================
-        // REVIEWS & RELATED PRODUCTS LOGIC
-        // ==========================================
-        
-        // Star Rating Selection
-        const stars = document.querySelectorAll('.star-rating-select i');
-        const ratingInput = document.getElementById('review-rating');
-
-        stars.forEach(star => {
-            star.addEventListener('click', function() {
-                const ratingVal = this.getAttribute('data-rating');
-                ratingInput.value = ratingVal;
-                stars.forEach(s => s.classList.remove('active'));
-                this.classList.add('active');
+        document.querySelectorAll('.variation-radio').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const index = this.getAttribute('data-index');
+                currentVariation = variations[index];
+                qty = 1;
+                document.getElementById('product-qty').value = qty;
+                updateUI();
             });
         });
 
-        // AJAX Review Submission
-        $('#reviewForm').on('submit', function(e) {
-            e.preventDefault();
-            const btn = $('#submitRevBtn');
-            btn.html('<span class="spinner-border spinner-border-sm"></span> Submitting...');
+        document.getElementById('btn-qty-plus').addEventListener('click', () => {
+            if (currentVariation && qty < parseInt(currentVariation.stock)) {
+                qty++;
+                document.getElementById('product-qty').value = qty;
+                updateUI();
+            }
+        });
 
-            $.ajax({
-                url: '<?php echo $site; ?>submit_review.php',
-                type: 'POST',
-                data: $(this).serialize(),
-                dataType: 'json',
-                success: function(res) {
-                    if(res.status === 'success') {
-                        showToast("Review Posted!", res.message, "success");
-                        $('#reviewForm')[0].reset();
-                        setTimeout(() => { location.reload(); }, 1500);
-                    } else {
-                        showToast("Error", res.message, "error");
-                        btn.html('Submit Review <i class="bi bi-send-fill ms-2"></i>');
+        document.getElementById('btn-qty-minus').addEventListener('click', () => {
+            if (qty > 1) {
+                qty--;
+                document.getElementById('product-qty').value = qty;
+                updateUI();
+            }
+        });
+
+        // ADD TO CART
+        document.getElementById('custom-add-to-cart-btn').addEventListener('click', () => {
+            if (currentVariation && parseInt(currentVariation.stock) > 0) {
+                $.ajax({
+                    url: '<?php echo $site; ?>cart_action.php',
+                    type: 'POST',
+                    data: {
+                        action: 'add_to_cart',
+                        product_id: <?php echo $p_id; ?>,
+                        variation_id: currentVariation.id,
+                        quantity: qty
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            $('.cart-count').text(response.cart_count);
+                            showToast("Added to Cart!", qty + " Pack of " + currentVariation
+                                .weight_size + " is in your basket.", "success");
+                        } else {
+                            showToast("Action Failed", response.message, "error");
+                        }
                     }
-                },
-                error: function() {
-                    showToast("Error", "Server connection failed.", "error");
+                });
+            } else {
+                alert('Cannot add out of stock item to basket.');
+            }
+        });
+
+        // BUY NOW
+        document.getElementById('custom-buy-now-btn').addEventListener('click', () => {
+            if (currentVariation && parseInt(currentVariation.stock) > 0) {
+                const btn = document.getElementById('custom-buy-now-btn');
+                btn.innerHTML =
+                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+
+                $.ajax({
+                    url: '<?php echo $site; ?>cart_action.php',
+                    type: 'POST',
+                    data: {
+                        action: 'buy_now',
+                        product_id: <?php echo $p_id; ?>,
+                        variation_id: currentVariation.id,
+                        quantity: qty
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            window.location.href =
+                                '<?php echo $site; ?>checkout.php?buy_now=true';
+                        } else {
+                            showToast("Action Failed", response.message, "error");
+                            btn.innerHTML =
+                                '<i class="bi bi-lightning-charge-fill"></i> Buy Now';
+                        }
+                    }
+                });
+            } else {
+                alert('Cannot buy out of stock item.');
+            }
+        });
+
+        updateUI();
+    });
+
+    // ==========================================
+    // REVIEWS & RELATED PRODUCTS LOGIC
+    // ==========================================
+
+    // Star Rating Selection
+    const stars = document.querySelectorAll('.star-rating-select i');
+    const ratingInput = document.getElementById('review-rating');
+
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            const ratingVal = this.getAttribute('data-rating');
+            ratingInput.value = ratingVal;
+            stars.forEach(s => s.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // AJAX Review Submission
+    $('#reviewForm').on('submit', function(e) {
+        e.preventDefault();
+        const btn = $('#submitRevBtn');
+        btn.html('<span class="spinner-border spinner-border-sm"></span> Submitting...');
+
+        $.ajax({
+            url: '<?php echo $site; ?>submit_review.php',
+            type: 'POST',
+            data: $(this).serialize(),
+            dataType: 'json',
+            success: function(res) {
+                if (res.status === 'success') {
+                    showToast("Review Posted!", res.message, "success");
+                    $('#reviewForm')[0].reset();
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                } else {
+                    showToast("Error", res.message, "error");
                     btn.html('Submit Review <i class="bi bi-send-fill ms-2"></i>');
                 }
-            });
+            },
+            error: function() {
+                showToast("Error", "Server connection failed.", "error");
+                btn.html('Submit Review <i class="bi bi-send-fill ms-2"></i>');
+            }
         });
+    });
 
-        window.addToCart = function(productId, variationId = 0, qty = 1) {
-            $.ajax({
-                url: '<?php echo $site; ?>cart_action.php', 
-                type: 'POST',
-                data: { action: 'add_to_cart', product_id: productId, variation_id: variationId, quantity: qty },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status === 'success') {
-                        $('.cart-count').text(response.cart_count);
-                        showToast("Added to Cart!", "Item successfully added to your basket.", "success");
-                    } else { showToast("Action Failed", response.message, "error"); }
+    window.addToCart = function(productId, variationId = 0, qty = 1) {
+        $.ajax({
+            url: '<?php echo $site; ?>cart_action.php',
+            type: 'POST',
+            data: {
+                action: 'add_to_cart',
+                product_id: productId,
+                variation_id: variationId,
+                quantity: qty
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    $('.cart-count').text(response.cart_count);
+                    showToast("Added to Cart!", "Item successfully added to your basket.", "success");
+                } else {
+                    showToast("Action Failed", response.message, "error");
                 }
-            });
-        }
+            }
+        });
+    }
 
-        window.buyNow = function(productId, variationId = 0, qty = 1) {
-            $.ajax({
-                url: '<?php echo $site; ?>cart_action.php', 
-                type: 'POST',
-                data: { action: 'buy_now', product_id: productId, variation_id: variationId, quantity: qty },
-                dataType: 'json',
-                success: function(response) {
-                    if(response.status === 'success') { window.location.href = '<?php echo $site; ?>checkout.php?buy_now=true'; } 
-                    else { showToast("Action Failed", response.message, "error"); }
+    window.buyNow = function(productId, variationId = 0, qty = 1) {
+        $.ajax({
+            url: '<?php echo $site; ?>cart_action.php',
+            type: 'POST',
+            data: {
+                action: 'buy_now',
+                product_id: productId,
+                variation_id: variationId,
+                quantity: qty
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    window.location.href = '<?php echo $site; ?>checkout.php?buy_now=true';
+                } else {
+                    showToast("Action Failed", response.message, "error");
                 }
-            });
-        }
+            }
+        });
+    }
     </script>
 </body>
+
 </html>

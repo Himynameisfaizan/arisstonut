@@ -2,6 +2,7 @@
 include('config/connect.php');
 include('inc/header.php');
 ?>
+
 <style>
 /* Modern Button Styles for Index Page */
 .modern-btn-add {
@@ -270,7 +271,7 @@ include('inc/header.php');
                     $pid = $prod['id'];
                     $pname = htmlspecialchars($prod['pro_name'] ?? '');
                     $pprice = htmlspecialchars($prod['selling_price'] ?? '0');
-                    
+
                     $raw_slug = !empty($prod['slug_url']) ? trim($prod['slug_url']) : $pid;
                     $pslug = htmlspecialchars($raw_slug);
 
@@ -282,7 +283,7 @@ include('inc/header.php');
 
                     // Wishlist check
                     $is_wished = (isset($_SESSION['wishlist']) && in_array($pid, $_SESSION['wishlist'])) ? 'bi-heart-fill text-danger' : 'bi-heart';
-                    ?>
+            ?>
             <div class="col-lg-3 col-md-4 col-sm-6 col-12">
                 <div class="video-prod-card">
                     <div class="v-wish-btn" onclick="handleWishlist(<?php echo $pid; ?>, this)">
@@ -458,7 +459,7 @@ include('inc/header.php');
                         $col_class = "col-lg-4 col-md-6";
                         $layout_class = "bento-vertical";
                     }
-                    ?>
+            ?>
             <div class="<?php echo $col_class; ?>">
                 <a href="<?php echo $site; ?>category/<?php echo $c_slug; ?>"
                     class="bento-card <?php echo $mapped_data['bg_class']; ?> <?php echo $layout_class; ?>">
@@ -737,13 +738,13 @@ include('inc/header.php');
                     while ($test = $test_res->fetch_assoc()) {
                         $name = htmlspecialchars($test['name']);
                         $message = htmlspecialchars($test['message']);
-                        
+
                         // Rating fallback (agar DB mein 0 ya null ho to 5 star dikhaye)
                         $rating = isset($test['rating']) && intval($test['rating']) > 0 ? intval($test['rating']) : 5;
-                        
+
                         // Date formatting 
                         $date_str = !empty($test['created_at']) ? date('M d, Y', strtotime($test['created_at'])) : 'Recent';
-                        
+
                         $img_src = !empty($test['image']) ? "admin/uploads/testimonials/" . htmlspecialchars($test['image']) : "assets/images/default-avatar.png";
                 ?>
                 <div class="swiper-slide">
@@ -771,15 +772,15 @@ include('inc/header.php');
                         <!-- Middle: Stars and Verified Badge -->
                         <div class="review-rating-row mt-3 mb-2 d-flex align-items-center">
                             <div class="stars me-3">
-                                <?php 
-                                for($r = 1; $r <= 5; $r++) {
-                                    if($r <= $rating) {
-                                        echo '<i class="bi bi-star-fill"></i> ';
-                                    } else {
-                                        echo '<i class="bi bi-star"></i> ';
-                                    }
-                                }
-                                ?>
+                                <?php
+                                        for ($r = 1; $r <= 5; $r++) {
+                                            if ($r <= $rating) {
+                                                echo '<i class="bi bi-star-fill"></i> ';
+                                            } else {
+                                                echo '<i class="bi bi-star"></i> ';
+                                            }
+                                        }
+                                        ?>
                             </div>
                             <div class="verified-badge">
                                 <i class="bi bi-patch-check-fill"></i> Verified Buyer
@@ -824,7 +825,7 @@ include('inc/header.php');
                     $pid = $prod['id'];
                     $pname = htmlspecialchars($prod['pro_name'] ?? '');
                     $pprice = htmlspecialchars($prod['selling_price'] ?? '0');
-                    
+
                     $raw_slug = !empty($prod['slug_url']) ? trim($prod['slug_url']) : $pid;
                     $pslug = htmlspecialchars($raw_slug);
 
@@ -836,7 +837,7 @@ include('inc/header.php');
 
                     // Wishlist check
                     $is_wished = (isset($_SESSION['wishlist']) && in_array($pid, $_SESSION['wishlist'])) ? 'bi-heart-fill text-danger' : 'bi-heart';
-                    ?>
+            ?>
             <div class="col-lg-3 col-md-4 col-sm-6 col-12">
                 <div class="video-prod-card">
 
@@ -901,20 +902,20 @@ include('inc/header.php');
             if ($blog_result && $blog_result->num_rows > 0) {
                 while ($blog = $blog_result->fetch_assoc()) {
                     $btitle = htmlspecialchars($blog['title'] ?? '');
-                    
+
                     $raw_bslug = !empty($blog['slug']) ? trim($blog['slug']) : $blog['blog_id'];
                     $bslug = htmlspecialchars($raw_bslug);
-                    
+
                     $raw_desc = strip_tags($blog['description'] ?? '');
                     $bdesc = strlen($raw_desc) > 120 ? substr($raw_desc, 0, 120) . '...' : $raw_desc;
-                    
+
                     $bdate = date('d M, Y', strtotime($blog['created_at']));
 
                     $bimg = !empty($blog['image']) ? $site . 'admin/assets/img/uploads/blogs/' . htmlspecialchars($blog['image']) : $site . 'assets/images/hero.webp';
                     if (!file_exists($_SERVER['DOCUMENT_ROOT'] . parse_url($bimg, PHP_URL_PATH))) {
                         $bimg = $site . 'admin/assets/img/uploads/blogs/' . htmlspecialchars($blog['image'] ?? '');
                     }
-                    ?>
+            ?>
             <div class="col-lg-4 col-md-6 col-12">
                 <a href="<?php echo $site; ?>blog-details.php?slug=<?php echo $bslug; ?>" class="modern-blog-card">
                     <div class="blog-img-box">

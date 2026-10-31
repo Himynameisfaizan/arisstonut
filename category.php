@@ -19,7 +19,8 @@ $cat_stmt->execute();
 $cat_res = $cat_stmt->get_result();
 
 if (!$cat_res || $cat_res->num_rows == 0) {
-    echo "<h2 style='text-align:center; margin-top:100px; color:#8B4513; font-family:sans-serif;'>Category Not Found.</h2>";
+   http_response_code(404);
+    include('404.php');
     exit();
 }
 

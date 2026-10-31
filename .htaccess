@@ -13,5 +13,7 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^category/([^/]+)/?$ category.php?url=$1 [L,QSA]
 
+# Fixed Path for XAMPP Localhost
+ErrorDocument 404 /projects/aristonut/404.php
 
 RewriteRule ^sitemap\.xml$ sitemap.php [L]

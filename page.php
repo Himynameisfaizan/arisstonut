@@ -7,8 +7,9 @@ $pageQuery = mysqli_query($conn, "SELECT * FROM custom_pages WHERE slug_url = '$
 $pageData = mysqli_fetch_assoc($pageQuery);
 
 if (!$pageData) {
-    echo "<script>window.location.href='index.php';</script>";
-    exit;
+    http_response_code(404);
+    include('404.php');
+    exit();
 }
 
 $slug = isset($_GET['slug']) ? mysqli_real_escape_string($conn, $_GET['slug']) : '';

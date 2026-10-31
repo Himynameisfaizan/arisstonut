@@ -32,12 +32,14 @@ if (isset($_GET['slug']) && !empty(trim($_GET['slug']))) {
         $og_image = !empty($blog['og_image']) ? $site . 'admin/uploads/seo/' . htmlspecialchars($blog['og_image']) : $b_img;
 
     } else {
-        header("Location: " . $site . "blog.php");
-        exit();
+       http_response_code(404);
+    include('404.php');
+    exit();
     }
     $stmt->close();
 } else {
-    header("Location: " . $site . "blog.php");
+  http_response_code(404);
+    include('404.php');
     exit();
 }
 
