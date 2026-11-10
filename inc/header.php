@@ -2,7 +2,9 @@
 include('config/connect.php');
 
 $current_page = basename($_SERVER['PHP_SELF']);
-$current_full_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+$canonical_domain = "https://www.aristonut.com";
+
+$current_full_url = $canonical_domain . $_SERVER['REQUEST_URI'];
 
 $total_cart_items = 0;
 if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION['cart'])) {
@@ -50,22 +52,22 @@ if ($seo_res && $seo_res->num_rows > 0) {
     <meta name="description" content="<?php echo htmlspecialchars($meta_desc); ?>">
     <meta name="keywords" content="<?php echo htmlspecialchars($meta_keyword); ?>">
 
-    <link rel="canonical" href="<?php echo htmlspecialchars($current_full_url); ?>" />
+    <link rel="canonical" href="<?php echo htmlspecialchars($current_full_url, ENT_QUOTES, 'UTF-8'); ?>" />
 
     <meta property="og:type" content="website">
-    <meta property="og:url" content="<?php echo htmlspecialchars($current_full_url); ?>">
+    <meta property="og:url" content="<?php echo htmlspecialchars($current_full_url, ENT_QUOTES, 'UTF-8'); ?>">
     <meta property="og:title" content="<?php echo htmlspecialchars($og_title); ?>">
     <meta property="og:description" content="<?php echo htmlspecialchars($og_desc); ?>">
     <meta property="og:image" content="<?php echo htmlspecialchars($og_image); ?>">
 
     <?php
-    if (!empty($schema_markup)) {
-        if (strpos(trim($schema_markup), '<script') === 0) {
-            echo $schema_markup;
-        } else {
-            echo "<!-- ERROR: Schema must be enclosed in <script type=\"application/ld+json\"> tags -->\n";
+        if (!empty($schema_markup)) {
+            if (strpos(trim($schema_markup), '<script') === 0) {
+                echo $schema_markup;
+            } else {
+                echo "<!-- ERROR: Schema must be enclosed in <script type=\"application/ld+json\"> tags -->\n";
+            }
         }
-    }
     ?>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -80,20 +82,24 @@ if ($seo_res && $seo_res->num_rows > 0) {
     <link rel="manifest" href="site.webmanifest">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="icon" type="image/webp" href="<?php echo $site; ?>admin/uploads/logo/logo_favicon_6accbb652f38b.png">
-    <link rel="stylesheet" href="https://cloudflare.com">
 
-    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/cart.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/about.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/category.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/contact.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/privacy.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/style.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/product.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/include.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/wishlist.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="<?php echo $site; ?>assets/css/blog.css?v=<?php echo time(); ?>">
+    <?php
+    $css_version = '20261031';
+    $css_base = rtrim($site, '/') . '/assets/css/';
+    ?>
+
+    <link rel="stylesheet" href="<?php echo $css_base; ?>cart.css?v=<?php echo $css_version; ?>">
+    <link rel="stylesheet" href="<?php echo $css_base; ?>about.css?v=<?php echo $css_version; ?>">
+    <link rel="stylesheet" href="<?php echo $css_base; ?>category.css?v=<?php echo $css_version; ?>">
+    <link rel="stylesheet" href="<?php echo $css_base; ?>contact.css?v=<?php echo $css_version; ?>">
+    <link rel="stylesheet" href="<?php echo $css_base; ?>privacy.css?v=<?php echo $css_version; ?>">
+    <link rel="stylesheet" href="<?php echo $css_base; ?>style.css?v=<?php echo $css_version; ?>">
+    <link rel="stylesheet" href="<?php echo $css_base; ?>product.css?v=<?php echo $css_version; ?>">
+    <link rel="stylesheet" href="<?php echo $css_base; ?>include.css?v=<?php echo $css_version; ?>">
+    <link rel="stylesheet" href="<?php echo $css_base; ?>wishlist.css?v=<?php echo $css_version; ?>">
+    <link rel="stylesheet" href="<?php echo $css_base; ?>blog.css?v=<?php echo $css_version; ?>">
+
 </head>
 
 <body>
