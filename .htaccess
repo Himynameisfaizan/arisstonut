@@ -9,6 +9,20 @@ RewriteRule ^product/([^/]+)$ product-detail.php?slug=$1 [L,QSA]
 RewriteRule ^blog/([^/]+)/?$ blog-details.php?slug=$1 [L,QSA]
 RewriteRule ^page/([^/]+)/?$ page.php?slug=$1 [L,QSA]
 
+RewriteCond %{REQUEST_METHOD} ^(?:GET|HEAD)$
+RewriteCond %{QUERY_STRING} ^$
+RewriteCond %{THE_REQUEST} \s/+[^\s?]+\.php(?:\s|\?) [NC]
+RewriteCond %{REQUEST_URI} !/(category|product-details|blog-details|page|sitemap|404)\.php$ [NC]
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^([A-Za-z0-9_-]+)\.php$ $1 [R=302,L,NE]
+
+# 6. Extensionless URL -> matching PHP file
+#    Example: /about -> about.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([A-Za-z0-9_-]+)/?$ $1.php [END,NC]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^category/([^/]+)/?$ category.php?url=$1 [L,QSA]

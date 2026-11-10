@@ -12,11 +12,11 @@ echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
     // 1. Static Pages
     $staticPages = [
     ["url" => "", "priority" => "1.0", "changefreq" => "daily"],
-    ["url" => "about.php", "priority" => "0.8", "changefreq" => "monthly"],
-    ["url" => "product.php", "priority" => "0.9", "changefreq" => "daily"],
-    ["url" => "services.php", "priority" => "0.9", "changefreq" => "monthly"],
-    ["url" => "blogs.php", "priority" => "0.8", "changefreq" => "weekly"],
-    ["url" => "contact.php", "priority" => "0.8", "changefreq" => "monthly"]
+    ["url" => "about", "priority" => "0.8", "changefreq" => "monthly"],
+    ["url" => "product", "priority" => "0.9", "changefreq" => "daily"],
+    ["url" => "services", "priority" => "0.9", "changefreq" => "monthly"],
+    ["url" => "blogs", "priority" => "0.8", "changefreq" => "weekly"],
+    ["url" => "contact", "priority" => "0.8", "changefreq" => "monthly"]
     ];
 
     foreach ($staticPages as $page) {
